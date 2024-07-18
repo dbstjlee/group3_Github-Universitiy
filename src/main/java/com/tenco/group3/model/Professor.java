@@ -18,6 +18,7 @@ public class Professor {
 	private Date birthdate;
 	private String gender;
 	private String address;
+	private String tel;
 	private String email;
 	private int deptId;
 	private Date hireDate;
