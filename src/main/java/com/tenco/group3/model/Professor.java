@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Professor {
-	private int id;
+	private int id; 
 	private String name;
 	private Date birthdate;
 	private String gender;

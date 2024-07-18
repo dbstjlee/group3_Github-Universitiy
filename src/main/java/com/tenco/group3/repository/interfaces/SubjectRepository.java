@@ -10,12 +10,8 @@ public interface SubjectRepository {
 	
 	List<Subject> getSubjectByType(String type);
 	
-	List<Subject> getSubjectByDeptId(int deptId);
+	List<Subject> getSubjectBySemester(int semester);
 	
-	List<Subject> getSubjectByName(String name);
+	List<Subject> getStudentBySubject(int id, String type);
 	
-	List<Subject> getSubjectByDeptIDAndType(int deptId, String type);
-	
-	// 수강 신청
-	Subject subjectEnrolment(int studentId, Subject subject);
 }
