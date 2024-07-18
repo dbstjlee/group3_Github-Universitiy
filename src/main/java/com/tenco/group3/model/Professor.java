@@ -15,7 +15,7 @@ import lombok.ToString;
 public class Professor {
 	private int id; 
 	private String name;
-	private Date birthdate;
+	private Date birthDate;
 	private String gender;
 	private String address;
 	private String tel;
