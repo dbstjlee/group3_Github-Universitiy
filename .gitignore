@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,eclipse,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,eclipse,java
 
+# web.xml 충돌 방지
+src/main/webapp/WEB-INF/web.xml
+
 ### Eclipse ###
 .metadata
 bin/
