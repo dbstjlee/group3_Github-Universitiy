@@ -10,7 +10,7 @@ public interface SubjectRepository {
 	
 	List<Subject> getSubjectByType(String type);
 	
-	List<Subject> getSubjectBySemester(int semester);
+	List<Subject> getSubjectBySemester(int professorId, int semester);
 	
 	List<Subject> getStudentBySubject(int id, String type);
 	
