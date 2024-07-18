@@ -1,4 +1,4 @@
-package com.tenco.group3.repository;
+package com.tenco.group3.repository.interfaces;
 
 import com.tenco.group3.model.Professor;
 

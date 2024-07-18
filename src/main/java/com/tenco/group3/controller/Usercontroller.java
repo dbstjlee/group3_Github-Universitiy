@@ -8,11 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/user/*")
-public class usercontroller extends HttpServlet {
+public class Usercontroller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
  
-    public usercontroller() {
+    public Usercontroller() {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
