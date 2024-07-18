@@ -16,14 +16,14 @@ import lombok.ToString;
 public class Student {
 	private int id;
 	private String name;
-	private Date birth_date;
+	private Date birthDate;
 	private String gender;
 	private String address;
 	private String tel;
 	private String email;
-	private int dept_id;
+	private int deptId;
 	private int grade;
 	private int semester;
-	private Date entrance_date;
-	private Date graduation_date;
+	private Date entranceDate;
+	private Date graduationDate;
 }
