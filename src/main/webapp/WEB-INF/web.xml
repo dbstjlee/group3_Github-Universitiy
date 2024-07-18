@@ -7,7 +7,7 @@
 		<description></description>
 		<display-name>Usercontroller</display-name>
 		<servlet-name>Usercontroller</servlet-name>
-		<servlet-class>com.tenco.group3.controller.usercontroller</servlet-class>
+		<servlet-class>com.tenco.group3.controller.Usercontroller</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Usercontroller</servlet-name>
