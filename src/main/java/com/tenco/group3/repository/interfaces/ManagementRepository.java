@@ -9,9 +9,13 @@ import com.tenco.group3.model.Student;
 public interface ManagementRepository {
 	// 모든 학생 명단 호출
 	List<Student> getAllStudents(int limit, int offset);
+	// 모든 학생 수 확인
+	int getTotalStudentCount();
 	
 	// 모든 교수 명단 호출
 	List<Professor> getAllProfessors(int limit, int offset);
+	// 모든 교수 수 확인
+	int getTotalProfessorCount();
 	
 	// 학생 등록
 	int createStudent(Student student);
