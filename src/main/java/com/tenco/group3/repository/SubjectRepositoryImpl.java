@@ -17,7 +17,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	@Override
 	public List<Subject> getSubjectAll() {
 		List<Subject> subjectList = new ArrayList();
-		try (Connection conn = DBUtil.getConnetion();
+		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUBJECT)){
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -49,7 +49,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	@Override
 	public List<Subject> getSubjectBySemester(int professorId, int subYear, int semester) {
 		List<Subject> subjectList = new ArrayList();
-		try (Connection conn = DBUtil.getConnetion();
+		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_SUBJECT_BY_SEMESTER)) {
 			pstmt.setInt(1, professorId);
 			pstmt.setInt(2, subYear);
