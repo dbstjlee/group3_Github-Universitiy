@@ -42,7 +42,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> getSubjectByType(String type) {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
@@ -74,7 +75,9 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> getStudentBySubject(int id, String type) {
-		// TODO Auto-generated method stub
+		
+		
+		
 		return null;
 	}
 
@@ -87,6 +90,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			pstmt.setInt(2, year);
 			pstmt.setInt(3, semester);
 			ResultSet rs = pstmt.executeQuery();
+			
 			while (rs.next()) {
 				subjectList.add(Subject.builder()
 						.id(rs.getInt("id"))
@@ -108,8 +112,27 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> selectIdByLessNumOfStudent() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Subject> subjectList = new ArrayList();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ID_BY_LESS_NUM_STUDENT)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				subjectList.add(Subject.builder()
+						.id(rs.getInt("id"))
+						.name(rs.getString("name"))
+						.professorId(rs.getInt("professorId"))
+						.roomId(rs.getString("roomId"))
+						.deptId(rs.getInt("deptId"))
+						.type(rs.getString("type"))
+						.subYear(rs.getInt("subYear"))
+						.startTime(rs.getInt("startTime"))
+						.endTime(rs.getInt("endTime"))
+						.build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subjectList;
 	}
 
 }

@@ -54,7 +54,6 @@ public class ProfessorRepositoryImpl implements ProfessorRepository {
 
 	@Override
 	public List<Professor> getProfessorList() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
