@@ -18,5 +18,5 @@ public interface ProfessorRepository {
 	
 	Professor getProfessorAmount(); // 교수 수 조회
 	
-	Professor addProfessor(); // 교수 추가
+	int addProfessor( Professor professor); // 교수 추가
 }
