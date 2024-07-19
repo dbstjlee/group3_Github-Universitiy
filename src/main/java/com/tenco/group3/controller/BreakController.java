@@ -97,10 +97,6 @@ public class BreakController extends HttpServlet {
 		// TODO - 학생 ID값 추가(세션에서 받음)
 //		int studentId = Integer.parseInt(request.getParameter("id"));
 		List<BreakApp> breakList = breakAppRepository.getBreakAppList(2023000011);
-		if (breakList == null) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return;
-		}
 //		System.out.println(breakList.toString());
 		request.setAttribute("breakList", breakList);
 		request.getRequestDispatcher("/WEB-INF/views/break/list.jsp").forward(request, response);
