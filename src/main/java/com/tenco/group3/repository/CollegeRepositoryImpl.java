@@ -15,7 +15,7 @@ public class CollegeRepositoryImpl implements CollegeRepository {
 	@Override
 	public int addCollege(College college) {
 		int resultrowCount = 0;
-		try (Connection conn = DBUtil.getConnetion()){
+		try (Connection conn = DBUtil.getConnection()){
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_COLLEGE)){
 				pstmt.setString(1, college.getName());
@@ -36,7 +36,7 @@ public class CollegeRepositoryImpl implements CollegeRepository {
 	@Override
 	public int deleteById(int id) {
 		int resultrowCount = 0;
-		try (Connection conn = DBUtil.getConnetion()){
+		try (Connection conn = DBUtil.getConnection()){
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_COLLEGE)){
 				pstmt.setInt(1, id);

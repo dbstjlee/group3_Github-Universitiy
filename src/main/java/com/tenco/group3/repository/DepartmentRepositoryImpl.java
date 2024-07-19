@@ -3,7 +3,6 @@ package com.tenco.group3.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;
@@ -22,7 +21,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository{
 	public Department selectedById(int id) {
 		Department department = null;
 		String query = " SELECT FROM * department_tb WHERE id = ? ";
-		try (Connection conn = DBUtil.getConnetion();
+		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)){
 				pstmt.setInt(1, id);
 				try (ResultSet rs = pstmt.executeQuery()){
@@ -45,7 +44,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository{
 	@Override
 	public int updateDepartment(Department department) {
 		String query = " UPDATE departments SET name = ? WHERE id = ? ";
-		try (Connection conn = DBUtil.getConnetion()) {
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setString(1, department.getName());

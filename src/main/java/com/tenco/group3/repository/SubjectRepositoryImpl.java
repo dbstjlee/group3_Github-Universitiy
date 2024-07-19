@@ -17,7 +17,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	private final String SELECT_ID_BY_LESS_NUM_STUDENT="SELECT id FROM subject_tb WHERE capacity >= num_of_student ";
 	@Override
 	public List<Subject> getSubjectAll() {
-		List<Subject> subjectList = new ArrayList();
+		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUBJECT)) {
 			ResultSet rs = pstmt.executeQuery();
@@ -49,7 +49,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> getSubjectBySemester(int professorId, int subYear, int semester) {
-		List<Subject> subjectList = new ArrayList();
+		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_SUBJECT_BY_SEMESTER)) {
 			pstmt.setInt(1, professorId);
@@ -83,7 +83,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> getSubjectById(int id, int year, int semester) {
-		List<Subject> subjectList = new ArrayList();
+		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_SUBJECT_BY_ID)) {
 			pstmt.setInt(1, id);
@@ -112,7 +112,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 	@Override
 	public List<Subject> selectIdByLessNumOfStudent() {
-		List<Subject> subjectList = new ArrayList();
+		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ID_BY_LESS_NUM_STUDENT)) {
 			ResultSet rs = pstmt.executeQuery();

@@ -17,7 +17,7 @@ public class DBUtil {
 			datesource = (DataSource) ctx.lookup("java:comp/env/jdbc/greenboard");
 		} catch (NamingException e) {
 			System.out.println("DBUtil 초기화 실패");
-			e.printStackTrace();
+			e.printStackTrace();	
 		}
 	}
 	
