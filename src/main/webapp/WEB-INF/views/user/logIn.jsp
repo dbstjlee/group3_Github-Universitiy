@@ -12,7 +12,7 @@
 		<div class="logo">
 			<a></a>
 		</div>
-	<form action="${pageContext.request.contextPath}/user/logIn" method="post" class="main--container">
+	<form action="${pageContext.request.contextPath}/user/logIn" method="post" class="main-container">
 		<div class="login-container">
 			<div class="id-container">
 				<div class="login-id">
@@ -34,8 +34,8 @@
 			<input type="submit" value="로그인" id="input-submit">
 		</div>
 		<ul class="login-info">
-			<li><a href="/find/id" onclick="window.open(this.href, 'width=500, height=300'); return false;">ID 찾기</a></li>
-			<li><a href="/find/pwd" onclick="window.open(this.href, 'width=500, height=300'); return false;">비밀번호 찾기</a></li>
+			<li><a href="${pageContext.request.contextPath}/user/findId" onclick="window.open(this.href,'_blank', 'width=500, height=300'); return false;">ID 찾기</a></li>
+			<li><a href="${pageContext.request.contextPath}/user/findPwd" onclick="window.open(this.href, '_blank', 'width=500, height=350'); return false;">비밀번호 찾기</a></li>
 		</ul>
 	</form>
 	</div>
