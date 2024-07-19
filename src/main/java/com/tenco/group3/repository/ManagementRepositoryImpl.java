@@ -33,16 +33,16 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 				studentList.add(Student.builder()
 					.id(rs.getInt("id"))
 					.name(rs.getString("name"))
-					.birthDate(rs.getDate("birthDate"))
+					.birthDate(rs.getDate("birth_date"))
 					.gender(rs.getString("gender"))
 					.address(rs.getString("address"))
 					.tel(rs.getString("tel"))
 					.email(rs.getString("email"))
-					.deptId(rs.getInt("deptId"))
+					.deptId(rs.getInt("dept_id"))
 					.grade(rs.getInt("grade"))
 					.semester(rs.getInt("semester"))
-					.entranceDate(rs.getDate("entranceDate"))
-					.graduationDate(rs.getDate("graduationDate"))
+					.entranceDate(rs.getDate("entrance_date"))
+					.graduationDate(rs.getDate("graduation_date"))
 					.build());
 			}
 
@@ -67,13 +67,13 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 				professorList.add(Professor.builder()
 					.id(rs.getInt("id"))
 					.name(rs.getString("name"))
-					.birthDate(rs.getDate("birthDate"))
+					.birthDate(rs.getDate("birth_date"))
 					.gender(rs.getString("gender"))
 					.address(rs.getString("address"))
 					.tel(rs.getString("tel"))
 					.email(rs.getString("email"))
-					.deptId(rs.getInt("deptId"))
-					.hireDate(rs.getDate("hireDate"))
+					.deptId(rs.getInt("dept_id"))
+					.hireDate(rs.getDate("hire_date"))
 					.build());
 			}
 
@@ -104,8 +104,20 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 	@Override
 	public int getTotalProfessorCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		int totalCounts = 0;
+		try (Connection conn = DBUtil.getConnection();//
+				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_PROFESSORS)) {
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				totalCounts = rs.getInt("count");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(totalCounts); // TODO 삭제
+		return totalCounts;
 	}
 
 	@Override

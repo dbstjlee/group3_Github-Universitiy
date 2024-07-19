@@ -53,8 +53,31 @@ main {
 	padding: 20px;
 	margin-bottom: 50px;
 }
+
 .sub--filter form {
-    display: flex;
+	display: flex;
+}
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v199/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+}
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+	font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
 }
 </style>
 </head>
@@ -126,14 +149,59 @@ main {
 								<li style="height: 24px;"><span class="material-symbols-outlined" style="font-size: 18px; padding-top: 4px;">search</span>
 							</ul>
 						</button>
-						<button type="button" onclick="location.href='/user/student/update'" style="margin-left: 10px;">
+						<!-- <button type="button" onclick="location.href='/user/student/update'" style="margin-left: 10px;">
 							<ul>
 								<li style="height: 24px;">새학기 적용
 							</ul>
-						</button>
+						</button> -->
 					</div>
 				</form>
 			</div>
+			<c:choose>
+				<c:when test="${!studentList.isEmpty()}">
+					<h4>
+						<span style="font-weight: 600;">학생 목록</span>
+					</h4>
+					<table border="1" class="sub--list--table">
+						<thead>
+							<tr>
+								<th>학번</th>
+								<th>이름</th>
+								<th>생년월일</th>
+								<th>성별</th>
+								<th>주소</th>
+								<th>전화번호</th>
+								<th>이메일</th>
+								<th>학과번호</th>
+								<th>학년</th>
+								<th>입학일</th>
+								<th>졸업일(졸업예정일)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="student" items="${studentList}">
+								<tr>
+									<td>${student.id}</td>
+									<td>${student.name}</td>
+									<td>${student.birthDate}</td>
+									<td>${student.gender}</td>
+									<td>${student.address}</td>
+									<td>${student.tel}</td>
+									<td>${student.email}</td>
+									<td>${student.deptId}</td>
+									<td>${student.grade}</td>
+									<td>${student.entranceDate}</td>
+									<td>${student.graduationDate}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+
+				</c:when>
+				<c:otherwise>
+					<p class="no--list--p">검색 결과가 없습니다.</p>
+				</c:otherwise>
+			</c:choose>
 			<ul class="page--list">
 				<c:forEach begin="1" end="${totalPages}" var="i">
 					<c:choose>

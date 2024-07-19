@@ -112,10 +112,10 @@ public class ManagementController extends HttpServlet {
 		List<Professor> professorList = managementRepository.getAllProfessors(pageSize, offset);
 
 		// 전체 학생 수 조회
-		int totalStudents = managementRepository.getTotalStudentCount();
+		int totalProfessors = managementRepository.getTotalProfessorCount();
 
 		// 총 페이지 수 계산
-		int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
+		int totalPages = (int) Math.ceil((double) totalProfessors / pageSize);
 
 		request.setAttribute("totalPages", totalPages);
 		request.setAttribute("professorList", professorList);
