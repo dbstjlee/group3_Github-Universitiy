@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CollegeTb {
+public class College {
 
 	private int id;
 	private String name;
