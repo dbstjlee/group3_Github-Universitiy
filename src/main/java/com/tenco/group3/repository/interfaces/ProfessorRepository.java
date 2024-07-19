@@ -1,10 +1,22 @@
 package com.tenco.group3.repository.interfaces;
 
+import java.util.List;
+
 import com.tenco.group3.model.Professor;
 
 public interface ProfessorRepository {
 
-	Professor getProfessorById(int id);
-	int updateProfessorPassword(Professor professor,String id);
+	int updateProfessorPassword(Professor professor,String id); // 비밀번호 변경
 	
+	int updateProfessor(Professor professor,String id); // 교수 정보 수정
+	
+	List<Professor> getProfessorList (); // 교수 전체 조회
+	
+	Professor getProfessorById(int id); // 아이디로 교수 조회
+	
+	Professor getProfessorByDepartmentId (int deptId); // 과 아이디로 교수조회
+	
+	Professor getProfessorAmount(); // 교수 수 조회
+	
+	Professor addProfessor(); // 교수 추가
 }
