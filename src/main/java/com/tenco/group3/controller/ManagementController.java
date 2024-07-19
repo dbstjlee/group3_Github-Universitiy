@@ -32,21 +32,22 @@ public class ManagementController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("principal") == null) {
-			response.sendRedirect(request.getContextPath() + "/main/login");
-			return;
-		}
+		// TODO 현재 로그인 기능 없어서 생략함
+//		HttpSession session = request.getSession(false);
+//		if (session == null || session.getAttribute("principal") == null) {
+//			response.sendRedirect(request.getContextPath() + "/main/login");
+//			return;
+//		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 
 		switch (action) {
-		case "studentList":
+		case "/studentList":
 			showStudentList(request, response);
 			break;
-		case "professorList":
+		case "/professorList":
 			showProfessorList(request, response);
 			break;
-
+			
 		default:
 			break;
 		}
@@ -64,7 +65,8 @@ public class ManagementController extends HttpServlet {
 		// 페이징 처리를 위한 변수 선언
 		int page = 1; // 기본 페이지 번호
 		int pageSize = 20; // 한 페이지당 보여질 게시글 수
-
+		
+		System.out.println("테스트용"); // TODO 삭제 예정
 		try {
 			String pageStr = request.getParameter("page");
 			if (pageStr != null) {

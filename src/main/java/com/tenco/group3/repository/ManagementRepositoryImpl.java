@@ -16,6 +16,8 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 	private final String SELECT_ALL_STUDENTS = " SELECT * FROM student_tb limit ? offset ? ";
 	private final String SELECT_ALL_PROFESSORS = " SELECT * FROM professor_tb limit ? offset ? ";
+	private final String COUNT_ALL_STUDENTS = " SELECT COUNT(*) AS count FROM student_tb ";
+	private final String COUNT_ALL_PROFESSORS = " SELECT COUNT(*) AS count FROM professor_tb ";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
@@ -84,8 +86,20 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 	@Override
 	public int getTotalStudentCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		int totalCounts = 0;
+		try (Connection conn = DBUtil.getConnection();//
+				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_STUDENTS)) {
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				totalCounts = rs.getInt("count");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(totalCounts); // TODO 삭제
+		return totalCounts;
 	}
 
 	@Override
