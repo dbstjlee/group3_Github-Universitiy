@@ -13,17 +13,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class Student {
+public class Staff {
+	
 	private int id;
 	private String name;
-	private Date birthDate;
+	private Date birth_date;
 	private String gender;
 	private String address;
 	private String tel;
 	private String email;
-	private int deptId;
-	private int grade;
-	private int semester;
-	private Date entranceDate;
-	private Date graduationDate;
+	private Date hire_date;
+	
 }

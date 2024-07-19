@@ -26,6 +26,9 @@ public class Subject {
 	private int grades; // 학점
 	private int capacity; // 학생 정원
 	private int numOfStudent; // 신청 학생수
+<<<<<<< HEAD
 	private String professorName;
 	private String deptName;
+=======
+>>>>>>> dev
 }

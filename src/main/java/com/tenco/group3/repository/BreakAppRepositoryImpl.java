@@ -16,7 +16,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 	public void addBreakApp(BreakApp breakApp) {
 		String query = " INSERT INTO break_app_tb " + " (student_id, student_grade, from_year, from_semester, to_year, "
 				+ " to_semester, type, app_date) " + " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
-		try (Connection conn = DBUtil.getConnetion()) {
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setInt(1, breakApp.getStudentId());
@@ -44,24 +44,17 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 				+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 				+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE st.id = ? ";
 		List<BreakApp> breakAppList = new ArrayList<BreakApp>();
-		try (Connection conn = DBUtil.getConnetion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					BreakApp app = BreakApp.builder().Type(rs.getString("type"))
-							.departmentName(rs.getString("departmentname"))
-							.id(rs.getInt("id"))
-							.studentGrade(rs.getInt("student_grade"))
-							.studentTel(rs.getString("tel"))
-							.studentAdds("address")
-							.studentName(rs.getString("studentName"))
-							.fromYear(rs.getInt("from_year"))
-							.fromSemester(rs.getInt("from_semester"))
-							.toYear(rs.getInt("to_year"))
-							.toSemester(rs.getInt("to_semester"))
-							.Type(rs.getString("type"))
-							.appDate(rs.getDate("app_date"))
-							.status(rs.getString("status"))
+							.departmentName(rs.getString("departmentname")).id(rs.getInt("id"))
+							.studentGrade(rs.getInt("student_grade")).studentTel(rs.getString("tel"))
+							.studentAdds("address").studentName(rs.getString("studentName"))
+							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
+							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
+							.Type(rs.getString("type")).appDate(rs.getDate("app_date")).status(rs.getString("status"))
 							.build();
 					breakAppList.add(app);
 				}
@@ -81,24 +74,17 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 				+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 				+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE br.id = ? ";
 		List<BreakApp> breakAppList = new ArrayList<BreakApp>();
-		try (Connection conn = DBUtil.getConnetion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, breakId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					BreakApp app = BreakApp.builder().Type(rs.getString("type"))
-							.departmentName(rs.getString("departmentname"))
-							.id(rs.getInt("id"))
-							.studentGrade(rs.getInt("student_grade"))
-							.studentTel(rs.getString("tel"))
-							.studentAdds("address")
-							.studentName(rs.getString("studentName"))
-							.fromYear(rs.getInt("from_year"))
-							.fromSemester(rs.getInt("from_semester"))
-							.toYear(rs.getInt("to_year"))
-							.toSemester(rs.getInt("to_semester"))
-							.Type(rs.getString("type"))
-							.appDate(rs.getDate("app_date"))
-							.status(rs.getString("status"))
+							.departmentName(rs.getString("departmentname")).id(rs.getInt("id"))
+							.studentGrade(rs.getInt("student_grade")).studentTel(rs.getString("tel"))
+							.studentAdds("address").studentName(rs.getString("studentName"))
+							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
+							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
+							.Type(rs.getString("type")).appDate(rs.getDate("app_date")).status(rs.getString("status"))
 							.build();
 					breakAppList.add(app);
 				}

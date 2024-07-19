@@ -13,11 +13,12 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Professor {
-	private int id;
+	private int id; 
 	private String name;
-	private Date birthdate;
+	private Date birthDate;
 	private String gender;
 	private String address;
+	private String tel;
 	private String email;
 	private int deptId;
 	private Date hireDate;

@@ -21,7 +21,7 @@ public class DBUtil {
 		}
 	}
 	
-	public static Connection getConnetion() throws SQLException {
+	public static Connection getConnection() throws SQLException {
 		return datesource.getConnection();
 	}
 	

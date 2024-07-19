@@ -11,37 +11,29 @@ import com.tenco.group3.repository.interfaces.SubjectRepository;
 import com.tenco.group3.util.DBUtil;
 
 public class SubjectRepositoryImpl implements SubjectRepository {
+	private final String SELECT_ALL_SUBJECT = "select * from subject_tb";
+	private final String GET_SUBJECT_BY_SEMESTER = "SELECT * FROM subject_tb WHERE  PROFESSOR_ID= ? AND AND sub_year = ? AND  semester = ?";
 
 	@Override
 	public List<Subject> getSubjectAll() {
-		List<Subject> subjectList = new ArrayList<Subject>();
-		String query = " SELECT su.*, pr.name, de.name " + " FROM subject_tb AS su "
-				+ " INNER JOIN department_tb AS de ON su.dept_id = de.id "
-				+ " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id ";
+		List<Subject> subjectList = new ArrayList();
 		try (Connection conn = DBUtil.getConnetion();
-				PreparedStatement pstmt = conn.prepareStatement(query)) {
-			try (ResultSet rs = pstmt.executeQuery()){
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUBJECT)){
+				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					Subject subject = Subject.builder()
-									.id(rs.getInt("id"))
-									.name(rs.getString("name"))
-									.roomId(rs.getString("room_id"))
-									.type(rs.getString("type"))
-									.semester(rs.getInt("semester"))
-									.subDay(rs.getString("sub_day"))
-									.startTime(rs.getInt("start_time"))
-									.endTime(rs.getInt("end_time"))
-									.grades(rs.getInt("grades"))
-									.capacity(rs.getInt("capacity"))
-									.numOfStudent(rs.getInt("numOfStudent"))
-									.professorName(rs.getString("professorName"))
-									.deptName("deptName")
-									.build();
-					subjectList.add(subject);
+					subjectList.add(Subject.builder()
+							.id(rs.getInt("id"))
+							.name(rs.getString("name"))
+							.professorId(rs.getInt("professorId"))
+							.roomId(rs.getString("roomId"))
+							.deptId(rs.getInt("deptId"))
+							.type(rs.getString("type"))
+							.subYear(rs.getInt("subYear"))
+							.startTime(rs.getInt("startTime"))
+							.endTime(rs.getInt("endTime"))
+							.build()
+							);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,31 +47,33 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	}
 
 	@Override
-	public List<Subject> getSubjectByDeptId(int deptId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Subject> getSubjectBySemester(int professorId, int subYear, int semester) {
+		List<Subject> subjectList = new ArrayList();
+		try (Connection conn = DBUtil.getConnetion();
+				PreparedStatement pstmt = conn.prepareStatement(GET_SUBJECT_BY_SEMESTER)) {
+			pstmt.setInt(1, professorId);
+			pstmt.setInt(2, subYear);
+			pstmt.setInt(3, semester);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				subjectList.add(
+						Subject.builder()
+						.id(rs.getInt("id"))
+						.deptId(rs.getInt("deptId"))
+						.name(rs.getString("name"))
+						.startTime(rs.getInt("startTime"))
+						.endTime(rs.getInt("endTime"))
+						.build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subjectList;
+
 	}
 
 	@Override
-	public List<Subject> getSubjectByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Subject> getSubjectByDeptIDAndType(int deptId, String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Subject subjectEnrolment(int studentId, Subject subject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Subject> getSubjectEnrolmented(int studentId, Subject subject) {
+	public List<Subject> getStudentBySubject(int id, String type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
