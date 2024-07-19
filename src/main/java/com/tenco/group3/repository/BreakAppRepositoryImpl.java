@@ -15,7 +15,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
 		String query = " INSERT INTO break_app_tb " + " (student_id, student_grade, from_year, from_semester, to_year, "
-				+ " to_semester, type, app_date) " + " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+				+ " to_semester, type) " + " VALUES (?, ?, ?, ?, ?, ?, ?) ";
 		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -26,7 +26,6 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 				pstmt.setInt(5, breakApp.getToYear());
 				pstmt.setInt(6, breakApp.getToSemester());
 				pstmt.setString(7, breakApp.getType());
-				pstmt.setDate(8, breakApp.getAppDate());
 				pstmt.executeUpdate();
 				conn.commit();
 			} catch (Exception e) {
@@ -40,21 +39,20 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 
 	@Override
 	public List<BreakApp> getBreakAppList(int studentId) {
-		String sql = " SELECT br.*, st.name AS studentName, de.name as departmentname, st.address, st.tel "
-				+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
+		String sql = " SELECT br.*, st.name AS studentName, de.name as departmentname " + " FROM break_app_tb AS br "
+				+ " JOIN student_tb AS st ON br.student_id = st.id "
 				+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE st.id = ? ";
 		List<BreakApp> breakAppList = new ArrayList<BreakApp>();
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					BreakApp app = BreakApp.builder().Type(rs.getString("type"))
-							.departmentName(rs.getString("departmentname")).id(rs.getInt("id"))
-							.studentGrade(rs.getInt("student_grade")).studentTel(rs.getString("tel"))
-							.studentAdds("address").studentName(rs.getString("studentName"))
+					BreakApp app = BreakApp.builder().type(rs.getString("type")).id(rs.getInt("id"))
+							.departmentName(rs.getString("departmentname")).studentId(rs.getInt("student_id"))
+							.studentGrade(rs.getInt("student_grade")).studentName(rs.getString("studentName"))
 							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
 							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
-							.Type(rs.getString("type")).appDate(rs.getDate("app_date")).status(rs.getString("status"))
+							.appDate(rs.getString("app_date")).status(rs.getString("status"))
 							.build();
 					breakAppList.add(app);
 				}
@@ -70,23 +68,23 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 	@Override
 	public BreakApp getBreakAppDetail(int breakId) {
 		BreakApp breakApp = null;
-		String sql = " SELECT br.*, st.name AS studentName, de.name as departmentname, st.address, st.tel "
+		String sql = " SELECT br.*, st.name AS studentName, de.name as departmentname, st.address, st.tel, co.name as collegename "
 				+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
-				+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE br.id = ? ";
-		List<BreakApp> breakAppList = new ArrayList<BreakApp>();
+				+ " JOIN department_tb as de on st.dept_id = de.id JOIN college_tb as co ON co.id = de.college_id "
+				+ "WHERE br.id = ? ";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, breakId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					BreakApp app = BreakApp.builder().Type(rs.getString("type"))
-							.departmentName(rs.getString("departmentname")).id(rs.getInt("id"))
+					breakApp = BreakApp.builder().type(rs.getString("type"))
+							.departmentName(rs.getString("departmentname")).studentId(rs.getInt("student_id"))
 							.studentGrade(rs.getInt("student_grade")).studentTel(rs.getString("tel"))
-							.studentAdds("address").studentName(rs.getString("studentName"))
+							.studentAdds(rs.getString("address")).studentName(rs.getString("studentName"))
 							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
 							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
-							.Type(rs.getString("type")).appDate(rs.getDate("app_date")).status(rs.getString("status"))
+							.appDate(rs.getString("app_date")).status(rs.getString("status"))
+							.collegeName(rs.getString("collegename"))
 							.build();
-					breakAppList.add(app);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -94,7 +92,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return breakApp;
 	}
 
 }
