@@ -37,7 +37,7 @@ public class userRepositoryImpl implements UserRepository{
 							.id(rs.getInt("id"))
 							.password(rs.getString("password"))
 							.userRole(rs.getString("user_role"))
-							.username(rs.getString("username"))
+							.username(rs.getString("name"))
 							.build();
 				}
 			} catch (Exception e) {
@@ -46,6 +46,7 @@ public class userRepositoryImpl implements UserRepository{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println(user);
 		return user;
 	}
 

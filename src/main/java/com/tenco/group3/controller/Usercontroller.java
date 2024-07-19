@@ -1,5 +1,6 @@
 package com.tenco.group3.controller;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.userRepositoryImpl;
@@ -36,6 +37,15 @@ public class Usercontroller extends HttpServlet {
 			break;
 		case "/logOut":
 			handleLogout(request, response);
+			break;
+		case "/main":
+			request.getRequestDispatcher("/WEB-INF/views/user/main.jsp").forward(request, response);
+			break;
+		case "/password":
+			request.getRequestDispatcher("/WEB-INF/views/user/pwd.jsp").forward(request, response);
+			break;
+		case "/update":
+			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
 			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -85,9 +95,16 @@ public class Usercontroller extends HttpServlet {
 		if(principal != null && principal.getPassword().equals(password)) {
 			HttpSession session = request.getSession();
 			session.setAttribute("principal", principal);
-			response.sendRedirect(request.getContextPath() + "/main"); // 로그인 성공 - 메인 홈으로 이동
+			response.sendRedirect(request.getContextPath() + "/user/main"); // 로그인 성공 - 메인 홈으로 이동
 		} else {
 			// 에러 메시지 (로그인 실패)
+			PrintWriter out = response.getWriter();
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html; charset=UTF-8");
+			out.println("<script> alert('아이디 또는 비밀번호가 틀립니다.');");
+			out.println("history.go(-1); </script>");
+			out.close();
+			
 			request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
 		}
 		

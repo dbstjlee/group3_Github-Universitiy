@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 * {
 	margin: 0;
 	padding: 0;
@@ -7,7 +8,7 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
-.login--div {
+.login-div {
 	height: 600px;
 	display: flex;
 	flex-direction: column;
@@ -20,7 +21,7 @@
 	height: 100px;
 }
 
-.main--container {
+.main-container {
 	width: 400px;
 	padding-top: 15px;
 }
@@ -30,10 +31,9 @@
 	justify-content: center;
 	align-items: center;
 	background-color: #fff;
-
 }
 
-.login--container {
+.login-container {
 	border: 1px solid #e8e6e6;
 	border-radius: 10px;
 	margin-top: 20px;
@@ -42,33 +42,36 @@
 	background-color: #fff;
 }
 
-.id--container {
+.id-container {
 	border-bottom: 1px solid #e8e6e6;
 	background-color: #fff;
 	display: flex;
 	align-items: center;
 }
 
-.pwd--container {
+.pwd-container {
 	display: flex;
 	align-items: center;
 	background-color: #fff;
 }
+
 label {
 	background-color: #fff;
 	margin: 0 0 0 3px;
 	padding-top: 3px;
 }
-.login--id {
+
+.login-id {
 	display: flex;
 	align-items: center;
 	height: 30px;
+	width: 350px;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	background-color: #fff;
 }
 
-.login--pwd {
+.login-pwd {
 	display: flex;
 	align-items: center;
 	margin-top: 20px;
@@ -76,7 +79,7 @@ label {
 	background-color: #fff;
 }
 
-.checkbox--id {
+.checkbox-id {
 	background-color: #fff;
 	font-size: 12px;
 	display: flex;
@@ -90,13 +93,12 @@ label {
 	padding: 1px 3px;
 }
 
-#userId { 
+#userId {
 	margin-right: 70px;
 }
 
-
-#input--submit {
-	height: 50px; 
+#input-submit {
+	height: 50px;
 	width: 400px;
 	border: 1px solid #e8e6e6;
 	margin-top: 40px;
@@ -104,7 +106,7 @@ label {
 	color: white;
 }
 
-.login--info{
+.login-info {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -112,16 +114,27 @@ label {
 	margin-top: 20px;
 }
 
-.login--info li {
+.login-info li {
 	margin-right: 20px;
 	list-style: none;
 }
 
-.login--info li a {
+.login-info li a {
 	text-decoration: none;
 	color: black;
 }
 
-.login--info li a :hover{
+.login-info li a :hover {
 	color: black;
+}
+
+.exam {
+	display: flex;
+	flex-direction: column; 
+	color: rgb(33, 37, 41);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 21px;
+	margin-bottom: 16px;
+	height: 105px;
 }
