@@ -8,6 +8,10 @@
 <title>break 화면</title>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/break/application">휴학 신청</a>
+	<a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a>
+	<a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a>
+	<a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a>
 	<h2>휴학 신청 내역 리스트 화면</h2>
 	<c:if test="${breakList.size() != 0}">
 		<table border="1">

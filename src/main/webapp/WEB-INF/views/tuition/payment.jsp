@@ -8,6 +8,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/break/application">휴학 신청</a>
+	<a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a>
+	<a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a>
+	<a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a>
 	<h1>등록금 납부 페이지</h1>
 	<div>
 		<h3>등록금 고지서</h3>
@@ -16,33 +20,33 @@
 			<thead>
 				<tr>
 					<th>단 과 대</th>
-					<td>공과 대학</td>
+					<td>${tuition.collgeName}</td>
 					<th>학 과</th>
-					<td>컴퓨터 공학과</td>
+					<td>${tuition.deptName}</td>
 				</tr>
 				<tr>
 					<th>학번</th>
-					<td>2023000003</td>
+					<td>${tuition.studentId}</td>
 					<th>성명</th>
-					<td>김지우</td>
+					<td>${tuition.studentName}</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<th colspan="2">장 학 유 형</th>
-					<th colspan="2">2 유 형</th>
+					<th colspan="2">${tuition.scholarType}</th>
 				</tr>
 				<tr>
 					<th colspan="2">등 록 금</th>
-					<th colspan="2">4,868,500</th>
+					<th colspan="2"><fmt:formatNumber value="${tuition.collAmount}" pattern="#,###" /></th>
 				</tr>
 				<tr>
 					<th colspan="2">장 학 금</th>
-					<th colspan="2">2,547,400</th>
+					<th colspan="2"><fmt:formatNumber value="${tuition.scholarAmount}" pattern="#,###" /></th>
 				</tr>
 				<tr>
 					<th colspan="2">납 부 금</th>
-					<th colspan="2">2,321,100</th>
+					<th colspan="2"><fmt:formatNumber value="${tuition.totalAmount}" pattern="#,###" /></th>
 				</tr>
 				<!-- 고정된 값 ?? -->
 				<tr>
@@ -56,10 +60,17 @@
 				</tr>
 			</tbody>
 		</table>
-		<%-- <c:choose>
-			<!-- status 파악후 제출시 <p>태그로 알림 or <butten> 으로 제출 -->
-			<c:when test=""></c:when>
-		</c:choose> --%>
+		<c:choose>
+			<c:when test="${tuition.status == 0}">
+				<form action="submitTuituion">
+					<button type="submit">납부하기</button>
+				</form>
+			</c:when>
+			<c:otherwise>
+				<p>상태가 0이거나, 학비 정보가 없습니다.</p>
+			</c:otherwise>
+		</c:choose>
+
 	</div>
 </body>
 </html>

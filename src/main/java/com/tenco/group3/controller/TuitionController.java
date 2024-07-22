@@ -46,7 +46,10 @@ public class TuitionController extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void showListTuition(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		Tuition tuition = tuitionRepository.getSummaryTuitionByStudentId(2023000003);
+		
+//		System.out.println(tuition.toString());
+		request.setAttribute("tuition", tuition);
 		request.getRequestDispatcher("/WEB-INF/views/tuition/check.jsp").forward(request, response);
 	}
 
@@ -62,7 +65,7 @@ public class TuitionController extends HttpServlet {
 			throws ServletException, IOException {
 		Tuition tuition = tuitionRepository.getTuitionByStudentId(2023000003);
 
-//		System.out.println(tuituon.toString());
+//		System.out.println(tuition.toString());
 		request.setAttribute("tuition", tuition);
 		request.getRequestDispatcher("/WEB-INF/views/tuition/payment.jsp").forward(request, response);
 	}

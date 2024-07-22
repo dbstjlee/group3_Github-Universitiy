@@ -114,8 +114,6 @@ public class BreakController extends HttpServlet {
 		case "/application":
 			handlerApplication(request, response, session);
 			break;
-		case "/list":
-			break;
 		default:
 			break;
 		}

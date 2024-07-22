@@ -16,8 +16,11 @@ public class Tuition {
 	private String studentName;
 	private String deptName;
 	private String collgeName;
-	private int collTution;
-	private String scholarType; // 변경된 부분
-	private int scholar;
-	private int totalTuition;
+	private int collAmount;
+	private int scholarType;
+	private int scholarAmount;
+	private int totalAmount;
+	private int status;
+	private int year;
+	private int semester;
 }
