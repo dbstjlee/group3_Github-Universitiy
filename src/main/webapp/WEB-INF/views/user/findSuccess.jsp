@@ -13,21 +13,21 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
-.header-top {
+.header--top {
 	width: 100%;
 	height: 40px;
 	background-color: #031734;
 }
 
-.section-header {
+.section--header {
 	text-align: center;
 }
 
-.search-table {
+.search--table {
 	width: 400px;
 }
 
-.search-table td {
+.search--table td {
 	padding: 4px;
 	text-align: left;
 }
@@ -40,38 +40,51 @@
 	width: 80%;
 }
 
-.submit-button {
-	margin-top: 20px;
-	margin-left: 200px;
-	padding: 10px 15px;
-	border: none;
-	border-radius: 10px;
-	color: white;
-	background-color: #142845;
-	cursor: pointer; 
+.submit--button {
+	margin: 20px 50px;
+	text-align: 200px;
+}
+.section--content {
+	margin: 20px 50px;
+	text-align: center;
 }
 </style>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/user/findSuccess" method="post">
+	<form action="${pageContext.request.contextPath}/user/findSuccess" method="get">
 		<header>
-			<div class="header-top"></div>
+			<div class="header--top"></div>
 		</header>
 		<section>
-			<div class="section-header">
+			<div class="section--header">
 				<h2>아이디 찾기</h2>
 				<br>
 			</div>
 			
 			<c:choose>
 				<c:when test="${student}">
-					<div class="section-content">
+					<div class="section--content">
 					${student.name}의 아이디는
 					<br>
 					<span style="font-weight: bold;">${student.id}</span>입니다.
 					</div>
 				</c:when>
 				
+				<c:when test="${professor}">
+					<div class="section--content">
+					${professor.name}의 아이디는
+					<br>
+					<span style="font-weight: bold;">${professor.id}</span>입니다.
+					</div>
+				</c:when>
+				
+				<c:otherwise>
+					<div class="section--content">
+					${staff.name}의 아이디는
+					<br>
+					<span style="font-weight: bold;">${staff.id}</span>입니다.
+					</div>
+				</c:otherwise>
 			</c:choose>
 		</section>
 	</form>
