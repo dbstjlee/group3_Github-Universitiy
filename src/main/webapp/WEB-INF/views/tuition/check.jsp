@@ -7,12 +7,15 @@
 <meta charset="UTF-8">
 <title>등록금 내역 조회</title>
 </head>
-<body>	
-	<a href="${pageContext.request.contextPath}/break/application">휴학 신청</a>
-	<a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a>
-	<a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a>
-	<a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a>
+<body>
+	<ul>
+		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
+		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
+	</ul>
 	<h1>등록금 내역 조회</h1>
+	<hr>
 	<table border="1">
 		<tr>
 			<th>등록연도</th>

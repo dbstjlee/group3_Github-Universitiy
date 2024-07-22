@@ -8,11 +8,14 @@
 <title>break 화면</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/break/application">휴학 신청</a>
-	<a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a>
-	<a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a>
-	<a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a>
-	<h2>휴학 신청 내역 리스트 화면</h2>
+	<ul>
+		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
+		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
+	</ul>
+	<h1>휴학 신청 내역</h1>
+	<hr>
 	<c:if test="${breakList.size() != 0}">
 		<table border="1">
 			<tr>
@@ -32,7 +35,7 @@
 					<td>${breakList.studentId}</td>
 					<td>${breakList.studentName}</td>
 					<td>${breakList.studentGrade}</td>
-					<td>${breakList.fromYear}년도${breakList.fromSemester}학기 부터 ${breakList.toYear}년도 ${breakList.toSemester} 까지</td>
+					<td>${breakList.fromYear}년도${breakList.fromSemester}학기부터${breakList.toYear}년도${breakList.toSemester}까지</td>
 					<c:choose>
 						<c:when test="${type == nomalBreak}">
 							<td>일반 휴학</td>
@@ -52,7 +55,10 @@
 					</c:choose>
 					<td>${breakList.appDate}</td>
 					<td>${breakList.status}</td>
-					<td><a href="${pageContext.request.contextPath}/break/detail?id=${breakList.id}">조회</a></td>
+					<td><form action="${pageContext.request.contextPath}/break/detail" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=600,height=400,scrollbars=yes');">
+							<input type="hidden" name="id" value="${breakList.id}">
+							<button type="submit">조회</button>
+						</form></td>
 				</tr>
 			</c:forEach>
 		</table>

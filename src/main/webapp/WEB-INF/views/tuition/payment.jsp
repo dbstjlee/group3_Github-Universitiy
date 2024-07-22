@@ -8,11 +8,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/break/application">휴학 신청</a>
-	<a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a>
-	<a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a>
-	<a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a>
+	<ul>
+		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
+		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
+		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
+	</ul>
 	<h1>등록금 납부 페이지</h1>
+	<hr>
 	<div>
 		<h3>등록금 고지서</h3>
 		<p>2023년도 1학기</p>
@@ -62,15 +65,14 @@
 		</table>
 		<c:choose>
 			<c:when test="${tuition.status == 0}">
-				<form action="submitTuituion">
+				<form action="${pageContext.request.contextPath}/tuition/payment">
 					<button type="submit">납부하기</button>
 				</form>
 			</c:when>
 			<c:otherwise>
-				<p>상태가 0이거나, 학비 정보가 없습니다.</p>
+				<p>이미 납부 하셨습니다.</p>
 			</c:otherwise>
 		</c:choose>
-
 	</div>
 </body>
 </html>

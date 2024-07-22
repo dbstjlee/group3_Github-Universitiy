@@ -15,13 +15,13 @@ public class Evaluation {
 	private int evaluationId;
 	private int studentId;
 	private int subjectId;
-	private String answer1; 
-	private String answer2; 
-	private String answer3; 
-	private String answer4; 
-	private String answer5; 
-	private String answer6; 
-	private String answer7; 
+	private int answer1; 
+	private int answer2; 
+	private int answer3; 
+	private int answer4; 
+	private int answer5; 
+	private int answer6; 
+	private int answer7; 
 	private String improvments; 
 	 
 }
