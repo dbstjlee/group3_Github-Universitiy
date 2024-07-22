@@ -12,21 +12,21 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
-.header-top {
+.header--top {
 	width: 100%;
 	height: 40px;
 	background-color: #031734;
 }
 
-.section-header {
+.section--header {
 	text-align: center;
 }
 
-.search-table {
+.search--table {
 	width: 400px;
 }
 
-.search-table td {
+.search--table td {
 	padding: 4px;
 	text-align: left;
 }
@@ -39,7 +39,7 @@
 	width: 80%;
 }
 
-.submit-button {
+.submit--button {
 	margin-top: 20px;
 	margin-left: 200px;
 	padding: 10px 15px;
@@ -53,15 +53,15 @@
 </head>
 <body>
 	<header>
-		<div class="header-top"></div>
+		<div class="header--top"></div>
 	</header>
 	<section>
-		<div class="section-header">
+		<div class="section--header">
 			<h2>아이디 찾기</h2>
 			<br>
 		</div>
 		<form action="${pageContext.request.contextPath}/user/findId" method="post">
-		<table class="search-table">
+		<table class="search--table">
 			<colgroup>
 				<col class="col1">
 				<col class="col2">
@@ -97,8 +97,8 @@
 				</tr>
 			</tbody>
 		</table>
-			<div class="button-container">
-				<button type="submit" class="submit-button">아이디 찾기</button>
+			<div class="button--container">
+				<button type="submit" class="submit--button">아이디 찾기</button>
 			</div>
 		
 		</form>
