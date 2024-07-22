@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.List;
 
 import com.tenco.group3.model.Professor;
+import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
@@ -215,8 +216,9 @@ public class ManagementController extends HttpServlet {
 				.build();
 			if (managementRepository.createStudent(student)) {
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('등록 성공'); </script>");
-				response.sendRedirect(request.getContextPath() + "/management/student");
+				response.getWriter().println("<script> alert('등록 성공'); "
+						+ "window.location.href = '"
+						+ request.getContextPath() + "/management/student';  </script>");
 			} else {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
@@ -227,14 +229,60 @@ public class ManagementController extends HttpServlet {
 		}
 	}
 
-	private void handleCreateProfessor(HttpServletRequest request, HttpServletResponse response) {
+	private void handleCreateProfessor(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		System.out.println("들어옴");
 		// TODO 유효성 검사
-
+		try {
+			Professor professor = Professor.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(request.getParameter("tel"))
+				.email(request.getParameter("email"))
+				.deptId(Integer.parseInt(request.getParameter("deptId")))
+				.build();
+			if (managementRepository.createProfessor(professor)) {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('등록 성공'); </script>");
+				response.getWriter().println("<script> alert('등록 성공'); "
+						+ "window.location.href = '"
+						+ request.getContextPath() + "/management/professor';  </script>");
+			} else {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+		}
 	}
 
-	private void handleCreateStaff(HttpServletRequest request, HttpServletResponse response) {
+	private void handleCreateStaff(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO 유효성 검사
-
+		try {
+			Staff staff = Staff.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(request.getParameter("tel"))
+				.email(request.getParameter("email"))
+				.build();
+			if (managementRepository.createStaff(staff)) {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('등록 성공'); "
+						+ "window.location.href = '"
+						+ request.getContextPath() + "/management/staff';  </script>");
+			} else {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			}
+		} catch (Exception e) {
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+		}
 	}
 
 }

@@ -101,7 +101,7 @@ main {
 		<main>
 			<h1>교수 등록</h1>
 			<div class="split--div"></div>
-			<form action="/management/student" method="post">
+			<form action="/management/professor" method="post">
 				<table class="table--container">
 					<tr>
 						<td>

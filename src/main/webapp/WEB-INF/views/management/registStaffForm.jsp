@@ -101,7 +101,7 @@ main {
 		<main>
 			<h1>직원 등록</h1>
 			<div class="split--div"></div>
-			<form action="/management/student" method="post">
+			<form action="/management/staff" method="post">
 				<table class="table--container">
 					<tr>
 						<td>
