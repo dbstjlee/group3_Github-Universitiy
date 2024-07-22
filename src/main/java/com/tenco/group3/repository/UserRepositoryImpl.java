@@ -11,7 +11,7 @@ import com.tenco.group3.model.User;
 import com.tenco.group3.repository.interfaces.UserRepository;
 import com.tenco.group3.util.DBUtil;
 
-public class userRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository{
 
 	// ID로 로그인
 	private static final String SELECT_USER_BY_ID = " SELECT u.*, "
