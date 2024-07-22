@@ -150,7 +150,7 @@ main {
 							<label for="email">이메일</label>
 						</td>
 						<td>
-							<input type="text" name="email" id="email" class="input--box">
+							<input type="email" name="email" id="email" class="input--box">
 						</td>
 					</tr>
 					<tr>
@@ -166,7 +166,7 @@ main {
 							<label for="entranceDate">입학일</label>
 						</td>
 						<td>
-							<input type="text" name="entranceDate" id="entranceDate" class="input--box">
+							<input type="date" name="entranceDate" id="entranceDate" class="input--box">
 						</td>
 					</tr>
 				</table>

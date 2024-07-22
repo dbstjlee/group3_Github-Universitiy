@@ -18,11 +18,11 @@ public interface ManagementRepository {
 	int getTotalProfessorCount();
 	
 	// 학생 등록
-	int createStudent(Student student);
+	boolean createStudent(Student student);
 	
 	// 교수 등록
-	int createProfessor(Professor professor);
+	boolean createProfessor(Professor professor);
 	
 	// 직원 등록
-	int createStaff(Staff staff);
+	boolean createStaff(Staff staff);
 }

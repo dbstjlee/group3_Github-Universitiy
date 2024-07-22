@@ -1,6 +1,7 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 import com.tenco.group3.model.Professor;
@@ -131,34 +132,38 @@ public class ManagementController extends HttpServlet {
 
 		request.getRequestDispatcher("/WEB-INF/views/management/professorList.jsp").forward(request, response);
 	}
+
 	/**
 	 * 학생 등록 페이지 호출
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showRegistStudentForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/views/management/registStudentForm.jsp").forward(request, response);
 	}
-	
+
 	/**
 	 * 교수 등록 페이지 호출
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showRegistProfessorForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request, response);
 	}
-	
+
 	/**
 	 * 직원 등록 페이지 호출
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showRegistStaffForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
@@ -175,14 +180,61 @@ public class ManagementController extends HttpServlet {
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 		switch (action) {
 		case "/student":
+			handleCreateStudent(request, response);
 			break;
 		case "/professor":
+			handleCreateProfessor(request, response);
 			break;
 		case "/staff":
+			handleCreateStaff(request, response);
 			break;
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * 학사관리 학생 등록
+	 * 학생 테이블, 유저 테이블 동시 등록
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleCreateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// TODO 유효성 검사
+		try {
+			Student student = Student.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(request.getParameter("tel"))
+				.email(request.getParameter("email"))
+				.deptId(Integer.parseInt(request.getParameter("deptId")))
+				.entranceDate(Date.valueOf(request.getParameter("entranceDate")))
+				.build();
+			if (managementRepository.createStudent(student)) {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('등록 성공'); </script>");
+				response.sendRedirect(request.getContextPath() + "/management/student");
+			} else {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			}
+		} catch (Exception e) {
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+		}
+	}
+
+	private void handleCreateProfessor(HttpServletRequest request, HttpServletResponse response) {
+		// TODO 유효성 검사
+
+	}
+
+	private void handleCreateStaff(HttpServletRequest request, HttpServletResponse response) {
+		// TODO 유효성 검사
+
 	}
 
 }

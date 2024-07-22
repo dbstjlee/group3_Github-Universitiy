@@ -18,6 +18,16 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	private final String SELECT_ALL_PROFESSORS = " SELECT * FROM professor_tb limit ? offset ? ";
 	private final String COUNT_ALL_STUDENTS = " SELECT COUNT(*) AS count FROM student_tb ";
 	private final String COUNT_ALL_PROFESSORS = " SELECT COUNT(*) AS count FROM professor_tb ";
+	private final String INSERT_STUDENT_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id, entrance_date) "
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+	private final String SELECT_STUDENT_ID_LAST = " SELECT id FROM student_tb ORDER BY id DESC LIMIT 1 ";
+	private final String INSERT_PROFESSOR_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id) "
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+	private final String INSERT_STAFF_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email) "
+			+ " VALUES (?, ?, ?, ?, ?, ?) ";
+	private final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
+	// TODO 나중에 암호화해서 자동으로 받을예정
+	private final String SAMPLE_PASSWORD = "123123";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
@@ -90,7 +100,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		try (Connection conn = DBUtil.getConnection();//
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_STUDENTS)) {
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			if (rs.next()) {
 				totalCounts = rs.getInt("count");
 			}
@@ -108,7 +118,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		try (Connection conn = DBUtil.getConnection();//
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_PROFESSORS)) {
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			if (rs.next()) {
 				totalCounts = rs.getInt("count");
 			}
@@ -121,21 +131,67 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	}
 
 	@Override
-	public int createStudent(Student student) {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean createStudent(Student student) {
+		boolean success = false;
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			// 학생 테이블에 새로운 학생 등록
+			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_STUDENT_SQL)) {
+				pstmt.setString(1, student.getName());
+				pstmt.setDate(2, student.getBirthDate());
+				pstmt.setString(3, student.getGender());
+				pstmt.setString(4, student.getAddress());
+				pstmt.setString(5, student.getTel());
+				pstmt.setString(6, student.getEmail());
+				pstmt.setInt(7, student.getDeptId());
+				pstmt.setDate(8, student.getEntranceDate());
+				pstmt.executeUpdate();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+				return success;
+			}
+			// 새로운 학생의 학번 받아오기
+			int id = 0;
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_ID_LAST)) {
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					id = rs.getInt("id");
+				}
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+				return success;
+			}
+			// 유저 테이블에 새로운 학생을 유저로 등록
+			String query = INSERT_USER_SQL + "'student') ";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				pstmt.setInt(1, id);
+				pstmt.setString(2, SAMPLE_PASSWORD);
+				pstmt.executeUpdate();
+				conn.commit();
+				success = true;
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+				return success;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	@Override
-	public int createProfessor(Professor professor) {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean createProfessor(Professor professor) {
+		boolean success = false;
+		return success;
 	}
 
 	@Override
-	public int createStaff(Staff staff) {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean createStaff(Staff staff) {
+		boolean success = false;
+		return success;
 	}
 
 }
