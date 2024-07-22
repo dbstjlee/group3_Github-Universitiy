@@ -63,9 +63,11 @@
             <option value="120">무역학과</option>
         </select>
 		<label for="subYear">강의명</label>
-        <input class="subYear" name="subYear" id= "subYear" type="number" value="2024">
+        <input type="text" name="name" list="subName">
+        <button type="submit">
+            조회
+        </button>
 	</div>
-
     <c:choose>
     <c:when test="${subjectList.isEmpty() == false}">
     <div><h3>강의 목록</h3><div><h4>[총]</h4></div>
