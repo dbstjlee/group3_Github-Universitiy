@@ -2,9 +2,11 @@ package com.tenco.group3.repository.interfaces;
 
 import com.tenco.group3.model.College;
 
-public interface CollegeRepository {
+import java.util.List;
 
-	int addCollege(College college);
-	int deleteById(int id);
+public interface CollegeRepository {
 	
+	List<College> getAllCollege(); // 단과대학 전체 조회
+	int addCollege(College college); // 단과대학 추가(등록)
+	int deleteById(int id); // 단과대학 삭제
 }
