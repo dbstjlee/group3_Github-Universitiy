@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
-import com.tenco.group3.repository.userRepositoryImpl;
+import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
 
 import jakarta.servlet.ServletException;
@@ -27,7 +27,7 @@ public class Usercontroller extends HttpServlet {
     
     @Override
     public void init() throws ServletException {
-    	userRepository = new userRepositoryImpl();
+    	userRepository = new UserRepositoryImpl();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
