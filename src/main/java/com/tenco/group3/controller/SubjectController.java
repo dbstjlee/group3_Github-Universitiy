@@ -31,12 +31,25 @@ public class SubjectController extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if(session == null || session.getAttribute("principal") == null) {
 			
+			switch(action) {
+			
+			case "/allsubject ":
+				showAllSubject(request, response);
+				break;
+			
+				
+				
+			}
+			
 			
 		}
 	
 	
 	}
-
+	private void showAllSubject(HttpServletRequest request, HttpServletResponse response) throws SecurityException,IOException {
+		
+		
+	}
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
