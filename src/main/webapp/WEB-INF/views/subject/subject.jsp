@@ -6,38 +6,81 @@
 <meta charset="UTF-8">
 <title>수업-전체 강의 조회</title>
 <style>
+    main{
+        margin-left:150px ;
+        min-width: 1150px;
+        padding: 20px;
+        margin-bottom: 50px;
+    }
     body{
-        display: inline;
+        align-items: flex-start ;
         
-    
+    }
+
+    .sub_choice{
+        margin-top: 10px;
+        padding-top: 15px;
+        padding-left: 10px;
+        background-color: #f0f0f0;
+        height: 40px;
+        
     }
     .top---title{
         border-bottom: 1px solid gray;
+       
     }
-	.sub_choice{
-		background-color: #F0F0F0;
-        padding:13px 13px 7px 10px ;
-	}
-    .subYear{
+	
+    input,select{
         margin: 0px 10px 0px 0px;
         padding: 0px 0px 0px 3px;
         margin-right: 10px;
         border-radius: 5px;
         border-width: 1px;
+        height: 20px;
     }
     .page--list{
 
     }
+    .side---title{
+        border-bottom: 3px solid #33688F;
+
+    }
+    th{
+        background-color:#f0f0f0 ;
+    }
+ 
 </style>
 </head>
 <body>
 
+    <div class="sub--menu--mid">
+        <div class ="side---title"><h1 style="color: #133c63;">수업</h1></div>
+        <table class="sub--menu--table" border ="1">
+            <tr>
+                <td><a href="/subject/list/1" class="selected--menu">전체 강의 조회</a></td>
+            </tr>
+            <c:if test="${principal.userRole.equals(\"professor\") }">
+                <tr>
+                    <td><a href="/professor/subject">내 강의 조회</a></td>
+                </tr>
+            </c:if>
+            <c:if test="${principal.userRole.equals(\"professor\") }">
+                <tr>
+                    <td><a href="/evaluation/read"> 내 강의 평가</a></td>
+                </tr>
+            </c:if>
+        </table>
+    </div>
+    <main >
     <div class="top---title"><h1>전체 강의조회</h1></div>
 	<div class=" sub_choice">
 		<label for="subYear">연도</label>
         <input class="subYear" name="subYear" id= "subYear" type="number" value="2024">
 		<label for="subYear">학기</label>
-        <input class="subYear" name="subYear" id= "subYear" type="number" value="2024">
+        <select name="semester" id="subSemester">
+            <option value="1">1학기</option>
+            <option value="2">2학기</option>
+        </select>
 		<label for="deptId">개설학과</label>
         <select  name="deptId" id= "deptId">
             <option value="-1">전체</option>
@@ -132,5 +175,6 @@
         <p class="no--list--p">검색 결과가 없습니다.</p>
     </c:otherwise>
 </c:choose>
+</main>
 </body>
 </html>
