@@ -47,7 +47,15 @@ public class ManagementController extends HttpServlet {
 		case "/professorList":
 			showProfessorList(request, response);
 			break;
-			
+		case "/student":
+			showRegistStudentForm(request, response);
+			break;
+		case "/professor":
+			showRegistProfessorForm(request, response);
+			break;
+		case "/staff":
+			showRegistStaffForm(request, response);
+			break;
 		default:
 			break;
 		}
@@ -65,7 +73,7 @@ public class ManagementController extends HttpServlet {
 		// 페이징 처리를 위한 변수 선언
 		int page = 1; // 기본 페이지 번호
 		int pageSize = 20; // 한 페이지당 보여질 게시글 수
-		
+
 		System.out.println("테스트용"); // TODO 삭제 예정
 		try {
 			String pageStr = request.getParameter("page");
@@ -123,13 +131,57 @@ public class ManagementController extends HttpServlet {
 
 		request.getRequestDispatcher("/WEB-INF/views/management/professorList.jsp").forward(request, response);
 	}
+	/**
+	 * 학생 등록 페이지 호출
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showRegistStudentForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/views/management/registStudentForm.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 교수 등록 페이지 호출
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showRegistProfessorForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 직원 등록 페이지 호출
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showRegistStaffForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("principal") == null) {
-			response.sendRedirect(request.getContextPath() + "/main/login");
-			return;
+		// TODO 현재 로그인 기능 없어서 생략함
+//		HttpSession session = request.getSession(false);
+//		if (session == null || session.getAttribute("principal") == null) {
+//			response.sendRedirect(request.getContextPath() + "/main/login");
+//			return;
+//		}
+		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
+		switch (action) {
+		case "/student":
+			break;
+		case "/professor":
+			break;
+		case "/staff":
+			break;
+		default:
+			break;
 		}
 	}
 
