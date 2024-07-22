@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>수업-전체 강의 조회</title>
 <style>
+	
     main{
         margin-left:150px ;
         min-width: 1150px;
@@ -48,6 +49,7 @@
     th{
         background-color:#f0f0f0 ;
     }
+	
  
 </style>
 </head>
