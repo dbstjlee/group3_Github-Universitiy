@@ -5,8 +5,15 @@
 <head>
 <meta charset="UTF-8">
 <title>수업-전체 강의 조회</title>
-<title>수업-전체 강의 조회</title>
 <style>
+    body{
+        display: inline;
+        
+    
+    }
+    .top---title{
+        border-bottom: 1px solid gray;
+    }
 	.sub_choice{
 		background-color: #F0F0F0;
         padding:13px 13px 7px 10px ;
@@ -18,9 +25,14 @@
         border-radius: 5px;
         border-width: 1px;
     }
+    .page--list{
+
+    }
 </style>
 </head>
 <body>
+
+    <div class="top---title"><h1>전체 강의조회</h1></div>
 	<div class=" sub_choice">
 		<label for="subYear">연도</label>
         <input class="subYear" name="subYear" id= "subYear" type="number" value="2024">
@@ -54,7 +66,9 @@
         <input class="subYear" name="subYear" id= "subYear" type="number" value="2024">
 	</div>
 
-    <div><h1>강의 목록</h1><div><h3>[총]</h3></div>
+    <c:choose>
+    <c:when test="${subjectList.isEmpty() == false}">
+    <div><h3>강의 목록</h3><div><h4>[총]</h4></div>
     </div>
     <table border="1" class="sub--list--table">
         <thead>
@@ -72,6 +86,49 @@
                 <th>강의계획서</th>
             </tr>
         </thead>
+        <tbody>
+            <c:forEach var="subject" items="${subjectList}">
+                <tr>
+                    <td>${subject.subYear}-${subject.semester}학기</td>
+                    <td>${subject.collName}</td>
+                    <td>${subject.deptName}</td>
+                    <td>${subject.id}</td>
+                    <td>${subject.type}</td>
+                    <td class="sub--list--name">${subject.name}</td>
+                    <td>${subject.professorName}</td>
+                    <td>${subject.grades}</td>
+                    <td>${subject.numOfStudent}</td>
+                    <td>${subject.capacity}</td>
+                    <td>
+                        <ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
+                            <li style="height: 24px;"><a href="/subject/syllabus/${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
+                            <li style="height: 24px;"><a href="/subject/syllabus/${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span class="material-symbols-outlined">content_paste_search</span></a>
+                        </ul>
+                    </td>
+                </tr>
+            </c:forEach>
 
+            
+        </tbody>
+        </table>
+        <c:if test="${pageCount != null}">
+					<ul class="page--list">
+						<c:forEach var="i" begin="1" end="${pageCount}" step="1">
+							<c:choose>
+								<c:when test="${i == page}">
+									<li><a href="/subject/list/${i}" style="font-weight: 700; color: #007bff">${i}</a>									
+								</c:when>
+								<c:otherwise>
+									<li><a href="/subject/list/${i}">${i}</a>									
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</ul>
+				</c:if>
+    </c:when>
+    <c:otherwise>
+        <p class="no--list--p">검색 결과가 없습니다.</p>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>
