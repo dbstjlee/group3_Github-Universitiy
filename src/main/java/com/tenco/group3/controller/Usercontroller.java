@@ -27,14 +27,6 @@ public class Usercontroller extends HttpServlet {
     	
     }
     
-    @Override
-    public void init() throws ServletException {
-    	userRepository = new UserRepositoryImpl();
-    }
-
-
-	private UserRepository userRepository;
-
 	@Override
 	public void init() throws ServletException {
 		userRepository = new UserRepositoryImpl();
