@@ -5,8 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subject.css">
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
 </head>
-<link rel="stylesheet" href="/css/subject.css">
 
 <style>
 .sub--filter form div {

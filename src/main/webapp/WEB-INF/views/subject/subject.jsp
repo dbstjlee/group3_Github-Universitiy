@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subject.css">
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <title>수업-전체 강의 조회</title>
 
