@@ -13,7 +13,7 @@ import com.tenco.group3.util.DBUtil;
 public class SubjectRepositoryImpl implements SubjectRepository {
 	private final String SELECT_ALL_SUBJECT = "select * from subject_tb";
 	private final String GET_SUBJECT_BY_SEMESTER = "SELECT * FROM subject_tb WHERE  PROFESSOR_ID= ? AND AND sub_year = ? AND  semester = ?";
-	private final String SELECT_SUBJECT_BY_ID = "SELECT * FROM subject_tb WHERE id =AND AND sub_year = ? AND  semester = ?";
+	private final String SELECT_SUBJECT_BY_ID = "SELECT * FROM subject_tb WHERE id =AND AND sub_year = ? AND  semester = ? AND name = ? ";
 	private final String SELECT_ID_BY_LESS_NUM_STUDENT="SELECT id FROM subject_tb WHERE capacity >= num_of_student ";
 	@Override
 	public List<Subject> getSubjectAll() {
@@ -82,13 +82,14 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	}
 
 	@Override
-	public List<Subject> getSubjectById(int id, int year, int semester) {
+	public List<Subject> getSubjectById(int id, int year, int semester, String name) {
 		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_SUBJECT_BY_ID)) {
 			pstmt.setInt(1, id);
 			pstmt.setInt(2, year);
 			pstmt.setInt(3, semester);
+			pstmt.setString(4, name);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next()) {

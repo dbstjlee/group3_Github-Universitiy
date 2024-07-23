@@ -14,7 +14,7 @@ public interface SubjectRepository {
 
 	List<Subject> getStudentBySubject(int id, String type);
 
-	List<Subject> getSubjectById(int id, int year, int semester);
+	List<Subject> getSubjectById(int id, int year, int semester , String name);
 	
 	List<Subject> selectIdByLessNumOfStudent();
 }
