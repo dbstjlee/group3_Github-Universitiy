@@ -37,7 +37,7 @@ public class ManagementController extends HttpServlet {
 		// TODO 현재 로그인 기능 없어서 생략함
 //		HttpSession session = request.getSession(false);
 //		if (session == null || session.getAttribute("principal") == null) {
-//			response.sendRedirect(request.getContextPath() + "/main/login");
+//			response.sendRedirect(request.getContextPath() + "/user/login");
 //			return;
 //		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
@@ -50,18 +50,28 @@ public class ManagementController extends HttpServlet {
 			showProfessorList(request, response);
 			break;
 		case "/student":
-			showRegistStudentForm(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/management/registStudentForm.jsp").forward(request, response);
 			break;
 		case "/professor":
-			showRegistProfessorForm(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request, response);
 			break;
 		case "/staff":
-			showRegistStaffForm(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
+			break;
+		case "/tuition":
+			request.getRequestDispatcher("/WEB-INF/views/management/tuitionForm.jsp").forward(request, response);
+			break;
+		case "/bill":
+			handleCreateTuition(request, response);
 			break;
 		default:
 			break;
 		}
 	}
+
+	
+
+	
 
 	/**
 	 * 학생 목록 조회 기능
@@ -133,41 +143,16 @@ public class ManagementController extends HttpServlet {
 
 		request.getRequestDispatcher("/WEB-INF/views/management/professorList.jsp").forward(request, response);
 	}
-
+	
 	/**
-	 * 학생 등록 페이지 호출
-	 * 
+	 * 등록금 고지서 발송
 	 * @param request
 	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
 	 */
-	private void showRegistStudentForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/management/registStudentForm.jsp").forward(request, response);
-	}
-
-	/**
-	 * 교수 등록 페이지 호출
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	private void showRegistProfessorForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request, response);
-	}
-
-	/**
-	 * 직원 등록 페이지 호출
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	private void showRegistStaffForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
+	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) {
+		// TODO 등록금 고지 대상 확인
+		// 1. 학적이 재학인 경우
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -175,7 +160,7 @@ public class ManagementController extends HttpServlet {
 		// TODO 현재 로그인 기능 없어서 생략함
 //		HttpSession session = request.getSession(false);
 //		if (session == null || session.getAttribute("principal") == null) {
-//			response.sendRedirect(request.getContextPath() + "/main/login");
+//			response.sendRedirect(request.getContextPath() + "/user/login");
 //			return;
 //		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
@@ -193,10 +178,10 @@ public class ManagementController extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
-	 * 학사관리 학생 등록
-	 * 학생 테이블, 유저 테이블 동시 등록
+	 * 학사관리 학생 등록 학생 테이블, 유저 테이블 동시 등록
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -216,9 +201,9 @@ public class ManagementController extends HttpServlet {
 				.build();
 			if (managementRepository.createStudent(student)) {
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('등록 성공'); "
-						+ "window.location.href = '"
-						+ request.getContextPath() + "/management/student';  </script>");
+				response.getWriter()
+					.println(
+							"<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/student';  </script>");
 			} else {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
@@ -245,9 +230,9 @@ public class ManagementController extends HttpServlet {
 			if (managementRepository.createProfessor(professor)) {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().println("<script> alert('등록 성공'); </script>");
-				response.getWriter().println("<script> alert('등록 성공'); "
-						+ "window.location.href = '"
-						+ request.getContextPath() + "/management/professor';  </script>");
+				response.getWriter()
+					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath()
+							+ "/management/professor';  </script>");
 			} else {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
@@ -272,9 +257,8 @@ public class ManagementController extends HttpServlet {
 				.build();
 			if (managementRepository.createStaff(staff)) {
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('등록 성공'); "
-						+ "window.location.href = '"
-						+ request.getContextPath() + "/management/staff';  </script>");
+				response.getWriter()
+					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/staff';  </script>");
 			} else {
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");

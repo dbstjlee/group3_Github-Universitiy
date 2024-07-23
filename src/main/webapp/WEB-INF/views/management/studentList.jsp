@@ -1,83 +1,70 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>임시 타이틀</title>
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Noto Sans KR', sans-serif;
+.sub--list--table th {
+	padding: 3px 9px;
+	text-align: center;
 }
 
-.page--list {
-	display: flex;
-	justify-content: center;
+.sub--list--table td {
+	padding: 1px 9px;
+	text-align: center;
 }
 
-ul {
-	list-style-type: disc;
-	margin-block-start: 1em;
-	margin-block-end: 1em;
-	margin-inline-start: 0px;
-	margin-inline-end: 0px;
-	padding-inline-start: 40px;
-	unicode-bidi: isolate;
-	margin-top: 0;
-	margin-bottom: 1rem;
+.sub--list--name {
+	text-align: left !important;
+	padding-right: 20px !important;
 }
 
-li {
-	list-style: none;
-}
-
-a {
-	text-decoration: none;
-	color: black;
-	font-size: 20px;
-}
-
-.selected--page {
-	color: blue;
-}
-
-.selected--menu {
-	color: blue;
-}
-
-main {
-	min-width: 1150px;
-	padding: 20px;
+.sub--filter {
 	margin-bottom: 50px;
 }
 
 .sub--filter form {
 	display: flex;
 }
-@font-face {
-  font-family: 'Material Symbols Outlined';
-  font-style: normal;
-  font-weight: 100 700;
-  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v199/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+
+.sub--filter form div {
+	background-color: buttonshadow;
+	padding: 13px 13px 7px 10px;
 }
-.material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-	font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+
+.sub--filter input[type="number"] {
+	width: 57px;
+	padding-left: 3px;
+}
+
+.sub--filter select[name="deptId"] {
+	width: 173px;
+}
+
+.sub--filter label {
+	margin-right: 5px;
+}
+
+.sub--filter input, .sub--filter select {
+	margin-right: 10px;
+	border-radius: 5px;
+	border-width: 1px;
+}
+
+.sub--filter button {
+	background-color: gray;
+	padding: 2px 6px;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	height: 28px;
+}
+
+.sub--plan--view li a:hover {
+	color: black;
+}
+
+.paging--container {
+	display: flex;
+	justify-content: center;
 }
 </style>
 </head>
