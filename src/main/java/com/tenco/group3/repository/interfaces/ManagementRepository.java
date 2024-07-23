@@ -25,4 +25,11 @@ public interface ManagementRepository {
 	
 	// 직원 등록
 	boolean createStaff(Staff staff);
+	
+	// 학사일정 스케줄 상태 변경
+	void updateSchedule(String columName, boolean state);
+	
+	// 학사일정 스케줄 상태 조회
+	int getScheduleStat(String columName);
+	
 }

@@ -30,6 +30,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	private final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
 	// TODO 나중에 암호화해서 자동으로 받을예정
 	private final String SAMPLE_PASSWORD = "123123";
+	private final String UPDATE_SCHEDULE = " UPDATE schedule_state_tb SET ";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
@@ -110,7 +111,6 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(totalCounts); // TODO 삭제
 		return totalCounts;
 	}
 
@@ -128,7 +128,6 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(totalCounts); // TODO 삭제
 		return totalCounts;
 	}
 
@@ -283,6 +282,42 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			e.printStackTrace();
 		}
 		return success;
+	}
+	
+	@Override
+	public void updateSchedule(String columName, boolean state) {
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			String query = UPDATE_SCHEDULE + columName + " = ? ";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				pstmt.setBoolean(1, state);
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public int getScheduleStat(String columName) {
+		int state = -1;
+		String query = " SELECT " + columName + " FROM schedule_state_tb LIMIT 1";
+		try (Connection conn = DBUtil.getConnection();//
+				PreparedStatement pstmt = conn.prepareStatement(query)) {
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				state = rs.getInt(columName);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return state;
 	}
 
 }

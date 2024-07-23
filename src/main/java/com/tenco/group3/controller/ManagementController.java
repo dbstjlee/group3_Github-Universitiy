@@ -37,7 +37,7 @@ public class ManagementController extends HttpServlet {
 		// TODO 현재 로그인 기능 없어서 생략함
 //		HttpSession session = request.getSession(false);
 //		if (session == null || session.getAttribute("principal") == null) {
-//			response.sendRedirect(request.getContextPath() + "/user/login");
+//			response.sendRedirect(request.getContextPath() + "/user/logIn");
 //			return;
 //		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
@@ -64,14 +64,20 @@ public class ManagementController extends HttpServlet {
 		case "/bill":
 			handleCreateTuition(request, response);
 			break;
+		case "/break":
+			showBreakPage(request, response);
+			break;
+		case "/breakStart":
+			handleBreakState(request, response, true);
+			break;
+		case "/breakEnd":
+			handleBreakState(request, response, false);
+			break;
 		default:
 			break;
 		}
 	}
 
-	
-
-	
 
 	/**
 	 * 학생 목록 조회 기능
@@ -153,6 +159,35 @@ public class ManagementController extends HttpServlet {
 		// TODO 등록금 고지 대상 확인
 		// 1. 학적이 재학인 경우
 		
+	}
+	
+	/**
+	 * 휴학 처리 페이지 호출 
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int isBreak = managementRepository.getScheduleStat("break"); // TODO 휴학 상태 받아와야됨
+		if (isBreak == -1) {
+			// TODO 오류 발생 오류 처리
+			return;
+		}
+		request.setAttribute("isBreak", isBreak);
+		request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 휴학 기간 상태 변경
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
+		managementRepository.updateSchedule("break", state);
+		showBreakPage(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

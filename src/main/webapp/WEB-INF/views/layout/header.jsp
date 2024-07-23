@@ -46,7 +46,7 @@
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/user/main">홈</a></li>
 							<li><a href="${pageContext.request.contextPath}/info/staff">My</a></li>
-							<li><a href="${pageContext.request.contextPath}/user/studentList">학사관리</a></li>
+							<li><a href="${pageContext.request.contextPath}/management/studentList">학사관리</a></li>
 							<li><a href="${pageContext.request.contextPath}/admin/college">등록</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 						</ul>

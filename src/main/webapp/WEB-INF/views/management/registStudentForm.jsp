@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
-			<h2>학사 관리</h2>
+			<h2>학사관리</h2>
 		</div>
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
