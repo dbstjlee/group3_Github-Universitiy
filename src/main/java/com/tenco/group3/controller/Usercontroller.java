@@ -3,6 +3,8 @@ package com.tenco.group3.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.tenco.group3.model.Professor;
+import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
@@ -109,8 +111,6 @@ public class Usercontroller extends HttpServlet {
 
 		// TODO - 유효성 검사
 
-		// 에러 발생 시
-			// 분기해서 페이지 이동 처리
 			// 학생일 때
 			if (userRole.equals("student")) {
 				user = userRepository.getStudentByNameAndEmail(name, email);
@@ -168,6 +168,7 @@ public class Usercontroller extends HttpServlet {
 					}
 				}
 			}
+			// TODO - 수정(학생, 교수, 직원일 때 main.jsp에 값 넣기)
 			session.setAttribute("principal", principal);
 			response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
 		} else {

@@ -49,6 +49,25 @@ public class UserRepositoryImpl implements UserRepository{
 			+ "	AND email = ? ";
 	
 	
+	// 학생 정보 조회
+	private static final String SELECT_STUDENT_INFO_BY_ID = " select s.id, s.name, s.birth_date, "
+			+ " s.gender, s.address, s.tel, s.email, s.grade, s.semester, s.entrance_date, s.graduation_date, "
+			+ " d.name as deptname, c.name as collname "
+			+ " from student_tb as s join department_tb as d on s.dept_id = d.id "
+			+ " join college_tb as c on c.id = d.college_id WHERE s.id = ? ; ";
+	
+	
+	// 교수 정보 조회
+	private static final String SELECT_PROFESSOR_INFO_BY_ID = " select p.id, p.name, p.birth_date, p.gender, "
+			+ " p.address, p.tel, p.email, d.name as deptname, c.name as collname "
+			+ " from professor_tb as p join department_tb as d on p.dept_id = d.id "
+			+ " join college_tb as c on c.id = d.college_id where p.id = ? ; ";
+	
+	
+	// 직원 정보 조회
+	private static final String SELECT_STAFF_INFO_BY_ID = " select * from staff_tb WHERE = ? 	; ";
+	
+	
 	
 	
 	@Override
@@ -134,6 +153,96 @@ public class UserRepositoryImpl implements UserRepository{
 					staff = User.builder()
 							.username(rs.getString("name"))
 							.id(rs.getInt("id"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return staff;
+	}
+
+	@Override
+	public Student getStudentInfo(int id) {
+		Student studentInfo = null;
+		 try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_INFO_BY_ID)){
+				pstmt.setInt(1, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					studentInfo = Student.builder()
+								.id(rs.getInt("id"))
+								.name(rs.getString("name"))
+								.birthDate(rs.getDate("birth_date"))
+								.gender(rs.getString("gender"))
+								.address(rs.getString("address"))
+								.tel(rs.getString("tel"))
+								.email(rs.getString("email"))
+								.grade(rs.getInt("grade"))
+								.semester(rs.getInt("semester"))
+								.entranceDate(rs.getDate("entrance_date"))
+								.graduationDate(rs.getDate("graduation_date"))
+								.deptname(rs.getString("deptname"))
+								.collname(rs.getString("collname"))
+								.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return studentInfo;
+	}
+
+	@Override
+	public Professor getProfessorInfo(int id) {
+		Professor professor = null;
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_PROFESSOR_INFO_BY_ID)){
+				pstmt.setInt(1, id);
+				ResultSet rs = pstmt.executeQuery();
+				if(rs.next()) {
+					professor = Professor.builder()
+								.id(rs.getInt("id"))
+								.name(rs.getString("name"))
+								.birthDate(rs.getDate("birth_date"))
+								.gender(rs.getString("gender"))
+								.address(rs.getString("address"))
+								.tel(rs.getString("tel"))
+								.email(rs.getString("email"))
+								.deptname(rs.getString("deptname"))
+								.collname(rs.getString("collname"))
+								.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return professor;
+	}
+
+	@Override
+	public Staff getStaffInfo(int id) {
+		Staff staff = null;
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_INFO_BY_ID)){
+				pstmt.setInt(1, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					staff = Staff.builder()
+							.id(rs.getInt("id"))
+							.name(rs.getString("name"))
+							.birthDate(rs.getDate("birth_date"))
+							.gender(rs.getString("gender"))
+							.address(rs.getString("address"))
+							.tel(rs.getString("tel"))
+							.email(rs.getString("email"))
+							.hireDate(rs.getDate("hire_date"))
 							.build();
 				}
 			} catch (Exception e) {

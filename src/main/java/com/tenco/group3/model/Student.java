@@ -26,4 +26,7 @@ public class Student {
 	private int semester;
 	private Date entranceDate;
 	private Date graduationDate;
+	private String deptname;
+	private String collname;
+	
 }

@@ -79,28 +79,29 @@
 			</div>
 		</div>
 		<!-- 프로필 -->
+		<!-- TODO - 수정 필요(UserController 연관) -->
 		<div class="main--page--profile" style="width: 240px;">
 			<ul class="">
 				<li>아이콘</li>
-				<li style="font-weight: 600; font-size: 18px;">${principal.username}님,&nbsp;환영합니다.</li>
+				<li style="font-weight: 600; font-size: 18px;">${studentInfo.name}님,&nbsp;환영합니다.</li>
 			</ul>
 			<table>
 				<tbody>
 					<tr>
 						<td>이메일</td>
-						<td>psw@green.com</td>
+						<td>${studentInfo.email}</td>
 					</tr>
 					<tr>
 						<td>소속</td>
-						<td>컴퓨터공학과</td>
+						<td>${studentInfo.deptname}</td>
 					</tr>
 					<tr>
 						<td>학기</td>
-						<td>1학년&nbsp;1학기</td>
+						<td>${studentInfo.grade}학년&nbsp;${studentInfo.semester}학기</td>
 					</tr>
 					<tr>
 						<td>학적상태</td>
-						<td>재학</td>
+						<td></td>
 					</tr>
 				</tbody>
 			</table>

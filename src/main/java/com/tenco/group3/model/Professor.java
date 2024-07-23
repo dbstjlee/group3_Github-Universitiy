@@ -22,5 +22,7 @@ public class Professor {
 	private String email;
 	private int deptId;
 	private Date hireDate;
+	private String deptname;
+	private String collname;
 		
 }
