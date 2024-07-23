@@ -74,11 +74,9 @@ public class SubjectController extends HttpServlet {
 		request.setAttribute("subjectlist", subjectlist);
 		request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
 	}
-	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-	
+
 	}
 	
 }
