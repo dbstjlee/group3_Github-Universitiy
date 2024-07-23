@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import com.tenco.group3.model.College;
+import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.CollegeRepositoryImpl;
+import com.tenco.group3.repository.DepartmentRepositoryImpl;
 import com.tenco.group3.repository.interfaces.CollegeRepository;
+import com.tenco.group3.repository.interfaces.DepartmentRepository;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,10 +20,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CollegeRepository collegeRepository;
+	private DepartmentRepository departmentRepository;
 
 	@Override
 	public void init() throws ServletException {
 		collegeRepository = new CollegeRepositoryImpl();
+		departmentRepository = new DepartmentRepositoryImpl();
+
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,10 +41,9 @@ public class AdminController extends HttpServlet {
 		switch (action) {
 		case "/college":
 			collegeList(request, response);
-			// request.getRequestDispatcher("/WEB-INF/views/admin/college.jsp");
 			break;
-		case "delete":
-			deleteCollege(request, response);
+		case "/department":
+			departmentList(request, response);
 			break;
 		default:
 			collegeList(request, response);
@@ -47,13 +52,16 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-	private void deleteCollege(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-
+	private void departmentList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		List<Department> departments = departmentRepository.getAllDepartment();
+		request.setAttribute("departments", departments);
+		request.getRequestDispatcher("/WEB-INF/views/admin/department.jsp").forward(request, response);
 	}
 
 	/**
 	 * 단과대학 조회
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws ServletException
@@ -70,29 +78,70 @@ public class AdminController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
-
 		System.out.println("action : " + action);
 		switch (action) {
 		case "/addCollege":
 			handleAddCollege(request, response);
 			break;
-
+		case "/deleteCollege":
+			handleDeleteCollege(request, response);
+			break;
 		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 	}
 
 	/**
-	 * 단과대학 등록 기능
+	 * 단과대학 삭제기능
+	 * 
 	 * @param request
 	 * @param response
 	 */
-	private void handleAddCollege(HttpServletRequest request, HttpServletResponse response) {
-		int collegeId = Integer.parseInt(request.getParameter("collegeId"));
-		String collegename= request.getParameter("collegeName");
+	private void handleDeleteCollege(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    String idParam = request.getParameter("id");
 
-		College college = College.builder().id(collegeId).name(collegename).build();
-		collegeRepository.addCollege(college);
-		
+	    if (idParam == null || idParam.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int collegeId;
+	    try {
+	        collegeId = Integer.parseInt(idParam);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    College college = collegeRepository.getCollegeById(collegeId);
+	    if (college == null) {
+	        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	        return;
+	    }
+	    int result = collegeRepository.deleteCollege(collegeId);
+	    if (result > 0) {
+	        response.sendRedirect(request.getContextPath() + "/admin/college");
+	    } else {
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
 	}
+
+
+	/**
+	 * 단과대학 등록기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleAddCollege(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String collegeName = request.getParameter("collegeName");
+		if (collegeName == null || collegeName.trim().isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		College college = College.builder().name(collegeName).build();
+		collegeRepository.addCollege(college);
+		response.sendRedirect(request.getContextPath() + "/admin/college");
+	}
+
 }
