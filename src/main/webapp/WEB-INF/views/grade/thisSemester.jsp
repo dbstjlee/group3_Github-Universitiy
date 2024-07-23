@@ -3,10 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
 	<ul>
 		<li><a href="${pageContext.request.contextPath}/grade/thisSemester">이번 학기 성적 조회</a></li>
@@ -35,7 +32,7 @@
 			<td>전공</td>
 			<td>3</td>
 			<td>A+</td>
-			<td><form action="${pageContext.request.contextPath}/grade/evaluation" target="popupWindow"
+			<td><form action="${pageContext.request.contextPath}/evaluation" target="popupWindow"
 					onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
 					<input type="hidden" name="id" value="10001">
 					<button type="submit">"Click"</button>

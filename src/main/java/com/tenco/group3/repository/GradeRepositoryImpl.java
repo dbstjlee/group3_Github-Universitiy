@@ -18,11 +18,13 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " ON st.grade = gr.grade " + " INNER JOIN student_tb AS stud " + " on st.student_id = stud.id "
 			+ " LEFT JOIN evaluation_tb AS ev " + " ON st.subject_id = ev.subject_id "
 			+ " WHERE st.student_id = ? AND su.semester = ? AND su.sub_year = ? " + " ORDER BY st.subject_id ";
+	
 	private static final String GET_SEMESTER_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type, gr.grade,su.grades "
 			+ " FROM stu_sub_tb AS st " + " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id "
 			+ " INNER JOIN professor_tb AS pr " + " ON su.professor_id = pr.id " + " INNER JOIN grade_tb AS gr "
 			+ " ON st.grade = gr.grade " + " INNER JOIN student_tb AS stud " + " on st.student_id = stud.id "
 			+ " WHERE st.student_id = ? ";
+	
 	private static final String GET_SEMESTER_BY_TYPE_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type, gr.grade, su.grades "
 			+ " FROM stu_sub_tb AS st "
 			+ " INNER JOIN subject_tb AS su "
@@ -34,6 +36,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " INNER JOIN student_tb AS stud "
 			+ " on st.student_id = stud.id "
 			+ " WHERE st.student_id = ? AND su.sub_year = ? AND su.semester = ? AND su.type = ? ";
+	
 	private static final String GET_TOTAL_GRADE = " SELECT su.sub_year, su.semester, SUM(su.grades) AS sum_grades,SUM(st.complete_grade) AS my_grades, AVG(gr.grade_value) AS average "
 			+ " FROM stu_sub_tb AS st "
 			+ " LEFT JOIN subject_tb AS su "
@@ -119,13 +122,14 @@ public class GradeRepositoryImpl implements GradeRepository {
 	public Grade getTotalGrade(int studentId) {
 		Grade grade = null;
 		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(GET_SEMESTER_SQL)) {
+				PreparedStatement pstmt = conn.prepareStatement(GET_TOTAL_GRADE)) {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					grade = Grade.builder().sub_year(rs.getInt("sub_year")).semester(rs.getInt("semester"))
-							.subjectId(rs.getInt("subject_id")).subjectName(rs.getString("과목이름"))
-							.type(rs.getString("type")).grade(rs.getString("grade")).build();
+							.sumGrades(rs.getDouble("sum_grades")).myGrades(rs.getDouble("my_grades"))
+							.average(rs.getDouble("average"))
+							.build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

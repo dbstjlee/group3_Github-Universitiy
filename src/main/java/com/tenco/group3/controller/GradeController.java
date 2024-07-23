@@ -23,9 +23,6 @@ public class GradeController extends HttpServlet {
 		case "/thisSemester":
 			showThisSemester(request, response);
 			break;
-		case "/evaluation":
-			showEvaluation(request, response);
-			break;
 		case "/semester":
 			showSemester(request, response);
 			break;
@@ -67,19 +64,6 @@ public class GradeController extends HttpServlet {
 	}
 
 	/**
-	 * 교수 평가 팝업창 띄우기
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	private void showEvaluation(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/grade/evaluation.jsp").forward(request, response);
-	}
-
-	/**
 	 * 이번 학기 성적 조회 페이지로 이동
 	 * 
 	 * @param request
@@ -100,31 +84,9 @@ public class GradeController extends HttpServlet {
 		case "/semester":
 			handlerGetRecodeBySemester(request, response);
 			break;
-		case "/evaluation":
-			handlerGetEvaluation(request, response);
-			break;
 		default:
 			break;
 		}
-	}
-
-	/**
-	 * 교수 평가 제출 핸들링
-	 * 
-	 * @param request
-	 * @param response
-	 */
-	private void handlerGetEvaluation(HttpServletRequest request, HttpServletResponse response) {
-		String subjectId = request.getParameter("subjectId");
-		String[] answers = new String[7];
-		for (int i = 0; i < 7; i++) {
-			answers[i] = request.getParameter("answer" + (i + 1));
-		}// 각 문항 답을 배열로 저장
-		String improvements = request.getParameter("improvements"); // text 필드 값 저장
-//		for (String string : answers) {
-//			System.out.println("answer : "+string);
-//		}
-		// TODO - 강의 평가 여부 확인 후 안했을 경우 교수평가 insert
 	}
 
 	/**

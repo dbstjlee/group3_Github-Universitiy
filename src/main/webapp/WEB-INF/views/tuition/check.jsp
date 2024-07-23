@@ -3,10 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>등록금 내역 조회</title>
-</head>
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
 	<ul>
 		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
