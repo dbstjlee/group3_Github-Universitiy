@@ -23,13 +23,12 @@
 			</tr>
 		</thead>
 		<tbody>
-
 			<tr>
-				<td>2023년</td>
-				<td>1학기</td>
-				<td>3</td>
-				<td>3</td>
-				<td>4.50</td>
+				<td>${grade.subYear}년</td>
+				<td>${grade.semester}학기</td>
+				<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${grade.sumGrades}" /></td>
+				<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${grade.myGrades}" /></td>
+				<td>${grade.average}</td>
 			</tr>
 		</tbody>
 	</table>
