@@ -18,12 +18,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/user/*")
-public class Usercontroller extends HttpServlet {
+public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private UserRepository userRepository;
 
-	public Usercontroller() {
+	public UserController() {
 
 	}
 
