@@ -22,7 +22,6 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 			+ " JOIN department_tb as de on st.dept_id = de.id JOIN college_tb as co ON co.id = de.college_id "
 			+ "WHERE br.id = ? ";
-	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
 
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
@@ -96,23 +95,6 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			e.printStackTrace();
 		}
 		return breakApp;
-	}
-
-	@Override
-	public boolean checkBreakAppDone() {
-		boolean done = false;
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(CHECK_BREAK_APP_DONE)) {
-			try (ResultSet rs = pstmt.executeQuery()) {
-				// 조회된 행이 하나라도 있다면 false, 없다면 true
-				done = !rs.next();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return done;
 	}
 
 }

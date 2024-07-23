@@ -17,7 +17,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/management/*")
 public class ManagementController extends HttpServlet {
@@ -85,7 +84,6 @@ public class ManagementController extends HttpServlet {
 		int page = 1; // 기본 페이지 번호
 		int pageSize = 20; // 한 페이지당 보여질 게시글 수
 
-		System.out.println("테스트용"); // TODO 삭제 예정
 		try {
 			String pageStr = request.getParameter("page");
 			if (pageStr != null) {
@@ -151,7 +149,6 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO 휴학 신청 기간일 경우 
 		if (managementRepository.getScheduleStat("break") == Define.TRUE) {
 			AlertUtil.errorAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
 		} else {
@@ -178,7 +175,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int isBreak = managementRepository.getScheduleStat("break"); // TODO 휴학 상태 받아와야됨
+		int isBreak = managementRepository.getScheduleStat("break");
 		if (isBreak == Define.ERROR) {
 			// TODO 오류 발생 오류 처리
 			return;
@@ -195,9 +192,12 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
-		// TODO 휴학 처리중인 신청이 있을 경우 뒤로 돌려보냄
-		managementRepository.updateSchedule("break", state);
-		showBreakPage(request, response);
+		if (!state && managementRepository.checkBreakAppDone()) {
+			AlertUtil.errorAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
+		} else {
+			managementRepository.updateSchedule("break", state);
+			showBreakPage(request, response);
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -14,49 +14,42 @@ import com.tenco.group3.util.DBUtil;
 
 public class ManagementRepositoryImpl implements ManagementRepository {
 
-	private final String SELECT_ALL_STUDENTS = " SELECT * FROM student_tb limit ? offset ? ";
-	private final String SELECT_ALL_PROFESSORS = " SELECT * FROM professor_tb limit ? offset ? ";
-	private final String COUNT_ALL_STUDENTS = " SELECT COUNT(*) AS count FROM student_tb ";
-	private final String COUNT_ALL_PROFESSORS = " SELECT COUNT(*) AS count FROM professor_tb ";
-	private final String INSERT_STUDENT_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id, entrance_date) "
+	private static final String SELECT_ALL_STUDENTS = " SELECT * FROM student_tb limit ? offset ? ";
+	private static final String SELECT_ALL_PROFESSORS = " SELECT * FROM professor_tb limit ? offset ? ";
+	private static final String COUNT_ALL_STUDENTS = " SELECT COUNT(*) AS count FROM student_tb ";
+	private static final String COUNT_ALL_PROFESSORS = " SELECT COUNT(*) AS count FROM professor_tb ";
+	private static final String INSERT_STUDENT_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id, entrance_date) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
-	private final String SELECT_STUDENT_ID_LAST = " SELECT id FROM student_tb ORDER BY id DESC LIMIT 1 ";
-	private final String INSERT_PROFESSOR_SQL = " INSERT INTO professor_tb (name, birth_date, gender, address, tel, email, dept_id) "
+	private static final String SELECT_STUDENT_ID_LAST = " SELECT id FROM student_tb ORDER BY id DESC LIMIT 1 ";
+	private static final String INSERT_PROFESSOR_SQL = " INSERT INTO professor_tb (name, birth_date, gender, address, tel, email, dept_id) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?) ";
-	private final String SELECT_PROFESSOR_ID_LAST = " SELECT id FROM professor_tb ORDER BY id DESC LIMIT 1 ";
-	private final String INSERT_STAFF_SQL = " INSERT INTO staff_tb (name, birth_date, gender, address, tel, email) "
+	private static final String SELECT_PROFESSOR_ID_LAST = " SELECT id FROM professor_tb ORDER BY id DESC LIMIT 1 ";
+	private static final String INSERT_STAFF_SQL = " INSERT INTO staff_tb (name, birth_date, gender, address, tel, email) "
 			+ " VALUES (?, ?, ?, ?, ?, ?) ";
-	private final String SELECT_STAFF_ID_LAST = " SELECT id FROM staff_tb ORDER BY id DESC LIMIT 1 ";
-	private final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
+	private static final String SELECT_STAFF_ID_LAST = " SELECT id FROM staff_tb ORDER BY id DESC LIMIT 1 ";
+	private static final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
 	// TODO 나중에 암호화해서 자동으로 받을예정
-	private final String SAMPLE_PASSWORD = "123123";
-	private final String UPDATE_SCHEDULE = " UPDATE schedule_state_tb SET ";
+	private static final String SAMPLE_PASSWORD = "123123";
+	private static final String UPDATE_SCHEDULE = " UPDATE schedule_state_tb SET ";
+	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
 		List<Student> studentList = new ArrayList<>();
 
-		try (Connection conn = DBUtil.getConnection();//
+		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_STUDENTS)) {
 			pstmt.setInt(1, limit);
 			pstmt.setInt(2, offset);
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				studentList.add(Student.builder()
-					.id(rs.getInt("id"))
-					.name(rs.getString("name"))
-					.birthDate(rs.getDate("birth_date"))
-					.gender(rs.getString("gender"))
-					.address(rs.getString("address"))
-					.tel(rs.getString("tel"))
-					.email(rs.getString("email"))
-					.deptId(rs.getInt("dept_id"))
-					.grade(rs.getInt("grade"))
-					.semester(rs.getInt("semester"))
-					.entranceDate(rs.getDate("entrance_date"))
-					.graduationDate(rs.getDate("graduation_date"))
-					.build());
+				studentList.add(Student.builder().id(rs.getInt("id")).name(rs.getString("name"))
+						.birthDate(rs.getDate("birth_date")).gender(rs.getString("gender"))
+						.address(rs.getString("address")).tel(rs.getString("tel")).email(rs.getString("email"))
+						.deptId(rs.getInt("dept_id")).grade(rs.getInt("grade")).semester(rs.getInt("semester"))
+						.entranceDate(rs.getDate("entrance_date")).graduationDate(rs.getDate("graduation_date"))
+						.build());
 			}
 
 		} catch (Exception e) {
@@ -70,24 +63,17 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	public List<Professor> getAllProfessors(int limit, int offset) {
 		List<Professor> professorList = new ArrayList<>();
 
-		try (Connection conn = DBUtil.getConnection();//
+		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_PROFESSORS)) {
 			pstmt.setInt(1, limit);
 			pstmt.setInt(2, offset);
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				professorList.add(Professor.builder()
-					.id(rs.getInt("id"))
-					.name(rs.getString("name"))
-					.birthDate(rs.getDate("birth_date"))
-					.gender(rs.getString("gender"))
-					.address(rs.getString("address"))
-					.tel(rs.getString("tel"))
-					.email(rs.getString("email"))
-					.deptId(rs.getInt("dept_id"))
-					.hireDate(rs.getDate("hire_date"))
-					.build());
+				professorList.add(Professor.builder().id(rs.getInt("id")).name(rs.getString("name"))
+						.birthDate(rs.getDate("birth_date")).gender(rs.getString("gender"))
+						.address(rs.getString("address")).tel(rs.getString("tel")).email(rs.getString("email"))
+						.deptId(rs.getInt("dept_id")).hireDate(rs.getDate("hire_date")).build());
 			}
 
 		} catch (Exception e) {
@@ -100,7 +86,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	@Override
 	public int getTotalStudentCount() {
 		int totalCounts = 0;
-		try (Connection conn = DBUtil.getConnection();//
+		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_STUDENTS)) {
 			ResultSet rs = pstmt.executeQuery();
 
@@ -117,7 +103,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	@Override
 	public int getTotalProfessorCount() {
 		int totalCounts = 0;
-		try (Connection conn = DBUtil.getConnection();//
+		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_PROFESSORS)) {
 			ResultSet rs = pstmt.executeQuery();
 
@@ -134,7 +120,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	@Override
 	public boolean createStudent(Student student) {
 		boolean success = false;
-		try (Connection conn = DBUtil.getConnection()){
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 학생 테이블에 새로운 학생 등록
 			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_STUDENT_SQL)) {
@@ -186,7 +172,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	@Override
 	public boolean createProfessor(Professor professor) {
 		boolean success = false;
-		try (Connection conn = DBUtil.getConnection()){
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 교수 테이블에 새로운 교수 등록
 			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_PROFESSOR_SQL)) {
@@ -237,7 +223,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	@Override
 	public boolean createStaff(Staff staff) {
 		boolean success = false;
-		try (Connection conn = DBUtil.getConnection()){
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 직원 테이블에 새로운 직원 등록
 			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_STAFF_SQL)) {
@@ -283,7 +269,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		}
 		return success;
 	}
-	
+
 	@Override
 	public void updateSchedule(String columName, boolean state) {
 		try (Connection conn = DBUtil.getConnection()) {
@@ -301,12 +287,12 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public int getScheduleStat(String columName) {
 		int state = -1;
 		String query = " SELECT " + columName + " FROM schedule_state_tb LIMIT 1";
-		try (Connection conn = DBUtil.getConnection();//
+		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
 
@@ -318,6 +304,23 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			e.printStackTrace();
 		}
 		return state;
+	}
+
+	@Override
+	public boolean checkBreakAppDone() {
+		boolean done = false;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(CHECK_BREAK_APP_DONE)) {
+			try (ResultSet rs = pstmt.executeQuery()) {
+				// 조회된 행이 하나라도 있다면 false, 없다면 true
+				done = !rs.next();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return done;
 	}
 
 }

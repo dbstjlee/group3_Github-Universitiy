@@ -12,6 +12,4 @@ public interface BreakAppRepository {
 	List<BreakApp> getBreakAppList(int studentId);
 	// 휴학 내역 상세 조회
 	BreakApp getBreakAppDetail(int breakId);
-	// 처리중인 휴학 신청이 있는지 조회
-	boolean checkBreakAppDone();
 }

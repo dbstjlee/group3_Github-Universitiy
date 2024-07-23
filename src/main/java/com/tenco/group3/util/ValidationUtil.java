@@ -5,7 +5,32 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {
+	
+	// 유효한 이름인지 확인
+	public static boolean isValidateName(String str) {
+		return isNotOnlyWhitespace(str) &&
+				isOnlyKorean(str) &&
+				isLessThanOrEqual(str, 10) &&
+				containsWhitespace(str);
+	}
 
+	// 입력된 날짜가 오늘 이전인지 확인
+	public static boolean isDateBeforeToday(String dateStr) {
+		try {
+			LocalDate date = LocalDate.parse(dateStr);
+			LocalDate today = LocalDate.now();
+			return date.isBefore(today);
+		} catch (DateTimeParseException e) {
+			// 날짜 형식이 잘못된 경우 false 반환
+			return false;
+		}
+	}
+	
+	// 주소가 정규표현식을 만족하는지 확인
+	public static boolean isValidateAddress(String address) {
+		return Pattern.matches(KOREAN_ADDRESS_PATTERN, address);
+	}
+	
 	// 문자열이 공백으로만 이루어져 있는지 검사
 	public static boolean isNotOnlyWhitespace(String str) {
 		return str != null && !str.trim().isEmpty();
@@ -13,7 +38,7 @@ public class ValidationUtil {
 
 	// 문자열이 한글로만 이루어져 있는지 검사
 	public static boolean isOnlyKorean(String str) {
-		return str != null && Pattern.matches("^[가-힣]*$", str);
+		return str != null && Pattern.matches("^[가-힣]+$", str);
 	}
 
 	// 문자열 길이가 주어진 정수 이하 인지 검사
@@ -31,18 +56,6 @@ public class ValidationUtil {
 		return str != null && str.contains(" ");
 	}
 
-	// 입력된 날짜가 오늘 이전인지 확인
-	public static boolean isDateBeforeToday(String dateStr) {
-		try {
-			LocalDate date = LocalDate.parse(dateStr);
-			LocalDate today = LocalDate.now();
-			return date.isBefore(today);
-		} catch (DateTimeParseException e) {
-			// 날짜 형식이 잘못된 경우 false 반환
-			return false;
-		}
-	}
-
 	// 대한민국 주소 형식 정규 표현식
 	private static final String KOREAN_ADDRESS_PATTERN =
 			"^[가-힣\\s\\d\\-]+"// 한글,공백,숫자,하이픈 문자가 1회 이상 반복됨
@@ -51,11 +64,6 @@ public class ValidationUtil {
 			+ "[가-힣\\s\\d\\-]+(동|읍|면)\\s"
 			+ "[가-힣\\s\\d\\-]+(길|로|번길)\\s"
 			+ "\\d+(-\\d+)?"; // ()? ()안의 내용이 있어도되고 없어도 되고 예시 : 123 // 456-7
-	
-	// 주소가 정규표현식을 만족하는지 확인
-	public static boolean isValidateAddress(String address) {
-		return Pattern.matches(KOREAN_ADDRESS_PATTERN, address);
-	}
 	
 	// 전화번호가 숫자 10~11자 인지 확인
 	public static boolean isValidateTel(String tel) {
