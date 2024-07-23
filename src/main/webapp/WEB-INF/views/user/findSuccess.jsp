@@ -62,27 +62,27 @@
 			</div>
 			
 			<c:choose>
-				<c:when test="${student}">
+				<c:when test="${userRole == 'student'}">
 					<div class="section--content">
-					${student.name}의 아이디는
+					${user.username}의 아이디는
 					<br>
-					<span style="font-weight: bold;">${student.id}</span>입니다.
+					<span style="font-weight: bold;">${user.id}</span>입니다.
 					</div>
 				</c:when>
 				
-				<c:when test="${professor}">
+				<c:when test="${userRole == 'professor'}">
 					<div class="section--content">
-					${professor.name}의 아이디는
+					${user.username}의 아이디는
 					<br>
-					<span style="font-weight: bold;">${professor.id}</span>입니다.
+					<span style="font-weight: bold;">${user.id}</span>입니다.
 					</div>
 				</c:when>
 				
 				<c:otherwise>
 					<div class="section--content">
-					${staff.name}의 아이디는
+					${user.username}의 아이디는
 					<br>
-					<span style="font-weight: bold;">${staff.id}</span>입니다.
+					<span style="font-weight: bold;">${user.id}</span>입니다.
 					</div>
 				</c:otherwise>
 			</c:choose>

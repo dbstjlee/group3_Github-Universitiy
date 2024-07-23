@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements UserRepository{
 	
 	// 이름, 이메일로 ID 찾기
 	// 학생
-	private static final String  SELECT_STUDENT_BY_FINDID = " SELECT id, name "
+	private static final String  SELECT_STUDENT_BY_NAME_AND_EMAIL = " SELECT id, name "
 			+ "	FROM student_tb "
 			+ "	WHERE name = ? "
 			+ "	AND email = ? ";
@@ -77,16 +77,16 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public Student getStudentByNameAndEmail(String username, String email) {
-		Student student = null;
+	public User getStudentByNameAndEmail(String username, String email) {
+		User student = null;
 		try (Connection conn = DBUtil.getConnection()){
-			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_BY_FINDID)){
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_BY_NAME_AND_EMAIL)){
 				pstmt.setString(1, username);
 				pstmt.setString(2, email);
 				ResultSet rs = pstmt.executeQuery();
 				if(rs.next()) {
-					student = Student.builder()
-							.name(rs.getString("name"))
+					student = User.builder()
+							.username(rs.getString("name"))
 							.id(rs.getInt("id"))
 							.build();
 				}
@@ -100,16 +100,16 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public Professor getProfessorByNameAndEmail(String username, String email) {
-		Professor professor = null;
+	public User getProfessorByNameAndEmail(String username, String email) {
+		User professor = null;
 		try (Connection conn = DBUtil.getConnection()){
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_PROFESSOR_BY_FINDID)){
 				pstmt.setString(1, username);
 				pstmt.setString(2, email);
 				ResultSet rs = pstmt.executeQuery();
 				if(rs.next()) {
-					professor = Professor.builder()
-							.name(rs.getString("name"))
+					professor = User.builder()
+							.username(rs.getString("name"))
 							.id(rs.getInt("id"))
 							.build();
 				}
@@ -123,16 +123,16 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public Staff getStaffByNameAndEmail(String username, String email) {
-		Staff staff = null;
+	public User getStaffByNameAndEmail(String username, String email) {
+		User staff = null;
 		try (Connection conn = DBUtil.getConnection()){
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_BY_FINDID)){
 				pstmt.setString(1, username);
 				pstmt.setString(2, email);
 				ResultSet rs = pstmt.executeQuery();
 				if(rs.next()) {
-					staff = Staff.builder()
-							.name(rs.getString("name"))
+					staff = User.builder()
+							.username(rs.getString("name"))
 							.id(rs.getInt("id"))
 							.build();
 				}

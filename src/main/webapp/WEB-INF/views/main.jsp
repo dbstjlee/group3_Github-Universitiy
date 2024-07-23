@@ -8,35 +8,35 @@
 
 <div class="">
 	<div>
-		<img src="/resources/images/university.jpg" class="main--page--img">
+		<img src="${pageContext.request.contextPath}/resources/images/university.jpg" class="main--page--img">
 	</div>
 	<div class="justify--containers">
 		<div class="main--page--div">
 			<div class="main--page--notice">
 				<h3>
-					<a href="/notice">공지사항</a>
+					<a href="${pageContext.request.contextPath}/notice">공지사항</a>
 				</h3>
 				<div class="main--page--split"></div>
 				<table>
 					<tbody>
 						<tr>
-							<td><a href="/notice/read?id=6">공지사항 제목 6번</a></td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=6">공지사항 제목 6번</a></td>
 							<td>날짜</td>
 						</tr>
 						<tr>
-							<td><a href="/notice/read?id=5">공지사항 제목 5번</a></td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=5">공지사항 제목 5번</a></td>
 							<td>날짜</td>
 						</tr>
 						<tr>
-							<td><a href="/notice/read?id=4">공지사항 제목 4번</a></td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=4">공지사항 제목 4번</a></td>
 							<td>날짜</td>
 						</tr>
 						<tr>
-							<td><a href="/notice/read?id=3">공지사항 제목 3번</a></td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=3">공지사항 제목 3번</a></td>
 							<td>날짜</td>
 						</tr>
 						<tr>
-							<td><a href="/notice/read?id=2">공지사항 제목 2번</a></td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=2">공지사항 제목 2번</a></td>
 							<td>날짜</td>
 						</tr>
 					</tbody>
@@ -45,7 +45,7 @@
 
 			<div class="main--page--calandar" style="width: 500px;">
 				<h3>
-					<a href="/shedule">학사일정</a>
+					<a href="${pageContext.request.contextPath}/shedule">학사일정</a>
 				</h3>
 				<div class="main--page--split"></div>
 				<table>
@@ -105,7 +105,7 @@
 				</tbody>
 			</table>
 			<div class="profile--button--div">
-				<a href="/info/student"><button>마이페이지</button></a> 
+				<a href="${pageContext.request.contextPath}/info/student"><button>마이페이지</button></a> 
 				<a href="${pageContext.request.contextPath}/user/logOut"><button>로그아웃</button></a>
 			</div>
 		</div>

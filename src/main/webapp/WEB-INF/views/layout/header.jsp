@@ -20,34 +20,34 @@
 	</div>
 	
 	<nav class="main--menu">
-		<a href="/${pageContext.request.contextPath}/main"><img class="logo" alt="" src="/resources/images/logo.png"></a>
+		<a href="/${pageContext.request.contextPath}/main"><img class="logo" alt="" src="${pageContext.request.contextPath}/resources/images/logo.png"></a>
 		
 		<c:choose>
-			<c:when test="${principal.userRole.equals(student)}">
+			<c:when test="${principal.userRole == 'student'}">
 				<ul>
-					<li><a href="${pageContext.request.contextPath}/main">홈</a></li>
-					<li><a href="/info/student">My</a></li>
-					<li><a href="/subject/list/1">수업</a></li>
-					<li><a href="/sugang/subjectList/1">수강신청</a></li>
-					<li><a href="/grade/thisSemester">성적</a></li>
-					<li><a href="/notice">학사정보</a></li>
+					<li><a href="${pageContext.request.contextPath}/">홈</a></li>
+					<li><a href="${pageContext.request.contextPath}/info/student">My</a></li>
+					<li><a href="${pageContext.request.contextPath}/subject/list/1">수업</a></li>
+					<li><a href="${pageContext.request.contextPath}/sugang/subjectList/1">수강신청</a></li>
+					<li><a href="${pageContext.request.contextPath}/grade/thisSemester">성적</a></li>
+					<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 				</ul>
 			</c:when>
-			<c:when test="${principal.userRole.equals(professor)}">
+			<c:when test="${principal.userRole == 'professor'}">
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/user/main">홈</a></li>
-					<li><a href="/info/professor">My</a></li>
-					<li><a href="/subject/list/1">수업</a></li>
-					<li><a href="/notice">학사정보</a></li>
+					<li><a href="${pageContext.request.contextPath}/info/professor">My</a></li>
+					<li><a href="${pageContext.request.contextPath}/subject/list/1">수업</a></li>
+					<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 				</ul>
 			</c:when>
 			<c:otherwise>
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/user/main">홈</a></li>
-					<li><a href="/info/staff">My</a></li>
-					<li><a href="/user/studentList">학사관리</a></li>
-					<li><a href="/admin/college">등록</a></li>
-					<li><a href="/notice">학사정보</a></li>
+					<li><a href="${pageContext.request.contextPath}/info/staff">My</a></li>
+					<li><a href="${pageContext.request.contextPath}/user/studentList">학사관리</a></li>
+					<li><a href="${pageContext.request.contextPath}/admin/college">등록</a></li>
+					<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 				</ul>	
 			</c:otherwise>
 		</c:choose>
