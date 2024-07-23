@@ -95,12 +95,12 @@
 
 					<c:otherwise>
 						<p class="no--list--p">대기 중인 신청 내역이 없습니다.</p>
-					<a href="/management/breakEnd"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
+					<a href="/management/breakState?state=false"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
 			<c:otherwise>
-				<a href="/management/breakStart"><button type="submit" class="btn btn-primary ">휴학 신청 기간 시작</button></a>
+				<a href="/management/breakState?state=true"><button type="submit" class="btn btn-primary ">휴학 신청 기간 시작</button></a>
 			</c:otherwise>
 		</c:choose>
 	</main>

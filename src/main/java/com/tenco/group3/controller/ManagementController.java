@@ -9,6 +9,8 @@ import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
+import com.tenco.group3.util.AlertUtil;
+import com.tenco.group3.util.Define;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,12 +36,6 @@ public class ManagementController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		// TODO 현재 로그인 기능 없어서 생략함
-//		HttpSession session = request.getSession(false);
-//		if (session == null || session.getAttribute("principal") == null) {
-//			response.sendRedirect(request.getContextPath() + "/user/logIn");
-//			return;
-//		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 
 		switch (action) {
@@ -59,7 +55,7 @@ public class ManagementController extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
 			break;
 		case "/tuition":
-			request.getRequestDispatcher("/WEB-INF/views/management/tuitionForm.jsp").forward(request, response);
+			showTuitionPage(request, response);
 			break;
 		case "/bill":
 			handleCreateTuition(request, response);
@@ -67,11 +63,8 @@ public class ManagementController extends HttpServlet {
 		case "/break":
 			showBreakPage(request, response);
 			break;
-		case "/breakStart":
-			handleBreakState(request, response, true);
-			break;
-		case "/breakEnd":
-			handleBreakState(request, response, false);
+		case "/breakState":
+			handleBreakState(request, response, Boolean.parseBoolean(request.getParameter("state")));
 			break;
 		default:
 			break;
@@ -151,6 +144,22 @@ public class ManagementController extends HttpServlet {
 	}
 	
 	/**
+	 * 등록금 고지서 페이지 호출
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO 휴학 신청 기간일 경우 
+		if (managementRepository.getScheduleStat("break") == Define.TRUE) {
+			AlertUtil.errorAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
+		} else {
+			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
+		}
+	}
+	
+	/**
 	 * 등록금 고지서 발송
 	 * @param request
 	 * @param response
@@ -170,7 +179,7 @@ public class ManagementController extends HttpServlet {
 	 */
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = managementRepository.getScheduleStat("break"); // TODO 휴학 상태 받아와야됨
-		if (isBreak == -1) {
+		if (isBreak == Define.ERROR) {
 			// TODO 오류 발생 오류 처리
 			return;
 		}
@@ -186,18 +195,13 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
+		// TODO 휴학 처리중인 신청이 있을 경우 뒤로 돌려보냄
 		managementRepository.updateSchedule("break", state);
 		showBreakPage(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		// TODO 현재 로그인 기능 없어서 생략함
-//		HttpSession session = request.getSession(false);
-//		if (session == null || session.getAttribute("principal") == null) {
-//			response.sendRedirect(request.getContextPath() + "/user/login");
-//			return;
-//		}
 		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 		switch (action) {
 		case "/student":
@@ -240,17 +244,15 @@ public class ManagementController extends HttpServlet {
 					.println(
 							"<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/student';  </script>");
 			} else {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			e.printStackTrace();
+			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
 	private void handleCreateProfessor(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println("들어옴");
 		// TODO 유효성 검사
 		try {
 			Professor professor = Professor.builder()
@@ -264,18 +266,15 @@ public class ManagementController extends HttpServlet {
 				.build();
 			if (managementRepository.createProfessor(professor)) {
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('등록 성공'); </script>");
 				response.getWriter()
 					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath()
 							+ "/management/professor';  </script>");
 			} else {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
@@ -295,12 +294,11 @@ public class ManagementController extends HttpServlet {
 				response.getWriter()
 					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/staff';  </script>");
 			} else {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().println("<script> alert('잘못된 요청입니다.'); history.back(); </script>");
+			e.printStackTrace();
+			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
 		}
 	}
 

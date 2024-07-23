@@ -98,7 +98,7 @@
 						<label for="tel">전화번호</label>
 					</td>
 					<td>
-						<input type="text" name="tel" id="tel" class="input--box">
+						<input type="tel" name="tel" id="tel" class="input--box">
 					</td>
 				</tr>
 				<tr>
