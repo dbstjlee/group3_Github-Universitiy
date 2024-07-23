@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Grade {
-	private int sub_year;
+	private int subYear;
 	private int semester;
 	private int subjectId;
 	private String subjectName; // 과목 이름

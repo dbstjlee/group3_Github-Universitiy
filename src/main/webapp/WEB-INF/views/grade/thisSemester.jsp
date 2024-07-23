@@ -24,20 +24,23 @@
 			<th>성적</th>
 			<th>강의평가</th>
 		</tr>
-		<tr>
-			<td>2023년</td>
-			<td>1학기</td>
-			<td>10001</td>
-			<td>딥러닝의 기초</td>
-			<td>전공</td>
-			<td>3</td>
-			<td>A+</td>
-			<td><form action="${pageContext.request.contextPath}/evaluation" target="popupWindow"
-					onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
-					<input type="hidden" name="id" value="10001">
-					<button type="submit">"Click"</button>
-				</form></td>
-		</tr>
+		<c:forEach var="grade" items="${gradeList}">
+			<tr>
+				<td>${grade.subYear}년</td>
+				<td>${grade.semester}학기</td>
+				<td>${grade.subjectId}</td>
+				<td>${grade.subjectName}</td>
+				<td>${grade.type}</td>
+				<td>${grade.grades}</td>
+				<td>${grade.grade}</td>
+				<td>
+					<form action="${pageContext.request.contextPath}/evaluation" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
+						<input type="hidden" name="id" value="${grade.subjectId}">
+						<button type="submit">Click</button>
+					</form>
+				</td>
+			</tr>
+		</c:forEach>
 	</table>
 </body>
 </html>
