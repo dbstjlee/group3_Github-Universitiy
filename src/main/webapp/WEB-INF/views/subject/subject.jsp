@@ -59,7 +59,8 @@
 						<option value="2">2학기</option>
 					</select>
 				
-					<label for="deptId">개설학과</label> <select name="deptId" id="deptId">
+					<label for="deptId">개설학과</label>
+					 <select name="deptId" id="deptId">
 						<option value="-1">전체</option>
 						
 							<option value="101">컴퓨터공학과</option>

@@ -38,6 +38,7 @@ public class ProfessorController extends HttpServlet {
 		
 		switch (action) {
 		case "/subject":
+			subjectById(request, response);
 			
 			break;
 		case "":
