@@ -7,17 +7,19 @@ import com.tenco.group3.model.Sugang;
 
 public interface SugangRepository {
 
-	List<Sugang> getAllSubject(int page, int offset);
+	List<Sugang> getAllSubject(int limit, int offset);
 
-	List<Sugang> getSubjectByDeptName(Sugang sugang, int page, int offset);
-
-	List<Sugang> getSubjectByType(Sugang sugang, int page, int offset);
-
-	List<Sugang> getSubjectBySubjectName(Sugang sugang, int page, int offset);
+	List<Sugang> getSubjectBySearch(Sugang sugang);
 
 	List<Sugang> getApplicationSubject(int studentId);
 
-	int addEnrolment(int studentId, Sugang sugang);
+	int addEnrolment(int studentId, int subjectId);
 
 	int cancelEnrolment(Sugang sugang);
+
+	int getAllSubjectCount();
+
+	List<Sugang> getApplicatedSubjectList(int studentId);
+
+	int getSubjectGrade(int studentId);
 }

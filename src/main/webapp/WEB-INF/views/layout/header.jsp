@@ -29,7 +29,7 @@
 							<li><a href="${pageContext.request.contextPath}/">홈</a></li>
 							<li><a href="${pageContext.request.contextPath}/info/student">My</a></li>
 							<li><a href="${pageContext.request.contextPath}/subject/list/1">수업</a></li>
-							<li><a href="${pageContext.request.contextPath}/sugang/subjectList/1">수강신청</a></li>
+							<li><a href="${pageContext.request.contextPath}/sugang/subjectList">수강신청</a></li>
 							<li><a href="${pageContext.request.contextPath}/grade/thisSemester">성적</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 						</ul>
