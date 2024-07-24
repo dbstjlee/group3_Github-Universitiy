@@ -3,10 +3,14 @@ package com.tenco.group3.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.tenco.group3.model.Student;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.DBUtil;
+import com.tenco.group3.util.SemesterUtil;
 
 public class TuitionRepositoryImpl implements TuitionRepository {
 
@@ -22,6 +26,14 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			+ "    scholarship_tb AS sc ON sc.type = ss.sch_type " + " WHERE" + "    tu.student_id = ? ";
 
 	private static final String GET_SUMMARY_TUTION_BY_STUDNETID = " SELECT *, (tui_amount - sch_amount) AS total_amount FROM tuition_tb WHERE student_id = ? ";
+	private static final String SELECT_TUITIONS = " SELECT s.id AS student_id, ct.amount AS tui_amount, sch.type AS sch_type, (ct.amount * sch.max_amount / 100) AS sch_amount "
+			+ " FROM stu_sch_tb ssc "
+			+ " JOIN scholarship_tb sch ON ssc.sch_type = sch.type "
+			+ " JOIN student_tb s ON s.id = ssc.student_id "
+			+ " JOIN department_tb d ON s.dept_id = d.id "
+			+ " JOIN coll_tuit_tb ct ON d.college_id = ct.college_id "
+			+ " JOIN stu_stat_tb ss ON s.id = ss.student_id "
+			+ " WHERE ss.status IN ('입학','복학') ";
 
 	@Override
 	public Tuition getTuitionByStudentId(int studentId) {
@@ -66,6 +78,29 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			e.printStackTrace();
 		}
 		return tuition;
+	}
+
+	@Override
+	public List<Tuition> getTuitions() {
+		List<Tuition> tutionList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_TUITIONS)) {
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					Tuition tuition = Tuition.builder()
+							.studentId(rs.getInt("student_id"))							
+							.year(SemesterUtil.getCurrentYear()).semester(SemesterUtil.getCurrentSemester())
+							.scholarType(rs.getInt("sch_type")).tuiAmount(rs.getInt("tui_amount"))
+							.scholarAmount(rs.getInt("sch_amount")).build();
+					tutionList.add(tuition);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tutionList;
 	}
 
 }

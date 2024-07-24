@@ -13,14 +13,15 @@ import lombok.ToString;
 @Builder
 public class Tuition {
 	private int studentId;
+	private int year;
+	private int semester;
+	private int tuiAmount;
+	private int scholarType;
+	private int scholarAmount;
+	private int status;
 	private String studentName;
 	private String deptName;
 	private String collgeName;
 	private int collAmount;
-	private int scholarType;
-	private int scholarAmount;
 	private int totalAmount;
-	private int status;
-	private int year;
-	private int semester;
 }

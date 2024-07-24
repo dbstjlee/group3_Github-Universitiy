@@ -8,8 +8,10 @@ import com.tenco.group3.model.BreakApp;
 public class SemesterUtil {
 	
 	// 현재 학기는 2024년 1학기 고정 --> 새학기 버튼 누르면 2024년 2학기 됨
-	private static int currentYear = 2024; 
-	private static int currentSemester = 1; 
+	private static int currentYear = 2024;
+	private static int currentSemester = 1;
+	private static int beforeYear = 2023;
+	private static int beforeSemester = 2;
 	
 	// 2024년 2학기 이전으로 설정된 학기라면 true 반환
 	public static boolean isBeforeSemester(int year, int semester) {
@@ -39,4 +41,10 @@ public class SemesterUtil {
 		return studentList;
 	}
 	
+	public static int getCurrentSemester() {
+		return currentSemester;
+	}
+	public static int getCurrentYear() {
+		return currentYear;
+	}
 }

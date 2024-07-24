@@ -2,7 +2,6 @@ package com.tenco.group3.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.repository.interfaces.StuStatRepository;

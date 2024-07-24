@@ -9,14 +9,19 @@ import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.RankedStudent;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
+import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
+import com.tenco.group3.repository.StuSchRepositoryImpl;
 import com.tenco.group3.repository.StuStatRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
+import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
+import com.tenco.group3.repository.interfaces.StuSchRepository;
 import com.tenco.group3.repository.interfaces.StuStatRepository;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
+import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
 import com.tenco.group3.util.SemesterUtil;
@@ -35,6 +40,8 @@ public class ManagementController extends HttpServlet {
 	private BreakAppRepository breakAppRepository;
 	private StuStatRepository stuStatRepository;
 	private StuSubRepository stuSubRepository;
+	private StuSchRepository stuSchRepository;
+	private TuitionRepository tuitionRepository;
 
 	public ManagementController() {
 		super();
@@ -46,6 +53,8 @@ public class ManagementController extends HttpServlet {
 		breakAppRepository = new BreakAppRepositoryImpl();
 		stuStatRepository = new StuStatRepositoryImpl();
 		stuSubRepository = new StuSubRepositoryImpl();
+		stuSchRepository = new StuSchRepositoryImpl();
+		tuitionRepository = new TuitionRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -182,12 +191,11 @@ public class ManagementController extends HttpServlet {
 		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
 		stuStatRepository.updateStatusById(studentIdList, "복학");
 		
-		// TODO 
-		// 2. 직전학기 성적 확인하여 장학금 타입 설정
+		// 2. 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 		List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
-			
-		// 3. 재학 중인 사람 에게 등록금 고지서 발송
-		
+		stuSchRepository.insertStuSch(rankedStudentList);
+		// TODO 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
+		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 	}
 	
 	/**
