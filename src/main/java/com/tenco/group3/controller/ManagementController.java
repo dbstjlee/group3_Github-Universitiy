@@ -2,19 +2,21 @@ package com.tenco.group3.controller;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
 import com.tenco.group3.model.Professor;
+import com.tenco.group3.model.RankedStudent;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
 import com.tenco.group3.repository.StuStatRepositoryImpl;
+import com.tenco.group3.repository.StuSubRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
 import com.tenco.group3.repository.interfaces.StuStatRepository;
+import com.tenco.group3.repository.interfaces.StuSubRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
 import com.tenco.group3.util.SemesterUtil;
@@ -32,6 +34,7 @@ public class ManagementController extends HttpServlet {
 	private ManagementRepository managementRepository;
 	private BreakAppRepository breakAppRepository;
 	private StuStatRepository stuStatRepository;
+	private StuSubRepository stuSubRepository;
 
 	public ManagementController() {
 		super();
@@ -42,6 +45,7 @@ public class ManagementController extends HttpServlet {
 		managementRepository = new ManagementRepositoryImpl();
 		breakAppRepository = new BreakAppRepositoryImpl();
 		stuStatRepository = new StuStatRepositoryImpl();
+		stuSubRepository = new StuSubRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -180,7 +184,7 @@ public class ManagementController extends HttpServlet {
 		
 		// TODO 
 		// 2. 직전학기 성적 확인하여 장학금 타입 설정
-		
+		List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 			
 		// 3. 재학 중인 사람 에게 등록금 고지서 발송
 		
