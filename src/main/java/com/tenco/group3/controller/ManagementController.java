@@ -2,15 +2,22 @@ package com.tenco.group3.controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.tenco.group3.model.BreakApp;
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
+import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
+import com.tenco.group3.repository.StuStatRepositoryImpl;
+import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
+import com.tenco.group3.repository.interfaces.StuStatRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
+import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,6 +30,7 @@ public class ManagementController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private ManagementRepository managementRepository;
+	private BreakAppRepository breakAppRepository;
 
 	public ManagementController() {
 		super();
@@ -31,6 +39,7 @@ public class ManagementController extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		managementRepository = new ManagementRepositoryImpl();
+		breakAppRepository = new BreakAppRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -162,8 +171,13 @@ public class ManagementController extends HttpServlet {
 	 * @param response
 	 */
 	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) {
-		// TODO 등록금 고지 대상 확인
-		// 1. 학적이 재학인 경우
+		// TODO 
+		// 1. 휴학이 끝난 사람을 재학 상태로 변경 (2024 2학기 기준)
+		List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
+		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
+		
+		// 2. 직전학기 성적 확인하여 장학금 타입 선정
+		// 3. 재학 중인 사람 에게 등록금 고지서 발송
 		
 	}
 	
@@ -177,11 +191,11 @@ public class ManagementController extends HttpServlet {
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = managementRepository.getScheduleStat("break");
 		if (isBreak == Define.ERROR) {
-			// TODO 오류 발생 오류 처리
-			return;
+			AlertUtil.errorAlert(response, "오류 발생");
+		} else {
+			request.setAttribute("isBreak", isBreak);
+			request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
 		}
-		request.setAttribute("isBreak", isBreak);
-		request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
 	}
 	
 	/**
@@ -202,7 +216,6 @@ public class ManagementController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 		switch (action) {
 		case "/student":
 			handleCreateStudent(request, response);

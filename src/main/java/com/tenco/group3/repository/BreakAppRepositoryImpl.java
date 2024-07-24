@@ -25,6 +25,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			+ "WHERE br.id = ? ";
 
 	private static final String GET_STUDENT_INFO = " SELECT * FROM student_tb WHERE id = ? ";
+	private static final String GET_BREAK_APP_BY_APPROVAL = " SELECT * FROM break_app_tb WHERE status '승인' ";
 
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
@@ -117,6 +118,30 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			e.printStackTrace();
 		}
 		return student;
+	}
+
+	@Override
+	public List<BreakApp> getBreakAppByApproval() {
+		List<BreakApp> breakAppList = new ArrayList<BreakApp>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(GET_BREAK_APP_BY_APPROVAL)) {
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					BreakApp app = BreakApp.builder().type(rs.getString("type")).id(rs.getInt("id"))
+							.departmentName(rs.getString("departmentname")).studentId(rs.getInt("student_id"))
+							.studentGrade(rs.getInt("student_grade")).studentName(rs.getString("studentName"))
+							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
+							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
+							.appDate(rs.getString("app_date")).status(rs.getString("status")).build();
+					breakAppList.add(app);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return breakAppList;
 	}
 
 }

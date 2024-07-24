@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import com.tenco.group3.model.User;
+import com.tenco.group3.util.AlertUtil;
 
 @WebFilter("/management/*")
 public class ManagementFilter extends HttpFilter implements Filter {
@@ -27,7 +28,7 @@ public class ManagementFilter extends HttpFilter implements Filter {
 		if ("staff".equals(principal.getUserRole())) {
 			chain.doFilter(request, response);
 		} else {
-			((HttpServletResponse)response).sendRedirect("/user/logIn");
+			AlertUtil.errorAlert((HttpServletResponse)response, "비정상적인 접근입니다.");
 		}
 	}
 
