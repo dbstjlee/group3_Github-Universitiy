@@ -31,6 +31,7 @@ public class ManagementController extends HttpServlet {
 
 	private ManagementRepository managementRepository;
 	private BreakAppRepository breakAppRepository;
+	private StuStatRepository stuStatRepository;
 
 	public ManagementController() {
 		super();
@@ -40,6 +41,7 @@ public class ManagementController extends HttpServlet {
 	public void init() throws ServletException {
 		managementRepository = new ManagementRepositoryImpl();
 		breakAppRepository = new BreakAppRepositoryImpl();
+		stuStatRepository = new StuStatRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -171,12 +173,15 @@ public class ManagementController extends HttpServlet {
 	 * @param response
 	 */
 	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) {
-		// TODO 
-		// 1. 휴학이 끝난 사람을 재학 상태로 변경 (2024 2학기 기준)
+		// 1. 휴학이 끝난 사람을 복학 상태로 변경 (2024 2학기 기준)
 		List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
 		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
+		stuStatRepository.updateStatusById(studentIdList, "복학");
 		
-		// 2. 직전학기 성적 확인하여 장학금 타입 선정
+		// TODO 
+		// 2. 직전학기 성적 확인하여 장학금 타입 설정
+		
+			
 		// 3. 재학 중인 사람 에게 등록금 고지서 발송
 		
 	}
