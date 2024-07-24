@@ -25,4 +25,5 @@ public class Sugang {
 	private String roomId;
 	private int numOfStudent;
 	private int capacity;
+	private int deptId;
 }
