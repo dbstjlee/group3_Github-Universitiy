@@ -11,12 +11,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
+
 public class Subject {
 	private int id;
 	private String name; // 수업 명
 	private int professorId; // 교수 ID
 	private String roomId; // 강의실 ID
 	private int deptId; // 학과 ID
+	private String professorName;
+	private String collName;
+	private String deptName;
 	private String type; // 전공, 교양
 	private int subYear; // 년도
 	private int semester; // 학기

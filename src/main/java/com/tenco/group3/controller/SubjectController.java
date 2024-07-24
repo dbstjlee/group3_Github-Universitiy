@@ -32,8 +32,8 @@ public class SubjectController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
-		HttpSession session = request.getSession(false);
-		if (session != null || session.getAttribute("principal") != null) {
+//		HttpSession session = request.getSession(false);
+//		if (session != null || session.getAttribute("principal") != null) {
 
 			switch (action) {
 
@@ -47,7 +47,7 @@ public class SubjectController extends HttpServlet {
 
 		}
 
-	}
+//	}
 
 	private void showAllSubject(HttpServletRequest request, HttpServletResponse response)
 			throws SecurityException, IOException {
