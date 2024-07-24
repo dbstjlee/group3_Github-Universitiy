@@ -3,6 +3,7 @@ package com.tenco.group3.controller;
 import java.io.IOException;
 
 import com.tenco.group3.model.Tuition;
+import com.tenco.group3.model.User;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 
@@ -11,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/tuition/*")
 public class TuitionController extends HttpServlet {
@@ -24,14 +26,15 @@ public class TuitionController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO - 테스트 나중에
 		String action = request.getPathInfo();
+		HttpSession session = request.getSession(false);
 		switch (action) {
 		case "/payment":
-			showPaymentTuition(request, response);
+			// TODO - 납부 기간아니면 alert 으로 접근 막기
+			showPaymentTuition(request, response, session);
 			break;
 		case "/check":
-			showListTuition(request, response);
+			showListTuition(request, response, session);
 			break;
 		default:
 			break;
@@ -42,11 +45,13 @@ public class TuitionController extends HttpServlet {
 	 * 등록금 내역 조회 페이지 이동
 	 * @param request
 	 * @param response
+	 * @param session 
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private void showListTuition(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Tuition tuition = tuitionRepository.getSummaryTuitionByStudentId(2023000003);
+	private void showListTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+		User user = (User) session.getAttribute("principal");
+		Tuition tuition = tuitionRepository.getSummaryTuitionByStudentId(user.getId());
 		
 //		System.out.println(tuition.toString());
 		request.setAttribute("tuition", tuition);
@@ -58,12 +63,14 @@ public class TuitionController extends HttpServlet {
 	 * 
 	 * @param request
 	 * @param response
+	 * @param session 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showPaymentTuition(HttpServletRequest request, HttpServletResponse response)
+	private void showPaymentTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
-		Tuition tuition = tuitionRepository.getTuitionByStudentId(2023000003);
+		User user = (User) session.getAttribute("principal");
+		Tuition tuition = tuitionRepository.getTuitionByStudentId(user.getId());
 
 //		System.out.println(tuition.toString());
 		request.setAttribute("tuition", tuition);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
+import com.tenco.group3.model.Student;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.util.DBUtil;
 
@@ -22,6 +23,8 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 			+ " JOIN department_tb as de on st.dept_id = de.id JOIN college_tb as co ON co.id = de.college_id "
 			+ "WHERE br.id = ? ";
+
+	private static final String GET_STUDENT_INFO = " SELECT * FROM student_tb WHERE id = ? ";
 
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
@@ -95,6 +98,25 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			e.printStackTrace();
 		}
 		return breakApp;
+	}
+
+	@Override
+	public Student getStudentInfo(int studentId) {
+		Student student = null;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(GET_STUDENT_INFO)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					student = Student.builder().grade(rs.getInt("grade")).semester(rs.getInt("semester")).build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return student;
 	}
 
 }

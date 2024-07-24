@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.Grade;
+import com.tenco.group3.model.Student;
 import com.tenco.group3.repository.interfaces.GradeRepository;
 import com.tenco.group3.util.DBUtil;
 
@@ -43,6 +44,8 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id\r\n" + " WHERE st.student_id = ? "
 			+ " group by su.sub_year " + " ORDER BY su.sub_year DESC ";
 
+	
+	
 	@Override
 	public List<Grade> getThisSemester(int studentId, int semester, int sub_year) {
 		List<Grade> gradeList = new ArrayList<Grade>();
@@ -174,6 +177,12 @@ public class GradeRepositoryImpl implements GradeRepository {
 			e.printStackTrace();
 		}
 		return grade;
+	}
+
+	@Override
+	public Student getStudentInfo(int studentId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

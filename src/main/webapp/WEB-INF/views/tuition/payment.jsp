@@ -5,12 +5,41 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<ul>
-		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
-		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
-	</ul>
+	<div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>My</h2>
+		</div>
+
+		<!-- 좌측 메뉴 -->
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/password">비밀번호 변경</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+
+				</tr>
+			</table>
+		</div>
+	</div>
 	<h1>등록금 납부 페이지</h1>
 	<hr>
 	<div>
