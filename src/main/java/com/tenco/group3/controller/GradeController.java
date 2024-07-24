@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tenco.group3.model.Grade;
 import com.tenco.group3.model.Student;
+import com.tenco.group3.model.User;
 import com.tenco.group3.repository.GradeRepositoryImpl;
 import com.tenco.group3.repository.interfaces.GradeRepository;
 
@@ -27,11 +28,8 @@ public class GradeController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String action = request.getPathInfo();
 		HttpSession session = request.getSession();
-//		if (session == null) {
-//			response.sendRedirect(request.getContextPath() + "/user/login");
-//		}
+		String action = request.getPathInfo();
 		switch (action) {
 		case "/thisSemester":
 			showThisSemester(request, response, session);
@@ -61,9 +59,9 @@ public class GradeController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO - 수강신청에서 학기, 연도 받기
 		// 세션에서 학생 ID 받기
-		Student student = (Student) session.getAttribute("principal");
+		User user = (User) session.getAttribute("principal");
 //		gradeRepository.getTotalGrade(student.getId());
-		Grade grade = gradeRepository.getTotalGrade(2023000012);
+		Grade grade = gradeRepository.getTotalGrade(user.getId());
 		request.setAttribute("grade", grade);
 		request.getRequestDispatcher("/WEB-INF/views/grade/total.jsp").forward(request, response);
 
@@ -81,7 +79,7 @@ public class GradeController extends HttpServlet {
 	private void showSemester(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		// TODO - 수강신청에서 학기, 연도 받기
-		Student student = (Student) session.getAttribute("principal");
+		User user = (User) session.getAttribute("principal");
 		int year = 0;
 		int semester = 0;
 		String type = "all";
@@ -100,12 +98,12 @@ public class GradeController extends HttpServlet {
 		if (type.equals("교양") || type.equals("전공")) {
 			// TODO - 교양 or 전공 타입 성적 조회
 			List<Grade> gradeList = gradeRepository.getSemesterByType(2023000012, grade);
-//			List<Grade> gradeList = gradeRepository.getSemesterByType(student.getId(), grade);
+//			List<Grade> gradeList = gradeRepository.getSemesterByType(user.getId(), grade);
 			request.setAttribute("gradeList", gradeList);
 		} else {
 			// TODO - 전체 성적 조회
 			List<Grade> gradeList = gradeRepository.getSemester(2023000012, grade);
-//			List<Grade> gradeList = gradeRepository.getSemesterByType(student.getId(), grade);
+//			List<Grade> gradeList = gradeRepository.getSemester(user.getId(), grade);
 			request.setAttribute("gradeList", gradeList);
 		}
 		request.getRequestDispatcher("/WEB-INF/views/grade/semester.jsp").forward(request, response);
@@ -123,10 +121,10 @@ public class GradeController extends HttpServlet {
 	private void showThisSemester(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		// TODO - 수강신청에서 학기, 연도 받기
-		Student student = (Student) session.getAttribute("principal");
-		Grade year = gradeRepository.getSubYear(student.getId());
-		Grade semester = gradeRepository.getSemester(student.getId());
-		List<Grade> gradeList = gradeRepository.getThisSemester(2023000012, 1, 2023);
+		User user = (User) session.getAttribute("principal");
+//		Grade year = gradeRepository.getSubYear(student.getId());
+//		Grade semester = gradeRepository.getSemester(student.getId());
+		List<Grade> gradeList = gradeRepository.getThisSemester(user.getId(), 1, 2023);
 //		List<Grade> gradeList = gradeRepository.getThisSemester(student.getId(), semester.getSemester(), year.getSubYear());
 		request.setAttribute("gradeList", gradeList);
 		request.getRequestDispatcher("/WEB-INF/views/grade/thisSemester.jsp").forward(request, response);

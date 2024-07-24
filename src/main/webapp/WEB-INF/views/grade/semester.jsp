@@ -5,11 +5,29 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<ul>
-		<li><a href="${pageContext.request.contextPath}/grade/thisSemester">이번 학기 성적 조회</a></li>
-		<li><a href="${pageContext.request.contextPath}/grade/semester">학기별 성적 조회</a></li>
-		<li><a href="${pageContext.request.contextPath}/grade/total">전체 성적 조회</a></li>
-	</ul>
+	<div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>My</h2>
+		</div>
+
+		<!-- 좌측 메뉴 -->
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/grade/thisSemester">이번 학기 성적 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/grade/semester">학기별 성적 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/grade/total">전체 성적 조회</a></td>
+
+				</tr>
+			</table>
+		</div>
+	</div>
 	<h1>학기별 성적 조회</h1>
 	<hr>
 	<form action="${pageContext.request.contextPath}/grade/semester">

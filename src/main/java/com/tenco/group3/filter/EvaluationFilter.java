@@ -1,9 +1,9 @@
-package com.tenco.group3.controller;
+package com.tenco.group3.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import com.tenco.group3.model.Student;
+import com.tenco.group3.model.User;
 import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.interfaces.EvaluationRepository;
 
@@ -25,32 +25,40 @@ public class EvaluationFilter extends HttpFilter implements Filter {
 	private EvaluationRepository evaluationRepository;
 
 	public void destroy() {
-
+		// 필터 종료 코드
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpSession session = ((HttpServletRequest) request).getSession();
-		Student student = (Student) session.getAttribute("principal");
-		if (student == null) {
-			if (evaluationRepository.isEvaluation(2023000013)) {
-				chain.doFilter(request, response);
+		HttpSession session = ((HttpServletRequest) request).getSession(); // 기존 세션 가져오기
+
+		if (session != null) {
+			Object principalObj = session.getAttribute("principal");
+
+			if (principalObj instanceof User) {
+				User principal = (User) principalObj;
+				System.out.println("principal : " + principal);
+
+				if (evaluationRepository.isEvaluation(principal.getId())) {
+					chain.doFilter(request, response);
+				} else {
+					sendErrorMessage((HttpServletResponse) response, "이미 평가를 했습니다.");
+				}
 			} else {
-				((HttpServletResponse) response).setContentType("text/html;charset=UTF-8");
-				PrintWriter out = ((HttpServletResponse) response).getWriter();
-				out.println("<script> alert('이미 평가를 했습니다.'); window.close(); </script>");
-				return;
+				sendErrorMessage((HttpServletResponse) response, "비정상 접근입니다.");
 			}
 		} else {
-			((HttpServletResponse) response).setContentType("text/html;charset=UTF-8");
-			PrintWriter out = ((HttpServletResponse) response).getWriter();
-			out.println("<script> alert('비정상 접근입니다.'); window.close(); </script>");
-			return;
+			sendErrorMessage((HttpServletResponse) response, "세션이 존재하지 않습니다.");
 		}
+	}
+
+	private void sendErrorMessage(HttpServletResponse response, String message) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script> alert('" + message + "'); window.close(); </script>");
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		evaluationRepository = new EvaluationRepositoryImpl();
 	}
-
 }

@@ -5,12 +5,41 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<ul>
-		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
-		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
-	</ul>
+	<div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>My</h2>
+		</div>
+
+		<!-- 좌측 메뉴 -->
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/password">비밀번호 변경</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+
+				</tr>
+			</table>
+		</div>
+	</div>
 	<h1>휴학 신청 내역</h1>
 	<hr>
 	<c:if test="${breakList.size() != 0}">
@@ -32,28 +61,28 @@
 					<td>${breakList.studentId}</td>
 					<td>${breakList.studentName}</td>
 					<td>${breakList.studentGrade}</td>
-					<td>${breakList.fromYear}년도${breakList.fromSemester}학기부터${breakList.toYear}년도${breakList.toSemester}까지</td>
+					<td>${breakList.fromYear}년도${breakList.fromSemester}학기 부터${breakList.toYear}년도${breakList.toSemester}학기 까지</td>
 					<c:choose>
-						<c:when test="${type == nomalBreak}">
+						<c:when test="${breakList.type eq 'nom'}">
 							<td>일반 휴학</td>
 						</c:when>
-						<c:when test="${type == familyBreak}">
+						<c:when test="${breakList.type eq 'fam'}">
 							<td>임신·출산·육아휴학</td>
 						</c:when>
-						<c:when test="${type == medicalBreak}">
+						<c:when test="${breakList.type eq 'med'}">
 							<td>질병 휴학</td>
 						</c:when>
-						<c:when test="${type == businessBreak}">
+						<c:when test="${breakList.type eq 'bus'}">
 							<td>창업 휴학</td>
 						</c:when>
-						<c:when test="${type == militaryBreak}">
+						<c:when test="${breakList.type eq 'mil'}">
 							<td>군입대 휴학</td>
 						</c:when>
 					</c:choose>
 					<td>${breakList.appDate}</td>
 					<td>${breakList.status}</td>
 					<td><form action="${pageContext.request.contextPath}/break/detail" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=600,height=400,scrollbars=yes');">
-							<input type="hidden" name="id" value="${breakList.id}">
+							<input type="hidden" name="breakId" value="${breakList.id}">
 							<button type="submit">조회</button>
 						</form></td>
 				</tr>

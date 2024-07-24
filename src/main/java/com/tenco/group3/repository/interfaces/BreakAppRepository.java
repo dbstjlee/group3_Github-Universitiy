@@ -3,6 +3,7 @@ package com.tenco.group3.repository.interfaces;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
+import com.tenco.group3.model.Student;
 
 public interface BreakAppRepository {
 
@@ -12,4 +13,6 @@ public interface BreakAppRepository {
 	List<BreakApp> getBreakAppList(int studentId);
 	// 휴학 내역 상세 조회
 	BreakApp getBreakAppDetail(int breakId);
+	// 학생 정보
+	Student getStudentInfo(int studentId);
 }

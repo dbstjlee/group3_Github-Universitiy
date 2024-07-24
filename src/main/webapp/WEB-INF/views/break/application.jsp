@@ -5,12 +5,41 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<ul>
-		<li><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></li>
-		<li><a href="${pageContext.request.contextPath}/break/list">휴학 신청 내역</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 확인</a></li>
-		<li><a href="${pageContext.request.contextPath}/tuition/payment">등록금 고지서</a></li>
-	</ul>
+	<div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>My</h2>
+		</div>
+
+		<!-- 좌측 메뉴 -->
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/password">비밀번호 변경</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 조회</a></td>
+
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+
+				</tr>
+			</table>
+		</div>
+	</div>
 	<h1>휴학 신청</h1>
 	<hr>
 	<div>
@@ -51,17 +80,13 @@
 						<tr>
 							<th>기간</th>
 							<!-- 학생 정보에서 받아오기 -->
-								<c:set var="today" value="<%=new java.util.Date()%>" />
-							 	<fmt:formatDate value="${today}" pattern="yyyy" var="currentYear"/>
-							<td colspan="3">${currentYear}년도 1학기 부터
-							<!-- 값 전송 -->
-							<!-- TODO 현재 년도와 학기와 동일한 값은 선택 불가능 하게 수정 -->
-							 <select id="breakYear" name="breakYear">
-							 	<c:forEach begin="0" end="2" var="i">
-									<option value="${currentYear + i}">${currentYear + i}</option>
-							 	</c:forEach>
-							</select> 년도
-							<select id="semester" name="semester">
+							<c:set var="today" value="<%=new java.util.Date()%>" />
+							<fmt:formatDate value="${today}" pattern="yyyy" var="currentYear" />
+							<td colspan="3">${currentYear}년도1학기 부터 <!-- 값 전송 --> <!-- TODO 현재 년도와 학기와 동일한 값은 선택 불가능 하게 수정 --> <select id="breakYear" name="breakYear">
+									<c:forEach begin="0" end="2" var="i">
+										<option value="${currentYear + i}">${currentYear + i}</option>
+									</c:forEach>
+							</select> 년도 <select id="semester" name="semester">
 									<option value="1">1</option>
 									<option value="2">2</option>
 							</select> 학기 까지
@@ -70,17 +95,16 @@
 						<tr>
 							<th>휴학 구분</th>
 							<td>
-								<input type="radio" name="breakType" id="nomalBreak" value="nomalBreak" checked="checked">
-								<label for="nomalBreak">일반 휴학</label>
-								<input type="radio" name="breakType" id="familyBreak" value="familyBreak">
-								<label for="familyBreak">임신·출산·육아휴학</label>
-								<input type="radio" name="breakType" id="medicalBreak" value="medicalBreak">
-								<label for="medicalBreak">질병 휴학</label>
-								<input type="radio" name="breakType" id="businessBreak" value="businessBreak">
-								<label for="businessBreak">창업 휴학</label>
-								<input type="radio" name="breakType" id="militaryBreak" value="militaryBreak">
-								<label for="militaryBreak">군입대 휴학</label>
-							</td>
+							<input type="radio" name="breakType" id="nom" value="nom" checked="checked">
+							<label for="nomalBreak">일반 휴학</label>
+							<input type="radio"name="breakType" id="fam" value="fam">
+							<label for="familyBreak">임신·출산·육아휴학</label>
+							<input type="radio" name="breakType" id="med" value="med">
+							<label for="medicalBreak">질병 휴학</label>
+							<input type="radio" name="breakType" id="bus" value="bus">
+							<label for="businessBreak">창업 휴학</label>
+							<input type="radio" name="breakType" id="mil" value="mil">
+							<label for="militaryBreak">군입대 휴학</label></td>
 						</tr>
 					</tbody>
 				</table>

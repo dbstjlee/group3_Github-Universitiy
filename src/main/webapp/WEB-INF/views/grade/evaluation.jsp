@@ -15,7 +15,7 @@ li {
 		<h1>강의 평가</h1>
 	</div>
 	<hr>
-	<form action="${pageContext.request.contextPath}/evaluation" method="post">
+	<form action="${pageContext.request.contextPath}/evaluationSubmit" method="post">
 		<ul>
 			<li><h3>1.강의 내용은 자신에게 학습 욕구를 불러일으킬 만큼 적절한 수준이었는가?</h3></li>
 			<li><input type="radio" name="answer1" value="5" id="a11"> <label for="a11"> 매우 그렇다</label></li>

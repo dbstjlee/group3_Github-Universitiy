@@ -38,24 +38,24 @@
 					</tr>
 					<tr>
 						<th>기간</th>
-						<td>${breakApp.fromYear}년${breakApp.fromSemester}학기 부터 ${breakApp.toYear}년 ${breakApp.toSemester}학기 까지</td>
+						<td>${breakApp.fromYear}년${breakApp.fromSemester}학기 부터 ${breakApp.toYear}년${breakApp.toSemester}학기 까지</td>
 					</tr>
 					<tr>
 						<th>휴학 구분</th>
 						<c:choose>
-							<c:when test="${type == nomalBreak}">
+							<c:when test="${breakApp.type eq 'nom'}">
 								<td>일반 휴학</td>
 							</c:when>
-							<c:when test="${type == familyBreak}">
+							<c:when test="${breakApp.type eq 'fam'}">
 								<td>임신·출산·육아휴학</td>
 							</c:when>
-							<c:when test="${type == medicalBreak}">
+							<c:when test="${breakApp.type eq 'med'}">
 								<td>질병 휴학</td>
 							</c:when>
-							<c:when test="${type == businessBreak}">
+							<c:when test="${breakApp.type eq 'bus'}">
 								<td>창업 휴학</td>
 							</c:when>
-							<c:when test="${type == militaryBreak}">
+							<c:when test="${breakApp.type eq 'mil'}">
 								<td>군입대 휴학</td>
 							</c:when>
 						</c:choose>
