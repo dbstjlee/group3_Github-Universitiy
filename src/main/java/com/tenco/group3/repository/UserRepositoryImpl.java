@@ -28,14 +28,15 @@ public class UserRepositoryImpl implements UserRepository{
 			+ "        LEFT JOIN professor_tb AS p "
 			+ "        ON u.id = p.id "
 			+ "        where u.id = ? ; ";
+	 
 	
-	// 이름, 이메일로 ID 찾기
+	//이름, 이메일로 ID 찾기
+	
 	// 학생
 	private static final String  SELECT_STUDENT_BY_NAME_AND_EMAIL = " SELECT id, name "
 			+ "	FROM student_tb "
 			+ "	WHERE name = ? "
 			+ "	AND email = ? ";
-	
 	// 교수
 	private static final String  SELECT_PROFESSOR_BY_FINDID = " SELECT id, name "
 			+ "	FROM professor_tb "
@@ -48,28 +49,44 @@ public class UserRepositoryImpl implements UserRepository{
 			+ "	WHERE name = ? "
 			+ "	AND email = ? ";
 	
+	// 정보 조회
 	
 	// 학생 정보 조회
-	private static final String SELECT_STUDENT_INFO_BY_ID = " select s.id, s.name, s.birth_date, "
+	private static final String SELECT_STUDENT_INFO_BY_ID = " SELECT s.id, s.name, s.birth_date, "
 			+ " s.gender, s.address, s.tel, s.email, s.grade, s.semester, s.entrance_date, s.graduation_date, "
 			+ " d.name as deptname, c.name as collname "
-			+ " from student_tb as s join department_tb as d on s.dept_id = d.id "
-			+ " join college_tb as c on c.id = d.college_id WHERE s.id = ? ; ";
+			+ " FROM student_tb as s join department_tb as d on s.dept_id = d.id "
+			+ " JOIN college_tb as c on c.id = d.college_id WHERE s.id = ? ; ";
 	
 	
 	// 교수 정보 조회
-	private static final String SELECT_PROFESSOR_INFO_BY_ID = " select p.id, p.name, p.birth_date, p.gender, "
+	private static final String SELECT_PROFESSOR_INFO_BY_ID = " SELECT p.id, p.name, p.birth_date, p.gender, "
 			+ " p.address, p.tel, p.email, d.name as deptname, c.name as collname "
-			+ " from professor_tb as p join department_tb as d on p.dept_id = d.id "
-			+ " join college_tb as c on c.id = d.college_id where p.id = ? ; ";
+			+ " FROM professor_tb as p join department_tb as d on p.dept_id = d.id "
+			+ " JOIN college_tb as c on c.id = d.college_id WHERE p.id = ? ; ";
 	
 	
 	// 직원 정보 조회
-	private static final String SELECT_STAFF_INFO_BY_ID = " select * from staff_tb WHERE = ? 	; ";
+	private static final String SELECT_STAFF_INFO_BY_ID = " SELECT * FROM staff_tb WHERE id = ? ; ";
 	
 	
+	// 정보 수정
 	
+	// 학생 정보 수정
+	private static final String UPDATE_STUDENT_INFO_BY_ID = " UPDATE student_tb SET address =  ? , "
+			+ " tel =  ? , email =  ?  WHERE id = ? ; ";
 	
+	// 교수 정보 수정
+	private static final String UPDATE_PROFESSOR_INFO_BY_ID = " UPDATE professor_tb SET address =  ? , "
+			+ " tel =  ? , email =  ?  WHERE id = ? ; ";
+	
+	// 직원 정보 수정
+	private static final String UPDATE_STAFF_INFO_BY_ID = " UPDATE staff_tb SET address =  ? , "
+			+ " tel =  ? , email =  ?  WHERE id = ? ; ";
+	
+	/**
+	 * ID로 로그인
+	 */
 	@Override
 	public User getUserById(int id) {
 		User user = null;
@@ -95,6 +112,10 @@ public class UserRepositoryImpl implements UserRepository{
 		return user;
 	}
 
+	/**
+	 * 이름, 이메일로 ID 찾기
+	 * 학생
+	 */
 	@Override
 	public User getStudentByNameAndEmail(String username, String email) {
 		User student = null;
@@ -118,6 +139,10 @@ public class UserRepositoryImpl implements UserRepository{
 		return student;
 	}
 
+	/**
+	 * 이름, 이메일로 ID 찾기
+	 * 교수
+	 */
 	@Override
 	public User getProfessorByNameAndEmail(String username, String email) {
 		User professor = null;
@@ -141,6 +166,10 @@ public class UserRepositoryImpl implements UserRepository{
 		return professor;
 	}
 
+	/**
+	 * 이름, 이메일로 ID 찾기
+	 * 직원
+	 */
 	@Override
 	public User getStaffByNameAndEmail(String username, String email) {
 		User staff = null;
@@ -164,6 +193,9 @@ public class UserRepositoryImpl implements UserRepository{
 		return staff;
 	}
 
+	/**
+	 * 학생 정보 조회
+	 */
 	@Override
 	public Student getStudentInfo(int id) {
 		Student studentInfo = null;
@@ -197,6 +229,9 @@ public class UserRepositoryImpl implements UserRepository{
 		return studentInfo;
 	}
 
+	/**
+	 * 교수 정보 조회
+	 */
 	@Override
 	public Professor getProfessorInfo(int id) {
 		Professor professor = null;
@@ -226,6 +261,9 @@ public class UserRepositoryImpl implements UserRepository{
 		return professor;
 	}
 
+	/**
+	 * 직원 정보 조회
+	 */
 	@Override
 	public Staff getStaffInfo(int id) {
 		Staff staff = null;
@@ -252,5 +290,74 @@ public class UserRepositoryImpl implements UserRepository{
 			e.printStackTrace();
 		}
 		return staff;
+	}
+
+	/**
+	 * 학생 정보 수정
+	 */
+	@Override
+	public void getStudentInfoUpdate(Student student) {
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_STUDENT_INFO_BY_ID)){
+				pstmt.setString(1, student.getAddress());
+				pstmt.setString(2, student.getTel());
+				pstmt.setString(3, student.getEmail());
+				pstmt.setInt(4, student.getId());
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 교수 정보 수정
+	 */
+	@Override
+	public void getProfessorInfoUpdate(Professor professor) {
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PROFESSOR_INFO_BY_ID)){
+				pstmt.setString(1, professor.getAddress());
+				pstmt.setString(2, professor.getTel());
+				pstmt.setString(3, professor.getEmail());
+				pstmt.setInt(4, professor.getId());
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 직원 정보 수정
+	 */
+	@Override
+	public void getStaffInfoUpdate(Staff staff) {
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_STAFF_INFO_BY_ID)){
+				pstmt.setString(1, staff.getAddress());
+				pstmt.setString(2, staff.getTel());
+				pstmt.setString(3, staff.getEmail());
+				pstmt.setInt(4, staff.getId());
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

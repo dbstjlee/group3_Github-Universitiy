@@ -43,12 +43,6 @@ public class UserController extends HttpServlet {
 		case "/logOut":
 			handleLogout(request, response);
 			break;
-		case "/password":
-			request.getRequestDispatcher("/WEB-INF/views/user/pwd.jsp").forward(request, response);
-			break;
-		case "/update":
-			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
-			break;
 		case "/findId":
 			request.getRequestDispatcher("/WEB-INF/views/user/findId.jsp").forward(request, response);
 			break;
@@ -94,7 +88,6 @@ public class UserController extends HttpServlet {
 
 	/**
 	 * id 찾기
-	 * 
 	 * 
 	 * @param request
 	 * @param response
@@ -181,7 +174,5 @@ public class UserController extends HttpServlet {
 
 			request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
 		}
-
 	}
-
 }

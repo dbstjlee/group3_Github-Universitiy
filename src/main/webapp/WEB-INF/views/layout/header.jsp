@@ -27,7 +27,7 @@
 					<c:when test="${principal.userRole == 'student'}">
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/">홈</a></li>
-							<li><a href="${pageContext.request.contextPath}/info/student">My</a></li>
+							<li><a href="${pageContext.request.contextPath}/info/student">MY</a></li>
 							<li><a href="${pageContext.request.contextPath}/subject/list/1">수업</a></li>
 							<li><a href="${pageContext.request.contextPath}/sugang/subjectList">수강신청</a></li>
 							<li><a href="${pageContext.request.contextPath}/grade/thisSemester">성적</a></li>
@@ -37,20 +37,20 @@
 					<c:when test="${principal.userRole == 'professor'}">
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/user/main">홈</a></li>
-							<li><a href="${pageContext.request.contextPath}/info/professor">My</a></li>
+							<li><a href="${pageContext.request.contextPath}/info/professor">MY</a></li>
 							<li><a href="${pageContext.request.contextPath}/subject/list/1">수업</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 						</ul>
 					</c:when>
-					<c:otherwise>
+					<c:when test="${principal.userRole == 'staff'}">
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/user/main">홈</a></li>
-							<li><a href="${pageContext.request.contextPath}/info/staff">My</a></li>
+							<li><a href="${pageContext.request.contextPath}/info/staff">MY</a></li>
 							<li><a href="${pageContext.request.contextPath}/management/studentList">학사관리</a></li>
 							<li><a href="${pageContext.request.contextPath}/admin/college">등록</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice">학사정보</a></li>
 						</ul>
-					</c:otherwise>
+					</c:when>
 				</c:choose>
 			</nav>
 		</form>
