@@ -5,10 +5,13 @@ import java.util.List;
 
 import com.tenco.group3.model.College;
 import com.tenco.group3.model.Department;
+import com.tenco.group3.model.Room;
 import com.tenco.group3.repository.CollegeRepositoryImpl;
 import com.tenco.group3.repository.DepartmentRepositoryImpl;
+import com.tenco.group3.repository.RoomRepositoryImpl;
 import com.tenco.group3.repository.interfaces.CollegeRepository;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;
+import com.tenco.group3.repository.interfaces.RoomRepository;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,12 +24,13 @@ public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CollegeRepository collegeRepository;
 	private DepartmentRepository departmentRepository;
-
+	private RoomRepository roomRepository;
+	
 	@Override
 	public void init() throws ServletException {
 		collegeRepository = new CollegeRepositoryImpl();
 		departmentRepository = new DepartmentRepositoryImpl();
-
+		roomRepository = new RoomRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,6 +49,9 @@ public class AdminController extends HttpServlet {
 		case "/department":
 			departmentList(request, response);
 			break;
+		case "/room":
+			roomList(request, response);
+			break;
 		default:
 			collegeList(request, response);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -52,6 +59,26 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 강의실 조회
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void roomList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Room> rooms = roomRepository.getAllRoom();
+		request.setAttribute("rooms", rooms);
+		request.getRequestDispatcher("/WEB-INF/views/admin/room.jsp").forward(request, response);
+	}
+
+	/**
+	 * 학과 조회
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void departmentList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<Department> departments = departmentRepository.getAllDepartment();
@@ -86,10 +113,66 @@ public class AdminController extends HttpServlet {
 		case "/deleteCollege":
 			handleDeleteCollege(request, response);
 			break;
+		case "/addDepartment":
+			handleAddDepartment(request, response);
+			break;
+		case "/addRoom":
+			handleAddRoom(request, response);
+			break;
+		case "/deleteRoom":
+			handleDeleteRoom(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
+	}
+
+	private void handleDeleteRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String idParam = request.getParameter("id");
+	    if (idParam == null || idParam.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int roomId;
+	    try {
+	        roomId = Integer.parseInt(idParam);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int result = roomRepository.deleteRoom(roomId);
+	    if (result > 0) {
+	        response.sendRedirect(request.getContextPath() + "/admin/room");
+	    } else {
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	
+	private void handleAddRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String roomId = request.getParameter("roomId");
+	    String collegeIdParam = request.getParameter("collegeId");
+
+	    if (roomId == null || roomId.trim().isEmpty() || collegeIdParam == null || collegeIdParam.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int collegeId;
+	    try {
+	        collegeId = Integer.parseInt(collegeIdParam);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    Room room = new Room(roomId, collegeId); 
+	    roomRepository.addRoom(room);
+	    response.sendRedirect(request.getContextPath() + "/admin/room");
+	}
+
+	
+	private void handleAddDepartment(HttpServletRequest request, HttpServletResponse response) {
+		
 	}
 
 	/**

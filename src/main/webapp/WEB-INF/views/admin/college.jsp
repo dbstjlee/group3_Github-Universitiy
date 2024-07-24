@@ -43,31 +43,30 @@
 				<a href="${pageContext.request.contextPath}/admin/addCollege" class="button">등록</a> <a href="${pageContext.request.contextPath}/admin/deleteCollege" class="button">삭제</a>
 			</div>
 			<!-- 단과대학 조회 -->
-<div class="total-container">
-    <table class="table-container">
-        <thead>
-            <tr class="first-tr">
-                <th>단과대학 ID</th>
-                <th>이름</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="college" items="${colleges}">
-                <tr>
-                    <td>${college.id}</td>
-                    <td>${college.name}</td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/admin/deleteCollege" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
-                            <input type="hidden" name="id" value="${college.id}"> 
-                            <input type="submit" value="삭제" class="button-delete">
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
-</div>
+			<div class="total-container">
+				<table class="table-container">
+					<thead>
+						<tr class="first-tr">
+							<th>단과대학 ID</th>
+							<th>이름</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="college" items="${colleges}">
+							<tr>
+								<td>${college.id}</td>
+								<td>${college.name}</td>
+								<td>
+									<form action="${pageContext.request.contextPath}/admin/deleteCollege" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+										<input type="hidden" name="id" value="${college.id}"> <input type="submit" value="삭제" class="button-delete">
+									</form>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 
 			<br>
 			<!-- 단과대학 등록 -->
