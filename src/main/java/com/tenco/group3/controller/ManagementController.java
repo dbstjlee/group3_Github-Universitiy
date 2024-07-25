@@ -94,7 +94,6 @@ public class ManagementController extends HttpServlet {
 		}
 	}
 
-
 	/**
 	 * 학생 목록 조회 기능
 	 * 
@@ -164,13 +163,14 @@ public class ManagementController extends HttpServlet {
 
 		request.getRequestDispatcher("/WEB-INF/views/management/professorList.jsp").forward(request, response);
 	}
-	
+
 	/**
 	 * 등록금 고지서 페이지 호출
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (managementRepository.getScheduleStat("break") == Define.TRUE) {
@@ -179,9 +179,10 @@ public class ManagementController extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
 		}
 	}
-	
+
 	/**
 	 * 등록금 고지서 발송
+	 * 
 	 * @param request
 	 * @param response
 	 */
@@ -190,20 +191,21 @@ public class ManagementController extends HttpServlet {
 		List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
 		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
 		stuStatRepository.updateStatusById(studentIdList, "복학");
-		
+
 		// 2. 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 		List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 		stuSchRepository.insertStuSch(rankedStudentList);
 		// TODO 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 	}
-	
+
 	/**
-	 * 휴학 처리 페이지 호출 
+	 * 휴학 처리 페이지 호출
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = managementRepository.getScheduleStat("break");
@@ -214,13 +216,14 @@ public class ManagementController extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
 		}
 	}
-	
+
 	/**
 	 * 휴학 기간 상태 변경
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
 		if (!state && managementRepository.checkBreakAppDone()) {
