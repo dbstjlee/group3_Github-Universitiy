@@ -83,6 +83,9 @@ public class ManagementController extends HttpServlet {
 		case "/bill":
 			handleCreateTuition(request, response);
 			break;
+		case "/billEnd":
+			handleEndTuition(request, response);
+			break;
 		case "/break":
 			showBreakPage(request, response);
 			break;
@@ -173,7 +176,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (managementRepository.getScheduleStat("breakApp") == Define.TRUE) {
+		if (managementRepository.getScheduleStat("break_app") == Define.TRUE) {
 			AlertUtil.backAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
@@ -185,7 +188,7 @@ public class ManagementController extends HttpServlet {
 	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 1. 휴학이 끝난 사람을 복학 상태로 변경 (2024 2학기 기준)
@@ -200,7 +203,25 @@ public class ManagementController extends HttpServlet {
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
 		String msg = rowCount + "명에게 등록금 고지서 발송 완료";
+		getServletContext().setAttribute("tuition", true);
+		managementRepository.updateSchedule("tuition", true);
 		AlertUtil.hrefAlert(response, msg, "/management/tuition");
+	}
+
+	/**
+	 * 등록금 납부 기한 종료
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleEndTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		getServletContext().setAttribute("tuition", false);
+		managementRepository.updateSchedule("tuition", false);
+		// TODO 등록금을 납부 하지 않은 학생을 제적 (미등록) 으로 학적 변동
+		int rowCount = 0;
+		String msg = rowCount + "명 제적 처리 완료";
+		AlertUtil.hrefAlert(response, msg, "/management/studentList");
 	}
 
 	/**
@@ -212,7 +233,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int isBreak = managementRepository.getScheduleStat("break");
+		int isBreak = managementRepository.getScheduleStat("break_app");
 		if (isBreak == Define.ERROR) {
 			AlertUtil.backAlert(response, "오류 발생");
 		} else {
@@ -233,8 +254,8 @@ public class ManagementController extends HttpServlet {
 		if (!state && managementRepository.checkBreakAppDone()) {
 			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
 		} else {
-			managementRepository.updateSchedule("breakApp", state);
-			getServletContext().setAttribute("breakApp", state);
+			managementRepository.updateSchedule("break_app", state);
+			getServletContext().setAttribute("break_app", state);
 			showBreakPage(request, response);
 		}
 	}
@@ -277,7 +298,8 @@ public class ManagementController extends HttpServlet {
 				.entranceDate(Date.valueOf(request.getParameter("entranceDate")))
 				.build();
 			if (managementRepository.createStudent(student)) {
-				AlertUtil.hrefAlert(response, "등록 성공", "/management/student");;
+				AlertUtil.hrefAlert(response, "등록 성공", "/management/student");
+				;
 			} else {
 				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}

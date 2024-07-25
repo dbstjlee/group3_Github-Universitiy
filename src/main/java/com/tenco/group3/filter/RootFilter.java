@@ -3,8 +3,8 @@ package com.tenco.group3.filter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+import jakarta.annotation.Priority;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -37,7 +37,6 @@ public class RootFilter extends HttpFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		HttpSession session = httpRequest.getSession();
 		String path = httpRequest.getRequestURI();
-		System.out.println(path);
 		if (ignoreURLs.contains(path) || path.startsWith("/resources")) {
 			chain.doFilter(request, response);
 			return;

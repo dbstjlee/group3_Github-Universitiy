@@ -13,16 +13,16 @@ import com.tenco.group3.util.DBUtil;
 public class StuSubRepositoryImpl implements StuSubRepository {
 
 	private static final String SELECT_RANKED_STUDENT = 
-			 " WITH total_grades AS ( "
-			+ "    SELECT ss.student_id, SUM(g.grade_value * ss.complete_grade) AS total_grade "
+			 " WITH avg_grades AS ( "
+			+ "    SELECT ss.student_id, AVG(g.grade_value * ss.complete_grade) AS avg_grade "
 			+ "    FROM stu_sub_tb ss "
 			+ "    JOIN grade_tb g ON ss.grade = g.grade "
 			+ "    GROUP BY ss.student_id "
 			+ " ), "
 			+ " ranked_grades AS ( "
 			+ "    SELECT tg.student_id, s.dept_id, s.grade"
-			+ " , RANK() OVER (PARTITION BY s.dept_id, s.grade ORDER BY total_grade DESC) AS ranking "
-			+ "    FROM total_grades tg "
+			+ " , RANK() OVER (PARTITION BY s.dept_id, s.grade ORDER BY avg_grade DESC) AS ranking "
+			+ "    FROM avg_grades tg "
 			+ "    JOIN student_tb s ON tg.student_id = s.id "
 			+ " ) "
 			+ " SELECT student_id, dept_id, grade, ranking "

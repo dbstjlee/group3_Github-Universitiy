@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
+<style>
+#btn--danger {
+	background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+</style>
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
@@ -56,12 +63,16 @@
 	<main>
 		<h1>등록금 고지서 발송</h1>
 		<div class="split--div"></div>
+		<c:choose>
+		<c:when test="${tuition}">
+		<a href="/management/billEnd"><button type="submit" class="btn btn-primary" id="btn--danger">등록금 납부 기한 종료</button></a>
+		<p>등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
+		<p>등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
+		</c:when>
+		<c:otherwise>
 		<a href="/management/bill"><button type="submit" class="btn btn-primary">등록금 고지서 발송</button></a>
-		<c:if test="${insertCount != null}">
-			<%
-			out.println("<script>alert('" + request.getAttribute("insertCount") + "개의 등록금 고지서가 생성되었습니다.'); history.back(); </script>");
-			%>
-		</c:if>
+		</c:otherwise>
+		</c:choose>
 	</main>
 </div>
 </body>

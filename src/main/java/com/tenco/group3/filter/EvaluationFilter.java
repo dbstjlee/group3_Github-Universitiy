@@ -7,6 +7,7 @@ import com.tenco.group3.model.User;
 import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.interfaces.EvaluationRepository;
 
+import jakarta.annotation.Priority;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -28,8 +29,7 @@ public class EvaluationFilter extends HttpFilter implements Filter {
 		// 필터 종료 코드
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpSession session = ((HttpServletRequest) request).getSession(); // 기존 세션 가져오기
 
 		if (session != null) {
