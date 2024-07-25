@@ -3,9 +3,6 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mainpage.css">
 
-
-<h2>메인 페이지</h2>
-
 <div class="">
 	<div>
 		<img src="${pageContext.request.contextPath}/resources/images/university.jpg" class="main--page--img">
@@ -14,7 +11,7 @@
 		<div class="main--page--div">
 			<div class="main--page--notice">
 				<h3>
-					<a href="${pageContext.request.contextPath}/notice">공지사항</a>
+					<a href="${pageContext.request.contextPath}/notice/list">공지사항</a>
 				</h3>
 				<div class="main--page--split"></div>
 				<table>

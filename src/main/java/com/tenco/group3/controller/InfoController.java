@@ -27,8 +27,6 @@ public class InfoController extends HttpServlet {
 
 	}
 
-	// TODO - notice 만들기
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
