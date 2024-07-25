@@ -158,3 +158,8 @@ main h1:first-of-type {
 .button-add:hover {
     background-color: #45a049; 
 }
+
+
+.hidden {
+    display: none;
+}

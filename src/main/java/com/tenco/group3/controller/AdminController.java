@@ -36,6 +36,7 @@ public class AdminController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
+		
 //		HttpSession session = request.getSession(false);
 //		if(session == null || session.getAttribute("principal") == null ) {
 //			response.sendRedirect(request.getContextPath() + "");
@@ -116,6 +117,12 @@ public class AdminController extends HttpServlet {
 		case "/addDepartment":
 			handleAddDepartment(request, response);
 			break;
+		case "/deleteDepartment":
+			handleDeleteDepartment(request, response);
+			break;
+		case "/updateDepartment":
+			handleUpdateDepartment(request, response);
+			break;
 		case "/addRoom":
 			handleAddRoom(request, response);
 			break;
@@ -128,19 +135,84 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-	private void handleDeleteRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	/**
+	 * 학과 이름 수정
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void handleUpdateDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String idParam = request.getParameter("id");
-	    if (idParam == null || idParam.trim().isEmpty()) {
+	    String name = request.getParameter("name");
+	    if (idParam == null || idParam.trim().isEmpty() || name == null || name.trim().isEmpty()) {
 	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 	        return;
 	    }
-	    int roomId;
+	    int id;
 	    try {
-	        roomId = Integer.parseInt(idParam);
+	        id = Integer.parseInt(idParam);
 	    } catch (NumberFormatException e) {
 	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 	        return;
 	    }
+	    Department department = Department.builder()
+	            .id(id)
+	            .name(name)
+	            .build();
+	    int result = departmentRepository.updateDepartment(department);
+	    if (result > 0) {
+	        response.sendRedirect(request.getContextPath() + "/admin/department");
+	    } else {
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
+	}
+	/**
+	 * 학과 삭제
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void handleDeleteDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String idParam = request.getParameter("id");
+
+	    if (idParam == null || idParam.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int departmentId;
+	    try {
+	    	departmentId = Integer.parseInt(idParam);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    Department department = departmentRepository.getDepartmentById(departmentId);
+	    if (department == null) {
+	        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	        return;
+	    }
+	    int result = departmentRepository.deleteDepartment(departmentId);
+	    if (result > 0) {
+	        response.sendRedirect(request.getContextPath() + "/admin/department");
+	    } else {
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+
+	/**
+	 * 강의실 삭제
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleDeleteRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    String roomId = request.getParameter("id");
+	    if (roomId == null || roomId.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    
 	    int result = roomRepository.deleteRoom(roomId);
 	    if (result > 0) {
 	        response.sendRedirect(request.getContextPath() + "/admin/room");
@@ -149,7 +221,12 @@ public class AdminController extends HttpServlet {
 	    }
 	}
 	
-	
+	/**
+	 * 강의실 등록
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	private void handleAddRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String roomId = request.getParameter("roomId");
 	    String collegeIdParam = request.getParameter("collegeId");
@@ -170,13 +247,40 @@ public class AdminController extends HttpServlet {
 	    response.sendRedirect(request.getContextPath() + "/admin/room");
 	}
 
-	
-	private void handleAddDepartment(HttpServletRequest request, HttpServletResponse response) {
-		
+	/**
+	 * 학과 등록
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleAddDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String departmentName = request.getParameter("departmentName");
+	    String collegeIdStr = request.getParameter("collegeId");
+	    
+	    if (departmentName == null || departmentName.trim().isEmpty() || collegeIdStr == null || collegeIdStr.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    
+	    int collegeId;
+	    try {
+	        collegeId = Integer.parseInt(collegeIdStr);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    
+	    Department department = new Department();
+	    department.setName(departmentName);
+	    department.setCollegeId(collegeId);
+	    
+	    departmentRepository.addDepartment(department);
+	    response.sendRedirect(request.getContextPath() + "/admin/department");
 	}
+	
 
 	/**
-	 * 단과대학 삭제기능
+	 * 단과대학 삭제
 	 * 
 	 * @param request
 	 * @param response
@@ -210,7 +314,7 @@ public class AdminController extends HttpServlet {
 
 
 	/**
-	 * 단과대학 등록기능
+	 * 단과대학 등록
 	 * 
 	 * @param request
 	 * @param response

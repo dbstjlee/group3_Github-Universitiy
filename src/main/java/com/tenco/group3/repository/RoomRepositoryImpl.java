@@ -61,12 +61,12 @@ public class RoomRepositoryImpl implements RoomRepository{
 	
 	// 강의실 삭제
 	@Override
-	public int deleteRoom(int id) {
+	public int deleteRoom(String id) {
 		  int resultCount = 0;
 	        try (Connection conn = DBUtil.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(DELETE_ROOM)) {
 	            conn.setAutoCommit(false);
-	            pstmt.setInt(1, id);
+	            pstmt.setString(1, id);
 	            resultCount = pstmt.executeUpdate();
 
 	            if (resultCount > 0) {
@@ -86,11 +86,11 @@ public class RoomRepositoryImpl implements RoomRepository{
 	    }
 
 	@Override
-	public Room getRoomById(int id) {
+	public Room getRoomById(String id) {
 		Room room = null;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOM_BY_ID)){
-			pstmt.setInt(1, id);
+			pstmt.setString(1, id);
 			try (ResultSet rs = pstmt.executeQuery()){
 				if(rs.next()) {
 					room = Room.builder()

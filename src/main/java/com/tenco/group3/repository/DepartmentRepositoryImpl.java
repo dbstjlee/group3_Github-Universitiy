@@ -3,6 +3,7 @@ package com.tenco.group3.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,40 +66,46 @@ public class DepartmentRepositoryImpl implements DepartmentRepository{
 	@Override
 	public int updateDepartment(Department department) {
 		int resultCount = 0;
-		try (Connection conn = DBUtil.getConnection()){
-			conn.setAutoCommit(false);
-			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_DEPARTMENT)){
-				pstmt.setString(1, department.getName());
-				pstmt.setInt(2, department.getCollegeId());
-				pstmt.executeUpdate();
-				conn.commit();
-			} catch (Exception e) {
-				conn.rollback();
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
+	    try (Connection conn = DBUtil.getConnection()) {
+	        conn.setAutoCommit(false);
+	        try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_DEPARTMENT)) {
+	            pstmt.setString(1, department.getName());
+	            pstmt.setInt(2, department.getId());
+	            resultCount = pstmt.executeUpdate();  
+	            conn.commit();
+	        } catch (Exception e) {
+	            conn.rollback();
+	            e.printStackTrace();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return resultCount;
 	}
 	
 	// 학과 삭제
 	@Override
 	public int deleteDepartment(int id) {
 		int resultCount = 0;
-		try (Connection conn = DBUtil.getConnection()){
-			conn.setAutoCommit(false);
-			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_DEPARTMENT)){
-				pstmt.setInt(1, id);
-				resultCount = pstmt.executeUpdate();
-				conn.commit();
-			} catch (Exception e) {
-				conn.rollback();
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(DELETE_DEPARTMENT)) {
+		        conn.setAutoCommit(false); 
+		        pstmt.setInt(1, id); 
+		        resultCount = pstmt.executeUpdate(); 
+		        
+		        if (resultCount > 0) {
+		            conn.commit(); 
+		        } else {
+		            conn.rollback(); 
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace(); 
+		        try (Connection conn = DBUtil.getConnection()) {
+		            conn.rollback();
+		        } catch (SQLException ex) {
+		            ex.printStackTrace();
+		        }
+		    }
 		return resultCount;
 	}
 

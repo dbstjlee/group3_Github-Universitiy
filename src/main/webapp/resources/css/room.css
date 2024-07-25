@@ -11,17 +11,18 @@ body {
 	background-color: #fff;
 }
 
-.sub-menu {
-	min-width: 230px;
-	margin-right: 80px;
-}
-
 .sub-main {
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
 	min-width: 100em;
 }
+
+.sub-menu {
+	min-width: 230px;
+	margin-right: 80px;
+}
+
 
 .sub-menu-top {
 	text-align: center;
@@ -39,6 +40,10 @@ body {
 	border-color: #D1D5D4;
 }
 
+.hidden {
+    display: none;
+}
+
 tbody {
 	display: table-row-group;
 	vertical-align: middle;
@@ -46,16 +51,16 @@ tbody {
 	border-color: inherit;
 }
 
+.selected-menu {
+	color: #0108d5;
+	font-weight: 600;
+}
+
 .split-div {
 	margin: 20px 0 20px;
 	min-width: 1100px;
 	background-color: #d8d4d4;
 	height: 2px;
-}
-
-.selected-menu {
-	color: #0108d5;
-	font-weight: 600;
 }
 
 main {
