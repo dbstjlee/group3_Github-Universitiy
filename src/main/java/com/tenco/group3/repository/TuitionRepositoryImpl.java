@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tenco.group3.model.RankedStudent;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
@@ -24,14 +25,15 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			+ "	 tuition_tb as tu ON tu.student_id = st.id " + " WHERE " + " st.id = ? ";
 
 	private static final String GET_SUMMARY_TUTION_BY_STUDNETID = " SELECT *, (tui_amount - sch_amount) AS total_amount FROM tuition_tb WHERE student_id = ? ";
-	private static final String SELECT_TUITIONS = " SELECT s.id AS student_id, ct.amount AS tui_amount, sch.type AS sch_type, (ct.amount * sch.max_amount / 100) AS sch_amount "
+	private static final String SELECT_TUITIONS = " SELECT s.id AS student_id, ct.amount AS tui_amount, IFNULL(sch.type,0) AS sch_type, IFNULL((ct.amount * sch.max_amount / 100),0) AS sch_amount "
 			+ " FROM stu_sch_tb ssc "
 			+ " JOIN scholarship_tb sch ON ssc.sch_type = sch.type "
-			+ " JOIN student_tb s ON s.id = ssc.student_id "
+			+ " RIGHT JOIN student_tb s ON s.id = ssc.student_id "
 			+ " JOIN department_tb d ON s.dept_id = d.id "
 			+ " JOIN coll_tuit_tb ct ON d.college_id = ct.college_id "
-			+ " JOIN stu_stat_tb ss ON s.id = ss.student_id "
+			+ " JOIN stu_stat_tb ss ON s.id = ss.student_id AND ss.to_date = '9999-01-01' "
 			+ " WHERE ss.status IN ('입학','복학') ";
+	private static final String ADD_ALL_TUITIONS = " INSERT INTO tuition_tb (student_id, tui_year, semester, tui_amount, sch_type, sch_amount) VALUES ";
 
 	@Override
 	public Tuition getTuitionByStudentId(int studentId) {
@@ -99,6 +101,41 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			e.printStackTrace();
 		}
 		return tutionList;
+	}
+
+	@Override
+	public int addAllTuitions(List<Tuition> tuitionList) {
+		int rowCount = 0;
+		StringBuffer insertQuery = new StringBuffer();
+		insertQuery.append(ADD_ALL_TUITIONS);
+		for (int i = 0; i < tuitionList.size(); i++) {
+			insertQuery.append(" (?,?,?,?,?,?)");
+			if (i < tuitionList.size() - 1) {
+				insertQuery.append(",");
+			}
+		}
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(insertQuery.toString())) {
+				int count = 1;
+				for (Tuition tuition : tuitionList) {
+					pstmt.setInt(count++, tuition.getStudentId());
+					pstmt.setInt(count++, tuition.getYear());
+					pstmt.setInt(count++, tuition.getSemester());
+					pstmt.setInt(count++, tuition.getTuiAmount());
+					pstmt.setInt(count++, tuition.getScholarType());
+					pstmt.setInt(count++, tuition.getScholarAmount());
+				}
+				rowCount = pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowCount;
 	}
 
 }

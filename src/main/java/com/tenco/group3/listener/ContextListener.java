@@ -13,7 +13,7 @@ import jakarta.servlet.annotation.WebListener;
 public class ContextListener implements ServletContextListener {
 
 	private ScheduleStateRepository scheduleStateRepository;
-	
+
 	public void contextInitialized(ServletContextEvent sce) {
 		scheduleStateRepository = new ScheduleStateRepositoryImpl();
 		ScheduleState scheduleState = scheduleStateRepository.getAllScheduleStates();

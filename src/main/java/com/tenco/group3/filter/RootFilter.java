@@ -1,9 +1,13 @@
 package com.tenco.group3.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -16,8 +20,16 @@ import jakarta.servlet.http.HttpSession;
 @WebFilter("/*")
 public class RootFilter extends HttpFilter implements Filter {
 
+	List<String> ignoreURLs = new ArrayList<>();
+
 	public RootFilter() {
 		super();
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		ignoreURLs.add("/user/logIn");
+		ignoreURLs.add("/favicon.io");
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -25,7 +37,13 @@ public class RootFilter extends HttpFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		HttpSession session = httpRequest.getSession();
 		String path = httpRequest.getRequestURI();
-		if (session.getAttribute("principal") == null && !path.equals("/user/logIn")) {
+		System.out.println(path);
+		if (ignoreURLs.contains(path) || path.startsWith("/resources")) {
+			chain.doFilter(request, response);
+			return;
+		}
+
+		if (session == null ||session.getAttribute("principal") == null) {
 			httpResponse.sendRedirect("/user/logIn");
 		} else {
 			if (path.equals("/")) {
@@ -34,6 +52,7 @@ public class RootFilter extends HttpFilter implements Filter {
 				request.getRequestDispatcher("/WEB-INF/views/main.jsp").forward(httpRequest, response);
 			} else {
 				chain.doFilter(request, response);
+				return;
 			}
 		}
 	}

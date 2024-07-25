@@ -10,4 +10,7 @@ public interface TuitionRepository {
 	
 	// 등록금 발송을 위한 데이터 받아오기
 	List<Tuition> getTuitions();
+	
+	// 등록금 발송 (tuition 테이블에 insert)
+	int addAllTuitions(List<Tuition> tuitionList);
 }

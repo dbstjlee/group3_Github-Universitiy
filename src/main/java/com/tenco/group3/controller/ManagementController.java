@@ -197,6 +197,7 @@ public class ManagementController extends HttpServlet {
 		stuSchRepository.insertStuSch(rankedStudentList);
 		// TODO 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
+		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
 	}
 
 	/**
@@ -229,7 +230,8 @@ public class ManagementController extends HttpServlet {
 		if (!state && managementRepository.checkBreakAppDone()) {
 			AlertUtil.errorAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
 		} else {
-			managementRepository.updateSchedule("break", state);
+			managementRepository.updateSchedule("breakApp", state);
+			getServletContext().setAttribute("breakApp", state);
 			showBreakPage(request, response);
 		}
 	}
