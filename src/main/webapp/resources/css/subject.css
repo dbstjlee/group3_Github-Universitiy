@@ -179,9 +179,10 @@ main h1:first-of-type {
 .page--list {
 	display: flex;
 	justify-content: center;
+	p-left: 10px; 
 }
 
-.page--list li {
+.page--list span {
 	margin: 30px 20px;
 }
 

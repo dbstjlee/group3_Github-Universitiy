@@ -6,7 +6,8 @@ import com.tenco.group3.model.Subject;
 
 public interface SubjectRepository {
 	// 강의 시간표 조회
-	List<Subject> getSubjectAll();
+	List<Subject> getSubjectAll(int limit, int offset);
+	List<Subject> searchSubject (int subYear,int semester,int deptId,String name,  int limit, int offset);
 
 	List<Subject> getSubjectByType(String type);
 
@@ -17,4 +18,6 @@ public interface SubjectRepository {
 	List<Subject> getSubjectById(int id, int year, int semester , String name);
 	
 	List<Subject> selectIdByLessNumOfStudent();
+	
+	int getAllSubjectCount();
 }

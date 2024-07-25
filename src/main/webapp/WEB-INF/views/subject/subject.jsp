@@ -46,14 +46,14 @@
 
 	
 		<div class="sub--filter">
-			<form action="/subject/list/search" method="get">
+			<form action="/subject/search" method="get">
 				<div>
-				
+					
 					<label for="subYear">연도 </label> <input type="number"
 						value="2023" name="subYear" id="subYear"
 						min="2005" max="2033">
 			
-					<label for="subSemester">학기 </label> <select name="semester"
+					<label for="subSemester">학기 </label> <select name="subSemester"
 						id="subSemester">
 						<option value="1">1학기</option>
 						<option value="2">2학기</option>
@@ -328,21 +328,19 @@
                         
                     </tbody>
                     </table>
-                    <c:if test="${pageCount != null}">
-                        <ul class="page--list">
-                            <c:forEach var="i" begin="1" end="${pageCount}" step="1">
-                                <c:choose>
-                                    <c:when test="${i == page}">
-                                        <li><a href="/subject/list/${i}" style="font-weight: 700; color: #007bff">${i}</a>									
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li><a href="/subject/list/${i}">${i}</a>									
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </ul>
-                    </c:if>
-    </c:when>
+                    <div class="page--list">
+                          <c:forEach begin="1" end="${totalPages}" var="i">
+							<c:choose>
+								<c:when test="${i == currentPage}">
+									<span >${i}</span>
+								</c:when>
+								<c:otherwise>
+									<span><a href="${pageContext.request.contextPath}/subject/allSubject?page=${i}"  style="font-weight: 700; color: #007bff">${i}</a></span>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</div>
+   								 </c:when>
             <c:otherwise>
                 <p class="no--list--p">검색 결과가 없습니다.</p>
             </c:otherwise>

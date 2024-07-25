@@ -43,6 +43,10 @@ public class SubjectController extends HttpServlet {
 			case "/subjectById":
 				subjectById(request, response);
 				break;
+			case "/search":
+				searchSubject(request, response);
+				break;
+				
 			}
 
 		}
@@ -51,17 +55,77 @@ public class SubjectController extends HttpServlet {
 
 	private void showAllSubject(HttpServletRequest request, HttpServletResponse response)
 			throws SecurityException, IOException {
-		List<Subject> subjectlist = subjectRepository.getSubjectAll();
+		
+		int page = 1; 
+		int pageSize = 20; 
 		try {
-			request.setAttribute("subjectlist", subjectlist);
-			request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			String pageStr = request.getParameter("page");
+			if (pageStr != null) {
+				page = Integer.parseInt(pageStr);
+			}
+		} catch (Exception e) {
+			page = 1;
 			e.printStackTrace();
 		}
+		int offset = (page - 1) * pageSize;
+		int totalCount = subjectRepository.getAllSubjectCount();	
+		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+		
+		List<Subject> subjectlist = subjectRepository.getSubjectAll(pageSize,offset);
+		request.setAttribute("subjectList", subjectlist);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("currentPage", page);
+		try {
+			request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void searchSubject(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException {
+		int page = 1; 
+		int pageSize = 20; 
+		int year = Integer.parseInt(request.getParameter("subYear"));
+		int semester = Integer.parseInt(request.getParameter("subSemester"));
+		int deptId = Integer.parseInt(request.getParameter("deptId"));
+		String name = request.getParameter("subName");
+		
+		
+		try {
+			
+			String pageStr = request.getParameter("page");
+			if (pageStr != null) {
+				page = Integer.parseInt(pageStr);
+			}
+		} catch (Exception e) {
+			page = 1;
+			e.printStackTrace();
+		}
+		
+		int offset = (page - 1) * pageSize;
+		int totalCount = subjectRepository.getAllSubjectCount();	
+		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+		
+		List<Subject> subjectlist = subjectRepository.searchSubject(year, semester, deptId, name, pageSize,offset);
+		request.setAttribute("subjectList", subjectlist);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("currentPage", page);
+		try {
+			request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 	}
 
 	/**
