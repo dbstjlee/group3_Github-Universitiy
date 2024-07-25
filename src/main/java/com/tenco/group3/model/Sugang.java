@@ -26,4 +26,6 @@ public class Sugang {
 	private int numOfStudent;
 	private int capacity;
 	private int deptId;
+	private int studentId;
+	private boolean hasConfirmed;
 }

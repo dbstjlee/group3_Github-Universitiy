@@ -11,15 +11,24 @@ public interface SugangRepository {
 
 	List<Sugang> getSubjectBySearch(Sugang sugang);
 
-	List<Sugang> getApplicationSubject(int studentId);
+	List<Sugang> getApplicationSubject(int studentId, int limit, int offset);
 
 	int addEnrolment(int studentId, int subjectId);
 
-	int cancelEnrolment(Sugang sugang);
-
 	int getAllSubjectCount();
+
+	int getSearchSubjectCount(Sugang sugang);
 
 	List<Sugang> getApplicatedSubjectList(int studentId);
 
 	int getSubjectGrade(int studentId);
+
+	boolean getConfirmSubject(int studentId);
+
+	int deleteConfirmSubject(int subjectId);
+
+	List<Sugang> getPreApplicationSubject(int studentId, int limit, int offset);
+
+	int deletePreConfirmSubject(int subjectId);
+
 }

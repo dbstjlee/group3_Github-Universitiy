@@ -5,6 +5,23 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
+	<!-- 좌측 메뉴 -->
+	<div class="sub--menu--mid">
+		<table class="sub--menu--table" border="1">
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/subjectList">강의 시간표 조회</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/application">수강 신청</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
+			</tr>
+		</table>
+	</div>
 	<h1>예비 수강 신청</h1>
 	<hr>
 	<div>
@@ -16,50 +33,28 @@
 					<option value="교양">교양</option>
 				</select> <label for="deptId">개설학과</label> <select name="deptId" id="deptId">
 					<option value="-1">전체</option>
-
 					<option value="101">컴퓨터공학과</option>
-
 					<option value="102">전자공학과</option>
-
 					<option value="103">화학공학과</option>
-
 					<option value="104">기계공학과</option>
-
 					<option value="105">신소재공학과</option>
-
 					<option value="106">철학과</option>
-
 					<option value="107">국사학과</option>
-
 					<option value="108">언어학과</option>
-
 					<option value="109">국어국문학과</option>
-
 					<option value="110">영어영문학과</option>
-
 					<option value="111">심리학과</option>
-
 					<option value="112">정치외교학과</option>
-
 					<option value="113">사회복지학과</option>
-
 					<option value="114">언론정보학과</option>
-
 					<option value="115">인류학과</option>
-
 					<option value="116">경영학과</option>
-
 					<option value="117">경제학과</option>
-
 					<option value="118">회계학과</option>
-
 					<option value="119">농업경영학과</option>
-
 					<option value="120">무역학과</option>
-
 				</select> <label for="subName">강의명</label> <input type="text" name="name" list="subName">
 				<datalist id="subName">
-
 					<option value="데이터통신">
 					<option value="딥러닝의 기초">
 					<option value="컴퓨터의 개념 및 실습">
@@ -148,7 +143,7 @@
 			<button class="preStuSubList--button">예비 수강 신청 내역</button>
 		</a>
 	</div>
-	<table border="1">
+	<table border="1" style="text-align: center">
 		<h3>강의 목록</h3>
 		<p>[총 ${totalCount}건]</p>
 		<thead>
@@ -166,29 +161,43 @@
 				<th>수강신청</th>
 			</tr>
 		</thead>
-		<c:forEach var="sugangList" items="${sugangList}">
-			<tbody>
+		<tbody>
+			<c:forEach var="sugangItem" items="${sugangList}">
 				<tr>
-					<td>${sugangList.collegeName}</td>
-					<td>${sugangList.departName}</td>
-					<td>${sugangList.subjectId}</td>
-					<td>${sugangList.subjectType}</td>
-					<td>${sugangList.subjectName}</td>
-					<td>${sugangList.professorName}</td>
-					<td>${sugangList.grades}</td>
-					<td>${sugangList.subjectDay}${sugangList.startTime}:00~${sugangList.endTime}:00(${sugangList.roomId})</td>
-					<td>${sugangList.numOfStudent}</td>
-					<td>${sugangList.capacity}</td>
-					<td>
-						<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
-							<input type="hidden" name="subjectId" value="${sugangList.subjectId}">
-							<input type="hidden" name="type" value="0">
-							<button type="submit" onclick="return confirm('해당 강의를 수강신청하시겠습니까?');" style="background-color: #548AC2;">신청</button>
-						</form>
-					</td>
+					<td>${sugangItem.collegeName}</td>
+					<td>${sugangItem.departName}</td>
+					<td>${sugangItem.subjectId}</td>
+					<td>${sugangItem.subjectType}</td>
+					<td>${sugangItem.subjectName}</td>
+					<td>${sugangItem.professorName}</td>
+					<td>${sugangItem.grades}</td>
+					<td><c:choose>
+							<c:when test="${sugangItem.startTime < 10}">
+							${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})								
+							</c:when>
+							<c:otherwise>
+							${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})							
+							</c:otherwise>
+						</c:choose></td>
+					<td>${sugangItem.numOfStudent}</td>
+					<td>${sugangItem.capacity}</td>
+					<td><c:choose>
+							<c:when test="${sugangItem.hasConfirmed == true}">
+								<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
+									<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="1">
+									<button type="submit" onclick="return confirm('해당 강의를 수강 취소 하시겠습니까?');" style="background-color: #548AC2;">수강 취소</button>
+								</form>
+							</c:when>
+							<c:otherwise>
+								<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
+									<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
+									<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
+								</form>
+							</c:otherwise>
+						</c:choose></td>
 				</tr>
-			</tbody>
-		</c:forEach>
+			</c:forEach>
+		</tbody>
 	</table>
 	<div class="pagination">
 		<c:forEach begin="1" end="${totalPages}" var="i">

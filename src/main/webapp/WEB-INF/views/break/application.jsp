@@ -87,7 +87,7 @@
 						<tr>
 							<th>휴학 구분</th>
 							<td><input type="radio" name="breakType" id="nom" value="nom" checked="checked"> <label for="nomalBreak">일반 휴학</label> <input type="radio" name="breakType"
-								id="fam" value="fam"> <label for="familyBreak">임신·출산·육아휴학</label> <input type="radio" name="breakType" id="med" value="med"> <label for="medicalBreak">질병
+								id="fam" value="fam"> <label for="familyBreak">임신·출산·육아 휴학</label> <input type="radio" name="breakType" id="med" value="med"> <label for="medicalBreak">질병
 									휴학</label> <input type="radio" name="breakType" id="bus" value="bus"> <label for="businessBreak">창업 휴학</label> <input type="radio" name="breakType" id="mil" value="mil">
 								<label for="militaryBreak">군입대 휴학</label></td>
 						</tr>
