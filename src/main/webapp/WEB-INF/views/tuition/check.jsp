@@ -43,7 +43,7 @@
 	<h1>등록금 내역 조회</h1>
 	<hr>
 	<c:choose>
-		<c:when test="${empty not tuition}">
+		<c:when test="${not empty tuition}">
 			<table border="1">
 				<tr>
 					<th>등록연도</th>
@@ -58,7 +58,14 @@
 				<tr>
 					<td>${tuition.year}년</td>
 					<td>${tuition.semester}학기</td>
-					<td>${tuition.scholarType}유형</td>
+					<c:choose>
+						<c:when test="${tuition.scholarType == 0}">
+							<td>해당 없음</td>
+						</c:when>
+						<c:otherwise>
+							<td>${tuition.scholarType}유형</td>
+						</c:otherwise>
+					</c:choose>
 					<td><fmt:formatNumber value="${tuition.collAmount}" pattern="#,###" /></td>
 					<td><fmt:formatNumber value="${tuition.scholarAmount}" pattern="#,###" /></td>
 					<td><fmt:formatNumber value="${tuition.totalAmount}" pattern="#,###" /></td>
