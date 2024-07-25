@@ -5,6 +5,23 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
+	<!-- 좌측 메뉴 -->
+	<div class="sub--menu--mid">
+		<table class="sub--menu--table" border="1">
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/subjectList">강의 시간표 조회</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/application">수강 신청</a></td>
+			</tr>
+			<tr>
+				<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
+			</tr>
+		</table>
+	</div>
 	<h1>강의 시간표 조회</h1>
 	<hr>
 	<div>
@@ -173,7 +190,14 @@
 					<td>${sugangList.subjectName}</td>
 					<td>${sugangList.professorName}</td>
 					<td>${sugangList.grades}</td>
-					<td>${sugangList.subjectDay}${sugangList.startTime}:00~ ${sugangList.endTime}:00 (${sugangList.roomId})</td>
+					<td><c:choose>
+							<c:when test="${sugangList.startTime < 10}">
+							${sugangList.subjectDay} 0${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})								
+							</c:when>
+							<c:otherwise>
+							${sugangList.subjectDay} ${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})							
+							</c:otherwise>
+						</c:choose></td>
 					<td>${sugangList.numOfStudent}</td>
 					<td>${sugangList.capacity}</td>
 					<%-- 강의 계획서로 이동 --%>
