@@ -1,5 +1,3 @@
-SELECT * FROM tuition_tb;
-
 -- 대학
 INSERT INTO college_tb VALUES (1, '공과대학');
 INSERT INTO college_tb VALUES (2, '인문대학');
@@ -115,7 +113,7 @@ VALUES
 
 INSERT INTO user_tb
 VALUES 
-(23000001, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'professor'),
+(23000001, '123123', 'professor'),
 (23000002, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'professor'),
 (23000003, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'professor'),
 (23000004, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'professor'),
@@ -541,7 +539,7 @@ INSERT INTO student_tb VALUES
 (2023000200, '이서현', '2003-09-12', '여성', '서울시 강남구 방배동', '010-2323-2563', 'aza@green.ac.kr', 120, 1, 1, '2023-03-02', NULL);
 INSERT INTO user_tb
 VALUES 
-(2023000001, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'student'),
+(2023000001, '123123', 'student'),
 (2023000002, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'student'),
 (2023000003, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'student'),
 (2023000004, '$2a$10$hEYFZOe.PbFbVRcPZymRKuCGMU2MilAn64ZGnIqPgfwWL7JyGeKKW', 'student'),

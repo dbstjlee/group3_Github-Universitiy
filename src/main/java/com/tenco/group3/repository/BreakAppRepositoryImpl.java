@@ -27,7 +27,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			+ " JOIN department_tb as de on st.dept_id = de.id JOIN college_tb as co ON co.id = de.college_id "
 			+ "WHERE br.id = ? ";
 
-	private static final String GET_BREAK_APP_BY_APPROVAL = " SELECT * FROM break_app_tb WHERE status '승인' ";
+	private static final String GET_BREAK_APP_BY_APPROVAL = " SELECT * FROM break_app_tb WHERE status = '승인' ";
 	
 	private static final String GET_STUDENT_INFO = " SELECT st.*, de.name as '학과', co.name as '단과대' "
 			+ " FROM student_tb as st "

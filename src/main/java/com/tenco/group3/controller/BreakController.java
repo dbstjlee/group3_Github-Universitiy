@@ -68,7 +68,7 @@ public class BreakController extends HttpServlet {
 			request.setAttribute("thisYear", thisYear);
 			request.setAttribute("thisSemester", thisSemester);
 		} else {
-			AlertUtil.errorAlert(response, "휴학 신청 기간이 아닙니다.");
+			AlertUtil.backAlert(response, "휴학 신청 기간이 아닙니다.");
 		}
 		request.getRequestDispatcher("/WEB-INF/views/break/application.jsp").forward(request, response);
 	}

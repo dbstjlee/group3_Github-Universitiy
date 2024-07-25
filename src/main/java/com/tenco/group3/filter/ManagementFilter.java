@@ -28,7 +28,7 @@ public class ManagementFilter extends HttpFilter implements Filter {
 		if ("staff".equals(principal.getUserRole())) {
 			chain.doFilter(request, response);
 		} else {
-			AlertUtil.errorAlert((HttpServletResponse)response, "비정상적인 접근입니다.");
+			AlertUtil.backAlert((HttpServletResponse)response, "비정상적인 접근입니다.");
 		}
 	}
 

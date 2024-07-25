@@ -168,7 +168,8 @@ CREATE TABLE stu_sch_tb
       student_id,
       sch_year,
       semester
-   )
+   ),
+   FOREIGN KEY (student_id) REFERENCES student_tb (id) ON DELETE CASCADE
 );
 
 -- 등록금
@@ -187,8 +188,7 @@ CREATE TABLE tuition_tb
       tui_year,
       semester
    ),
-   FOREIGN KEY (student_id) REFERENCES student_tb (id) ON DELETE CASCADE,
-   FOREIGN KEY (sch_type) REFERENCES scholarship_tb (type)
+   FOREIGN KEY (student_id) REFERENCES student_tb (id) ON DELETE CASCADE
 );
 
 -- 공지사항
@@ -200,15 +200,6 @@ CREATE TABLE notice_tb
    content TEXT NOT NULL,
    created_time TIMESTAMP DEFAULT now(),
    views INT NOT NULL DEFAULT 0 COMMENT '조회수'
-);
-
--- 공지사항 첨부 파일
-CREATE TABLE notice_file_tb
-(
-   notice_id INT NOT NULL,
-   origin_filename VARCHAR (100) COMMENT '기존 파일명' NOT NULL,
-   uuid_filename VARCHAR (255) COMMENT '랜덤 문자열 포함 파일명' NOT NULL,
-   FOREIGN KEY (notice_id) REFERENCES notice_tb (id) ON DELETE CASCADE
 );
 
 -- 휴학 신청 내역

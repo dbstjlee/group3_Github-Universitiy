@@ -173,8 +173,8 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (managementRepository.getScheduleStat("break") == Define.TRUE) {
-			AlertUtil.errorAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
+		if (managementRepository.getScheduleStat("breakApp") == Define.TRUE) {
+			AlertUtil.backAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
 		}
@@ -185,8 +185,9 @@ public class ManagementController extends HttpServlet {
 	 * 
 	 * @param request
 	 * @param response
+	 * @throws IOException 
 	 */
-	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) {
+	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 1. 휴학이 끝난 사람을 복학 상태로 변경 (2024 2학기 기준)
 		List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
 		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
@@ -195,9 +196,11 @@ public class ManagementController extends HttpServlet {
 		// 2. 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 		List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 		stuSchRepository.insertStuSch(rankedStudentList);
-		// TODO 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
+		// 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
+		String msg = rowCount + "명에게 등록금 고지서 발송 완료";
+		AlertUtil.hrefAlert(response, msg, "/management/tuition");
 	}
 
 	/**
@@ -211,7 +214,7 @@ public class ManagementController extends HttpServlet {
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = managementRepository.getScheduleStat("break");
 		if (isBreak == Define.ERROR) {
-			AlertUtil.errorAlert(response, "오류 발생");
+			AlertUtil.backAlert(response, "오류 발생");
 		} else {
 			request.setAttribute("isBreak", isBreak);
 			request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
@@ -228,7 +231,7 @@ public class ManagementController extends HttpServlet {
 	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
 		if (!state && managementRepository.checkBreakAppDone()) {
-			AlertUtil.errorAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
+			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
 		} else {
 			managementRepository.updateSchedule("breakApp", state);
 			getServletContext().setAttribute("breakApp", state);
@@ -274,16 +277,13 @@ public class ManagementController extends HttpServlet {
 				.entranceDate(Date.valueOf(request.getParameter("entranceDate")))
 				.build();
 			if (managementRepository.createStudent(student)) {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter()
-					.println(
-							"<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/student';  </script>");
+				AlertUtil.hrefAlert(response, "등록 성공", "/management/student");;
 			} else {
-				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
@@ -300,16 +300,13 @@ public class ManagementController extends HttpServlet {
 				.deptId(Integer.parseInt(request.getParameter("deptId")))
 				.build();
 			if (managementRepository.createProfessor(professor)) {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter()
-					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath()
-							+ "/management/professor';  </script>");
+				AlertUtil.hrefAlert(response, "등록 성공", "/management/professor");
 			} else {
-				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
@@ -325,15 +322,13 @@ public class ManagementController extends HttpServlet {
 				.email(request.getParameter("email"))
 				.build();
 			if (managementRepository.createStaff(staff)) {
-				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter()
-					.println("<script> alert('등록 성공'); " + "window.location.href = '" + request.getContextPath() + "/management/staff';  </script>");
+				AlertUtil.hrefAlert(response, "등록 성공", "/management/staff");
 			} else {
-				AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			AlertUtil.errorAlert(response, "잘못된 요청입니다.");
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
 

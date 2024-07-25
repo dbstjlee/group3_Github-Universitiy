@@ -14,7 +14,7 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 
 	private static final String SELECT_RANKED_STUDENT = 
 			 " WITH total_grades AS ( "
-			+ "    SELECT ss.student_id, SUM(g.grade_value * ss.completed_grade) AS total_grade "
+			+ "    SELECT ss.student_id, SUM(g.grade_value * ss.complete_grade) AS total_grade "
 			+ "    FROM stu_sub_tb ss "
 			+ "    JOIN grade_tb g ON ss.grade = g.grade "
 			+ "    GROUP BY ss.student_id "

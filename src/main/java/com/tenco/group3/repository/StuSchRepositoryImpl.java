@@ -15,6 +15,9 @@ public class StuSchRepositoryImpl implements StuSchRepository {
 
 	@Override
 	public void insertStuSch(List<RankedStudent> rankedStudentList) {
+		if (rankedStudentList.size() == 0) {
+			return;
+		}
 		StringBuffer insertQuery = new StringBuffer();
 		insertQuery.append(INSERT_STUSCH);
 		for (int i = 0; i < rankedStudentList.size(); i++) {

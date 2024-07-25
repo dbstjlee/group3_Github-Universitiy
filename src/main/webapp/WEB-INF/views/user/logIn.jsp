@@ -20,7 +20,14 @@
 					<label for="userId"></label>
 					<input type="text" name="id" id="userId" placeholder="아이디를 입력하세요." required value="${cookie.id.value}">
 					<div class="checkbox--id">
+					<c:choose>
+					<c:when test="${cookie.id != null}">
+					<input type="checkbox" name="rememberId" checked >ID 저장
+					</c:when>
+					<c:otherwise>
 					<input type="checkbox" name="rememberId" >ID 저장
+					</c:otherwise>
+					</c:choose>
 					
 					</div>
 				</div>

@@ -243,7 +243,7 @@ public class SugangController extends HttpServlet {
 		if (rowCount != 0) {
 			response.sendRedirect(request.getContextPath() + "/sugang/pre");
 		} else {
-			AlertUtil.errorAlert(response, "정원 초과된 강의입니다.");
+			AlertUtil.backAlert(response, "정원 초과된 강의입니다.");
 		}
 	}
 
