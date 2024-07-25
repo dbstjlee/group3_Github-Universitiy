@@ -219,6 +219,8 @@ public class SugangController extends HttpServlet {
 		case "/pre":
 			handlerPreliminaryList(request, response, session);
 			break;
+		case "/":
+			break;
 		default:
 			break;
 		}

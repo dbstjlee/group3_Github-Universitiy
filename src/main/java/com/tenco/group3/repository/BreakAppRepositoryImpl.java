@@ -13,18 +13,25 @@ import com.tenco.group3.util.DBUtil;
 
 public class BreakAppRepositoryImpl implements BreakAppRepository {
 
+	// 휴학 신청
 	private static final String ADD_BREAK_APP = " INSERT INTO break_app_tb "
 			+ " (student_id, student_grade, from_year, from_semester, to_year, " + " to_semester, type) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+	// 휴학 신청 리스트
 	private static final String GET_BREAK_APP_LIST = " SELECT br.*, st.name AS studentName, de.name as departmentname "
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 			+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE st.id = ? ";
+	// 휴학 신청 자세히
 	private static final String GET_BREAK_APP_DETAIL = " SELECT br.*, st.name AS studentName, de.name as departmentname, st.address, st.tel, co.name as collegename "
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 			+ " JOIN department_tb as de on st.dept_id = de.id JOIN college_tb as co ON co.id = de.college_id "
 			+ "WHERE br.id = ? ";
 
-	private static final String GET_STUDENT_INFO = " SELECT * FROM student_tb WHERE id = ? ";
+	private static final String GET_STUDENT_INFO = " SELECT st.*, de.name as '학과', co.name as '단과대' "
+			+ " FROM student_tb as st "
+			+ " JOIN department_tb as de on de.id = st.dept_id "
+			+ " JOIN college_tb as co on de.college_id = co.id "
+			+ " WHERE st.id = ? ";
 
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
@@ -108,7 +115,14 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					student = Student.builder().grade(rs.getInt("grade")).semester(rs.getInt("semester")).build();
+					student = Student.builder().collname(rs.getString("단과대"))
+							.id(rs.getInt("id"))
+							.deptname(rs.getString("학과"))
+							.tel(rs.getString("tel"))
+							.name(rs.getString("name"))
+							.address(rs.getString("address"))
+							.grade(rs.getInt("grade"))
+							.build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

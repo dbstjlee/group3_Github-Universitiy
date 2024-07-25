@@ -39,6 +39,7 @@
 							<td class="sub--list--button--row">
 								<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
 									<input type="hidden" name="delete" value="${sugangList.subjectId}">
+									<input type="hidden" name="type" value="1">
 									<button type="submit" onclick="return confirm('예비수강신청을 취소하시겠습니까?');" style="background-color: #a7a7a7;">취소</button>
 								</form>
 							</td>

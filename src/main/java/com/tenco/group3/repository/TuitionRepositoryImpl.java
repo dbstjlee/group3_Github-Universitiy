@@ -10,16 +10,14 @@ import com.tenco.group3.util.DBUtil;
 
 public class TuitionRepositoryImpl implements TuitionRepository {
 
-	private static final String GET_TUITION_BY_STUDENTID = " SELECT " + "    tu.student_id, "
-			+ "    st.name AS student_name, " + "    de.name AS dept_name, " + "    co.name AS collage_name, "
-			+ "    ct.amount AS collage_amount, " + "    ss.sch_type, " + "    sc.max_amount AS sch_amount, "
-			+ "    (tu.tui_amount - sc.max_amount) AS total_amount, tu.status as status " + " FROM "
-			+ "    tuition_tb AS tu " + "        INNER JOIN " + "    student_tb AS st ON st.id = tu.student_id "
-			+ "        INNER JOIN " + "    department_tb AS de ON st.dept_id = de.id " + "        INNER JOIN "
-			+ "    college_tb AS co ON de.college_id = co.id " + "        INNER JOIN "
-			+ "    coll_tuit_tb AS ct ON ct.college_id = co.id " + "        INNER JOIN "
-			+ "    stu_sch_tb AS ss ON ss.student_id = st.id " + "        INNER JOIN "
-			+ "    scholarship_tb AS sc ON sc.type = ss.sch_type " + " WHERE" + "    tu.student_id = ? ";
+	private static final String GET_TUITION_BY_STUDENTID = " SELECT " + "	st.id AS studentId, "
+			+ "    st.name AS studentName, " + " de.name AS deptName, " + " co.name AS collgeName, "
+			+ "    ct.amount AS collTution, " + "    tu.sch_type AS scholarType, " + "	tu.tui_amount AS scholar, "
+			+ "    (tu.tui_amount - tu.sch_amount) AS totaltution, tu.status as status " + " FROM "
+			+ "    student_tb AS st " + " JOIN " + " department_tb AS de ON st.dept_id = de.id " + " JOIN "
+			+ "    college_tb AS co ON de.college_id = co.id " + " JOIN "
+			+ "    coll_tuit_tb AS ct ON co.id = ct.college_id " + " JOIN "
+			+ "	 tuition_tb as tu ON tu.student_id = st.id " + " WHERE " + " st.id = ? ";
 
 	private static final String GET_SUMMARY_TUTION_BY_STUDNETID = " SELECT *, (tui_amount - sch_amount) AS total_amount FROM tuition_tb WHERE student_id = ? ";
 

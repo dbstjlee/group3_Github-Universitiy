@@ -9,6 +9,7 @@ import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
+import com.tenco.group3.util.AlertUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -57,6 +58,18 @@ public class BreakController extends HttpServlet {
 	 */
 	private void showApplication(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
+		Boolean isBreakDay = (Boolean) getServletContext().getAttribute("breakApp");
+		int thisYear = (int) getServletContext().getAttribute("year");
+		int thisSemester = (int) getServletContext().getAttribute("semester");
+		User user = (User) session.getAttribute("principal");
+		if(isBreakDay) {
+			Student student = breakAppRepository.getStudentInfo(user.getId());
+			request.setAttribute("student", student);
+			request.setAttribute("thisYear", thisYear);
+			request.setAttribute("thisSemester", thisSemester);
+		} else {
+			AlertUtil.errorAlert(response, "휴학 신청 기간이 아닙니다.");
+		}
 		request.getRequestDispatcher("/WEB-INF/views/break/application.jsp").forward(request, response);
 	}
 

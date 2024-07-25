@@ -182,6 +182,7 @@
 					<td>
 						<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
 							<input type="hidden" name="subjectId" value="${sugangList.subjectId}">
+							<input type="hidden" name="type" value="0">
 							<button type="submit" onclick="return confirm('해당 강의를 수강신청하시겠습니까?');" style="background-color: #548AC2;">신청</button>
 						</form>
 					</td>
