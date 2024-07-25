@@ -3,6 +3,7 @@ package com.tenco.group3.listener;
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ScheduleStateRepository;
+import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -21,6 +22,8 @@ public class ContextListener implements ServletContextListener {
 		sce.getServletContext().setAttribute("tuition", scheduleState.isTuition());
 		sce.getServletContext().setAttribute("year", scheduleState.getYear());
 		sce.getServletContext().setAttribute("semester", scheduleState.getSemester());
+		SemesterUtil.setCurrentYear(scheduleState.getYear());
+		SemesterUtil.setCurrentSemester(scheduleState.getSemester());
 	}
 
 }
