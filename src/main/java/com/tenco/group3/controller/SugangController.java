@@ -109,7 +109,7 @@ public class SugangController extends HttpServlet {
 		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
-		request.getRequestDispatcher("/WEB-INF/views/sugang/appList.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/sugang/applicationSearch.jsp").forward(request, response);
 	}
 
 	/**

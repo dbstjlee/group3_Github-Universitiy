@@ -164,51 +164,59 @@
 					</div>
 				</form>
 			</div>
-			<table border="1">
-				<h3>강의 목록</h3>
-				<p>[총 ${totalCount}건]</p>
-				<thead>
-					<tr>
-						<th>단과대학</th>
-						<th>개설학과</th>
-						<th>학수번호</th>
-						<th>강의구분</th>
-						<th style="width: 200px;">강의명</th>
-						<th>담당교수</th>
-						<th>학점</th>
-						<th>요일시간 (강의실)</th>
-						<th>현재인원</th>
-						<th>정원</th>
-						<th>강의계획서</th>
-					</tr>
-				</thead>
-				<c:forEach var="sugangList" items="${sugangList}">
-					<tbody>
-						<tr>
-							<td>${sugangList.collegeName}</td>
-							<td>${sugangList.departName}</td>
-							<td>${sugangList.subjectId}</td>
-							<td>${sugangList.subjectType}</td>
-							<td>${sugangList.subjectName}</td>
-							<td>${sugangList.professorName}</td>
-							<td>${sugangList.grades}</td>
-							<td><c:choose>
-									<c:when test="${sugangList.startTime < 10}">
-							${sugangList.subjectDay} 0${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})								
+			<main>
+				<c:choose>
+					<c:when test="${not empty sugangList}">
+						<table border="1">
+							<h3>강의 목록</h3>
+							<p>[총 ${totalCount}건]</p>
+							<thead>
+								<tr>
+									<th>단과대학</th>
+									<th>개설학과</th>
+									<th>학수번호</th>
+									<th>강의구분</th>
+									<th style="width: 200px;">강의명</th>
+									<th>담당교수</th>
+									<th>학점</th>
+									<th>요일시간 (강의실)</th>
+									<th>현재인원</th>
+									<th>정원</th>
+									<th>강의계획서</th>
+								</tr>
+							</thead>
+							<c:forEach var="sugangItem" items="${sugangList}">
+								<tbody>
+									<tr>
+										<td>${sugangItem.collegeName}</td>
+										<td>${sugangItem.departName}</td>
+										<td>${sugangItem.subjectId}</td>
+										<td>${sugangItem.subjectType}</td>
+										<td>${sugangItem.subjectName}</td>
+										<td>${sugangItem.professorName}</td>
+										<td>${sugangItem.grades}</td>
+										<td><c:choose>
+												<c:when test="${sugangItem.startTime < 10}">
+							${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})								
 							</c:when>
-									<c:otherwise>
-							${sugangList.subjectDay} ${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})							
+												<c:otherwise>
+							${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})							
 							</c:otherwise>
-								</c:choose></td>
-							<td>${sugangList.numOfStudent}</td>
-							<td>${sugangList.capacity}</td>
-							<%-- 강의 계획서로 이동 --%>
-							<td><a href="">조회</a></td>
-						</tr>
-					</tbody>
-				</c:forEach>
-			</table>
-		</main>
+											</c:choose></td>
+										<td>${sugangItem.numOfStudent}</td>
+										<td>${sugangItem.capacity}</td>
+										<%-- 강의 계획서로 이동 --%>
+										<td><a href="">조회</a></td>
+									</tr>
+								</tbody>
+							</c:forEach>
+						</table>
+					</c:when>
+					<c:otherwise>
+						<p class="no--list--p">검색 결과 없음.</p>
+					</c:otherwise>
+				</c:choose>
+			</main>
 	</div>
 </body>
 </html>

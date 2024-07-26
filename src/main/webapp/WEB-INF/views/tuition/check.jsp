@@ -49,6 +49,7 @@
 							<th>등록금</th>
 							<th>장학금</th>
 							<th>납입금</th>
+							<th>상태</th>
 						</tr>
 						<tr>
 							<td>${checkTuition.year}년</td>
@@ -64,6 +65,7 @@
 							<td><fmt:formatNumber value="${checkTuition.collAmount}" pattern="#,###" /></td>
 							<td><fmt:formatNumber value="${checkTuition.scholarAmount}" pattern="#,###" /></td>
 							<td><fmt:formatNumber value="${checkTuition.totalAmount}" pattern="#,###" /></td>
+							<td>${checkTuition.status}</td>
 						</tr>
 					</table>
 				</c:when>

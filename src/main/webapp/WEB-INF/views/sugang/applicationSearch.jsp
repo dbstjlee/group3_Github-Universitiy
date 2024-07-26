@@ -166,69 +166,78 @@
 				<button class="preStuSubList--button">수강 신청 내역</button>
 			</a>
 		</div>
-		<table border="1">
-			<h3>강의 목록</h3>
-			<p>[총 ${totalCount}건]</p>
-			<thead>
-				<tr>
-					<th>단과대학</th>
-					<th>개설학과</th>
-					<th>학수번호</th>
-					<th>강의구분</th>
-					<th style="width: 200px;">강의명</th>
-					<th>담당교수</th>
-					<th>학점</th>
-					<th>요일시간 (강의실)</th>
-					<th>현재인원</th>
-					<th>정원</th>
-					<th>수강신청</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="sugangItem" items="${sugangList}">
-					<tr>
-						<td>${sugangItem.collegeName}</td>
-						<td>${sugangItem.departName}</td>
-						<td>${sugangItem.subjectId}</td>
-						<td>${sugangItem.subjectType}</td>
-						<td>${sugangItem.subjectName}</td>
-						<td>${sugangItem.professorName}</td>
-						<td>${sugangItem.grades}</td>
-						<td><c:choose>
-								<c:when test="${sugangItem.startTime < 10}">
+		<main>
+			<c:choose>
+				<c:when test="${not empty sugangList}">
+					<table border="1">
+						<h3>강의 목록</h3>
+						<p>[총 ${totalCount}건]</p>
+						<thead>
+							<tr>
+								<th>단과대학</th>
+								<th>개설학과</th>
+								<th>학수번호</th>
+								<th>강의구분</th>
+								<th style="width: 200px;">강의명</th>
+								<th>담당교수</th>
+								<th>학점</th>
+								<th>요일시간 (강의실)</th>
+								<th>현재인원</th>
+								<th>정원</th>
+								<th>수강신청</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="sugangItem" items="${sugangList}">
+								<tr>
+									<td>${sugangItem.collegeName}</td>
+									<td>${sugangItem.departName}</td>
+									<td>${sugangItem.subjectId}</td>
+									<td>${sugangItem.subjectType}</td>
+									<td>${sugangItem.subjectName}</td>
+									<td>${sugangItem.professorName}</td>
+									<td>${sugangItem.grades}</td>
+									<td><c:choose>
+											<c:when test="${sugangItem.startTime < 10}">
 							${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})								
 							</c:when>
-								<c:otherwise>
+											<c:otherwise>
 							${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})							
 							</c:otherwise>
-							</c:choose></td>
-						<td>${sugangItem.numOfStudent}</td>
-						<td>${sugangItem.capacity}</td>
-						<td><c:choose>
-								<c:when test="${sugangItem.result != 0}">
-									<c:choose>
-										<c:when test="${sugangItem.hasConfirmed == true}">
-											<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-												<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="1">
-												<button type="submit" onclick="return confirm('해당 강의를 수강 취소 하시겠습니까?');" style="background-color: #548AC2;">수강 취소</button>
-											</form>
-										</c:when>
-										<c:otherwise>
-											<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-												<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
-												<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
-											</form>
-										</c:otherwise>
-									</c:choose>
-								</c:when>
-								<c:otherwise>
-									<p>신청마감</p>
-								</c:otherwise>
-							</c:choose></td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+										</c:choose></td>
+									<td>${sugangItem.numOfStudent}</td>
+									<td>${sugangItem.capacity}</td>
+									<td><c:choose>
+											<c:when test="${sugangItem.result != 0}">
+												<c:choose>
+													<c:when test="${sugangItem.hasConfirmed == true}">
+														<form action="${pageContext.request.contextPath}/sugang/application" method="post">
+															<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="1">
+															<button type="submit" onclick="return confirm('해당 강의를 수강 취소 하시겠습니까?');" style="background-color: #548AC2;">수강 취소</button>
+														</form>
+													</c:when>
+													<c:otherwise>
+														<form action="${pageContext.request.contextPath}/sugang/application" method="post">
+															<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
+															<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
+														</form>
+													</c:otherwise>
+												</c:choose>
+											</c:when>
+											<c:otherwise>
+												<p>신청마감</p>
+											</c:otherwise>
+										</c:choose></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</c:when>
+				<c:otherwise>
+					<p class="no--list--p">검색 결과 없음.</p>
+				</c:otherwise>
+			</c:choose>
+		</main>
 	</div>
 </body>
 </html>
