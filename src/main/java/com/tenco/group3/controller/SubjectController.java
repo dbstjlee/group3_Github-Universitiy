@@ -46,6 +46,8 @@ public class SubjectController extends HttpServlet {
 			case "/search":
 				searchSubject(request, response);
 				break;
+			case "/syllabus":
+				break;
 				
 			}
 
@@ -94,7 +96,6 @@ public class SubjectController extends HttpServlet {
 		int deptId = Integer.parseInt(request.getParameter("deptId"));
 		String name = request.getParameter("subName");
 		
-		
 		try {
 			
 			String pageStr = request.getParameter("page");
@@ -107,10 +108,10 @@ public class SubjectController extends HttpServlet {
 		}
 		
 		int offset = (page - 1) * pageSize;
-		int totalCount = subjectRepository.getAllSubjectCount();	
+		List<Subject> subjectlist = subjectRepository.searchSubject(year, semester, name,deptId, pageSize,offset);
+		int totalCount = subjectRepository.getSearchSubjectCount(year, semester, name, deptId);
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		
-		List<Subject> subjectlist = subjectRepository.searchSubject(year, semester, deptId, name, pageSize,offset);
 		request.setAttribute("subjectList", subjectlist);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -122,8 +123,6 @@ public class SubjectController extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 		
 		
 	}

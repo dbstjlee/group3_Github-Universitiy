@@ -25,7 +25,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	private final String SELECT_SUBJECT_BY_ID = "SELECT * FROM subject_tb WHERE id = AND AND sub_year = ? AND  semester = ? AND name = ? ";
 	private final String SELECT_ID_BY_LESS_NUM_STUDENT="SELECT id FROM subject_tb WHERE capacity >= num_of_student ";
 	private static final String COUNT_ALL_BOARDS = " SELECT count(*) as count FROM subject_tb ";
-	private static final String SEARCH_SUBJECT = " select sub.*, dept.name AS deptName, coll.name AS collName, prof.name AS professorName "
+	private static final String SEARCH_SUBJECT = " select sub.*, dept.name AS dept_name, coll.name AS coll_name, prof.name AS professor_name "
 			+ " FROM subject_tb AS sub "
 			+ " JOIN department_tb AS dept "
 			+ " ON sub.dept_id = dept.id "
@@ -33,10 +33,18 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			+ " ON dept.college_id = coll.id "
 			+ " JOIN professor_tb AS prof "
 			+ " ON sub.professor_id = prof.id "
-			+ " where sub.sub_year like ? and sub.semester like  ?  and dept.id like  ?  and sub.name like  ?  "
+			+ " where sub.sub_year  = ? and sub.semester =  ? and sub.name like ?  and (dept.id = ? OR ? = -1)  "
 			+ " ORDER BY id asc "
 			+ " limit ? offset ? ";
-	
+	private static final String COUNT_SEARCH_SUBJECT = " select COUNT(*) as count "
+			+ " FROM subject_tb AS sub "
+			+ " JOIN department_tb AS dept "
+			+ " ON sub.dept_id = dept.id "
+			+ " JOIN college_tb AS coll "
+			+ " ON dept.college_id = coll.id "
+			+ " JOIN professor_tb AS prof "
+			+ " ON sub.professor_id = prof.id "
+			+ " where sub.sub_year  = ? and sub.semester =  ? and sub.name like ?  and (dept.id = ? OR ? = -1)  ";
 	@Override
 	public List<Subject> getSubjectAll(int limit, int offset) {
 		List<Subject> subjectList = new ArrayList<>();
@@ -71,18 +79,21 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	
 	
 	@Override
-	public List<Subject> searchSubject(int subYear,int semester,int deptId,String name,int limit, int offset) {
+	public List<Subject> searchSubject(int subYear,int semester,String name,int deptId,int limit, int offset) {
 		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SEARCH_SUBJECT)) {
 		
-			
-			pstmt.setString(1, "%" + subYear + "%");
-			pstmt.setString(2,"%" + semester +"%");
-			pstmt.setString(3, "%" + deptId+ "%");
-			pstmt.setString(4, "%" + name + "%");
-			pstmt.setInt(5, limit);
-			pstmt.setInt(6, offset);			
+			if (name == null) {
+				name = "";
+			}
+			pstmt.setInt(1, subYear);
+			pstmt.setInt(2,semester);
+			pstmt.setString(3, "%" + name + "%");
+			pstmt.setInt(4,  deptId);
+			pstmt.setInt(5, deptId);
+			pstmt.setInt(6, limit);
+			pstmt.setInt(7, offset);			
 			ResultSet rs = pstmt.executeQuery();
 			System.out.println("나는 섭");
 			while (rs.next()) {
@@ -218,6 +229,37 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		}
 		return subjectCount;
 	}
+
+
+
+	@Override
+	public int getSearchSubjectCount(int year, int semester, String name, int deptId) {
+		 int count = 0;
+	        try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(COUNT_SEARCH_SUBJECT)) {
+	        	if (name == null) {
+					name = "";
+				}
+	        	pstmt.setInt(1, year);
+	        	pstmt.setInt(2, semester);
+	        	pstmt.setString(3, "%" + name + "%");
+	        	pstmt.setInt(4, deptId);
+	        	pstmt.setInt(5, deptId);
+	                try (ResultSet rs = pstmt.executeQuery()) {
+	                    if (rs.next()) {
+	                        count = rs.getInt("count");
+	                    }
+	                }
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	            return count;
+		
+	}
+
+
+
+	
 
 	
 

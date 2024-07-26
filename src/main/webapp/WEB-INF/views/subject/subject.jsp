@@ -285,7 +285,7 @@
     <c:choose>
 <c:when test="${subjectList.isEmpty() == false}">
 				<h4>
-					<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 80건]</span>
+					<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
 				</h4>
                 <table border="1" class="sub--list--table">
                     <thead>
