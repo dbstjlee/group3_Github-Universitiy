@@ -12,10 +12,14 @@ import lombok.ToString;
 @ToString
 @Builder
 public class ScheduleState {
-
-	private boolean breakApp;
-	private boolean sugang;
-	private boolean tuition;
+	
+	public static final int FALSE = 0;
+	public static final int TRUE = 1;
+	public static final int END = 2;
+	
+	private int breakApp;
+	private int sugang;
+	private int tuition;
 	private int year;
 	private int semester;
 
