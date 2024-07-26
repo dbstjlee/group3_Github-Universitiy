@@ -110,17 +110,13 @@
 						<th>변동 일자</th>
 						<th>변동 구분</th>
 						<th>세부</th>
-						<th>승인 여부</th>
-						<th>복학 예정 연도/학기</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td></td>
-						<td>재학</td>
-						<td></td>
-						<td>승인</td>
-						<td></td>
+						<td>${studentStat.fromDate}</td>
+						<td>${studentStat.status}</td>
+						<td>${studentStat.description}</td>
 					</tr>
 				</tbody>
 			</table>

@@ -29,5 +29,6 @@ public class Student {
 	private String deptname;
 	private String collname;
 	private String status;
-	
+	private Date fromDate;
+	private String description;
 }

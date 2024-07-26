@@ -21,7 +21,7 @@
 			</div>
 
 			<nav class="main--menu">
-				<a href="/${pageContext.request.contextPath}/main"><img class="logo" alt="" src="${pageContext.request.contextPath}/resources/images/logo.png"></a>
+				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.png"></a>
 
 				<c:choose>
 					<c:when test="${principal.userRole == 'student'}">

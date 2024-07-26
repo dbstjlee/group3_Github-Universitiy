@@ -72,6 +72,11 @@ public class UserRepositoryImpl implements UserRepository {
 			+ " JOIN stu_stat_tb as stat on st.id = stat.student_id "
 			+ " WHERE stat.to_date = '9999-01-01' AND st.id = ? ; ";
 
+	// 학생 학적 변동 조회
+	private static final String SELECT_STUDENT_STAT = " SELECT student_id, status, from_date, description from stu_stat_tb where student_id = ? ; ";
+	
+	
+	
 	/**
 	 * ID로 로그인
 	 */
@@ -92,7 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(user);
+		System.out.println(user); //TODO 삭제
 		return user;
 	}
 
@@ -330,6 +335,33 @@ public class UserRepositoryImpl implements UserRepository {
 							.grade(rs.getInt("grade"))
 							.semester(rs.getInt("semester"))
 							.status(rs.getString("status"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return student;
+	}
+
+	/**
+	 * 학생 학적 변동 조회
+	 */
+	@Override
+	public Student getStudentStat(int id) {
+		Student student = null;
+		try (Connection conn = DBUtil.getConnection()) {
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_STAT)) {
+				pstmt.setInt(1, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					student = Student.builder()
+							.id(rs.getInt("student_id"))
+							.status(rs.getString("status"))
+							.fromDate(rs.getDate("from_date"))
+							.description(rs.getString("description"))
 							.build();
 				}
 			} catch (Exception e) {

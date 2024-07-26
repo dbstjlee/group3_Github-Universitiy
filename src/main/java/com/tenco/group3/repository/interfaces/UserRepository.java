@@ -29,4 +29,6 @@ public interface UserRepository {
 	
 	Student getStudentInfoMain(int id); // 학생 프로필 정보 조회
 	
+	Student getStudentStat(int id); // 학생 학적 변동 조회
+	
 }
