@@ -15,7 +15,7 @@
 				<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
 			</tr>
 			<tr>
-				<td><a href="${pageContext.request.contextPath}/sugang/application">수강 신청</a></td>
+				<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=1">수강 신청</a></td>
 			</tr>
 			<tr>
 				<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
@@ -28,7 +28,7 @@
 			<hr>
 			<div class="d-flex justify-content-between align-items-start" style="width: 100%">
 				<c:choose>
-					<c:when test="${not empty sugangList}">
+					<c:when test="${not empty sugangPreList}">
 						<div>
 							<h4>
 								<span style="font-weight: 600;"> 신청 내역&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalGrade}학점]</span>
@@ -47,7 +47,7 @@
 										<th>수강신청</th>
 									</tr>
 								</thead>
-								<c:forEach var="sugang" items="${sugangList}">
+								<c:forEach var="sugang" items="${sugangPreList}">
 									<tbody>
 										<tr>
 											<td>${sugang.subjectId}</td>
