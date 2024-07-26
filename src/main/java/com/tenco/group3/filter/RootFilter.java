@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tenco.group3.model.Notice;
+import com.tenco.group3.repository.NoticeRepositoryImpl;
+import com.tenco.group3.repository.interfaces.NoticeRepository;
+
 import jakarta.annotation.Priority;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -20,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
 @WebFilter("/*")
 public class RootFilter extends HttpFilter implements Filter {
 
+	private NoticeRepository noticeRepository;
+	
 	List<String> ignoreURLs = new ArrayList<>();
 
 	public RootFilter() {
@@ -30,6 +36,8 @@ public class RootFilter extends HttpFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		ignoreURLs.add("/user/logIn");
 		ignoreURLs.add("/favicon.io");
+		
+		noticeRepository = new NoticeRepositoryImpl();
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -47,6 +55,28 @@ public class RootFilter extends HttpFilter implements Filter {
 		} else {
 			if (path.equals("/")) {
 				// TODO 홈 화면에서 필요한 값들 지정해줘야함
+				
+				// 2. 공지
+				int list = 1; // 1페이지
+				int listSize = 5; // 공지글 5개
+				
+				try {
+					String listStr = request.getParameter("list");
+
+					if (listStr != null) {
+						list = Integer.parseInt(listStr);
+					}
+
+				} catch (Exception e) {
+					list = 1;
+				}
+				
+				int offset = (list - 1) * listSize;
+
+				List<Notice> noticeList = noticeRepository.getAllNotice(listSize, offset);
+
+				
+				
 				// 1. 유저정보, 2. 공지, 3. 학사일정
 				request.getRequestDispatcher("/WEB-INF/views/main.jsp").forward(httpRequest, response);
 			} else {

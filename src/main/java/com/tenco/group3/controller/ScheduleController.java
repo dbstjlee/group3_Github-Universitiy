@@ -1,21 +1,21 @@
 package com.tenco.group3.controller;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import com.tenco.group3.model.Schedule;
+import com.tenco.group3.model.User;
+import com.tenco.group3.repository.ScheduleRepositoryImpl;
+import com.tenco.group3.repository.interfaces.ScheduleRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import com.tenco.group3.model.Notice;
-import com.tenco.group3.model.Schedule;
-import com.tenco.group3.model.User;
-import com.tenco.group3.repository.ScheduleRepositoryImpl;
-import com.tenco.group3.repository.interfaces.ScheduleRepository;
 
 @WebServlet("/schedule/*")
 public class ScheduleController extends HttpServlet {
@@ -39,6 +39,12 @@ public class ScheduleController extends HttpServlet {
 		case "/create":
 			handleScheduleList(request, response);
 			break;
+		case "/delete":
+			handleScheduleDelete(request, response);
+			break;
+		case "/add":
+			request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleAdd.jsp").forward(request, response);
+			break;
 		case "/update":
 			showScheduleUpdate(request, response);
 			break;
@@ -52,20 +58,34 @@ public class ScheduleController extends HttpServlet {
 	}
 
 	/**
+	 * 학사 일정 삭제 기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleScheduleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		int scheduleId = Integer.parseInt(request.getParameter("id"));
+		scheduleRepository.deleteSchedule(scheduleId);
+		response.sendRedirect(request.getContextPath() + "/schedule/create");
+	}
+
+	/**
 	 * 학사 일정 수정 폼
 	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
-	private void showScheduleUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		int ScheduleId = Integer.parseInt(request.getParameter("id"));
-
+		System.out.println("ScheduleId:" + ScheduleId); // TODO - 삭제 예정
 		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId); // TODO - 다시
 		request.setAttribute("schedule", schedule);
-		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleDetail.jsp").forward(request, response);
-
+		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleUpdate.jsp").forward(request, response);
 	}
 
 	/**
@@ -78,12 +98,16 @@ public class ScheduleController extends HttpServlet {
 	 */
 	private void showScheduleDetail(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		User principal = (User) request.getSession().getAttribute("principal");
 		int ScheduleId = Integer.parseInt(request.getParameter("id"));
-		System.out.println("ScheduleId:" + ScheduleId);
-		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId);
-		request.setAttribute("schedule", schedule);
-		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleDetail.jsp").forward(request, response);
 
+		if (principal.getUserRole().equals("staff")) {
+			Schedule schedule = scheduleRepository.getScheduleById(ScheduleId);
+			request.setAttribute("schedule", schedule);
+			request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleDetail.jsp").forward(request, response);
+		} else {
+			response.sendRedirect(request.getContextPath() + "/user/logIn");
+		}
 	}
 
 	/**
@@ -123,11 +147,11 @@ public class ScheduleController extends HttpServlet {
 		String action = request.getPathInfo();
 		System.out.println("action:" + action);
 		switch (action) {
-		case "/create":
-			handleScheduleListCreate(request, response); // TODO
+		case "/add":
+			handleScheduleAdd(request, response);
 			break;
 		case "/update":
-			handleScheduleUpdate(request, response); // TODO
+			handleScheduleUpdate(request, response);
 			break;
 		}
 	}
@@ -138,8 +162,10 @@ public class ScheduleController extends HttpServlet {
 	 * @param request
 	 * @param response
 	 * @throws IOException
+	 * @throws ServletException
 	 */
-	private void handleScheduleUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void handleScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		int scheduleId = Integer.parseInt(request.getParameter("id"));
 		System.out.println("scheduleId : " + scheduleId); // TODO - 삭제
 		String information = request.getParameter("information");
@@ -148,33 +174,52 @@ public class ScheduleController extends HttpServlet {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 형식에 맞게 설정
 
-		try {
-			Date startDay = formatter.parse(startDayStr);
-			Date endDay = formatter.parse(endDayStr);
+		java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDayStr);
+		java.sql.Date sqlEndDate = java.sql.Date.valueOf(endDayStr);
 
-			// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
-			Schedule schedule = new Schedule();
-			schedule.setStartDay(startDay);
-			schedule.setEndDay(endDay);
+		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
+		Schedule schedule = new Schedule();
+		schedule.setStartDay(sqlStartDate);
+		schedule.setEndDay(sqlEndDate);
 
-			Schedule scheduleList = Schedule.builder()
-					.id(scheduleId)
-					.startDay(startDay)
-					.endDay(endDay)
-					.information(information)
-					.build();
-			scheduleRepository.updateSchedule(scheduleList);
-			request.setAttribute("scheduleList", scheduleList);
-			response.sendRedirect(request.getContextPath() + "/schedule/update");
-		} catch (ParseException e) {
-			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date format");
-		}
+		Schedule scheduleList = Schedule.builder().id(scheduleId).startDay(sqlStartDate).endDay(sqlEndDate)
+				.information(information).build();
+		scheduleRepository.updateSchedule(scheduleList);
+		response.sendRedirect(request.getContextPath() + "/schedule/create");
+//		request.setAttribute("scheduleList", scheduleList);
+//		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleUpdate.jsp").forward(request, response);
 
 	}
 
-	private void handleScheduleListCreate(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+	/**
+	 * 학사 일정 추가 기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void handleScheduleAdd(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		User principal = (User) request.getSession().getAttribute("principal");
+		int staffId = principal.getId();
 
+		String information = request.getParameter("information");
+		String startDayStr = request.getParameter("startDay");
+		String endDayStr = request.getParameter("endDay");
+
+		java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDayStr);
+		java.sql.Date sqlEndDate = java.sql.Date.valueOf(endDayStr);
+
+		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
+		Schedule schedule = new Schedule();
+		schedule.setStartDay(sqlStartDate);
+		schedule.setEndDay(sqlEndDate);
+
+		Schedule scheduleListById = Schedule.builder().staffId(staffId).startDay(sqlStartDate).endDay(sqlEndDate)
+				.information(information).build();
+		scheduleRepository.addSchedule(scheduleListById);
+		System.out.println("scheduleListById:" + scheduleListById); // TODO - 삭제
+		response.sendRedirect(request.getContextPath() + "/schedule/create");
 	}
 }

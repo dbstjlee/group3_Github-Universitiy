@@ -15,27 +15,13 @@
 				</h3>
 				<div class="main--page--split"></div>
 				<table>
+				
 					<tbody>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/notice/read?id=6">공지사항 제목 6번</a></td>
-							<td>날짜</td>
+							<td><a href="${pageContext.request.contextPath}/notice/read?id=${notice.id}">${notice.category}&nbsp;${notice.title}</a></td>
+							<td>${notice.createdTime}</td>
 						</tr>
-						<tr>
-							<td><a href="${pageContext.request.contextPath}/notice/read?id=5">공지사항 제목 5번</a></td>
-							<td>날짜</td>
-						</tr>
-						<tr>
-							<td><a href="${pageContext.request.contextPath}/notice/read?id=4">공지사항 제목 4번</a></td>
-							<td>날짜</td>
-						</tr>
-						<tr>
-							<td><a href="${pageContext.request.contextPath}/notice/read?id=3">공지사항 제목 3번</a></td>
-							<td>날짜</td>
-						</tr>
-						<tr>
-							<td><a href="${pageContext.request.contextPath}/notice/read?id=2">공지사항 제목 2번</a></td>
-							<td>날짜</td>
-						</tr>
+						
 					</tbody>
 				</table>
 			</div>

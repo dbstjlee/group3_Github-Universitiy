@@ -1,6 +1,8 @@
 package com.tenco.group3.model;
 
-import java.util.Date;
+
+
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

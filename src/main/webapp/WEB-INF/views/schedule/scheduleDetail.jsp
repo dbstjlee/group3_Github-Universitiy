@@ -74,14 +74,14 @@
 					<td><a href="/schedule/list">학사일정</a></td>
 				</tr>
 				<tr>
-					<td><a href="/schedule/create" class="selected--menu"> 학사일정 등록</a></td>
+					<td><a href="/schedule/create"> 학사일정 등록</a></td>
 				</tr>
 			</table>
 		</div>
 	</div>
 
 	<main>
-		<form action="/schedule/detail" method="get" class="form--container">
+		<form action="/schedule/detail?id=${schedule.id}" method="get" class="form--container">
 			<table class="table">
 				<thead>
 					<tr class="first--tr">
@@ -91,11 +91,11 @@
 				<tbody>
 					<tr>
 						<td>시작날짜</td>
-						<td><fmt:formatDate value="${schedule.startDay}" pattern="MM-dd" /></td>
+						<td><fmt:formatDate value="${schedule.startDay}" pattern="MM-dd"/></td>
 					</tr>
 					<tr>
 						<td>종료날짜</td>
-						<td><fmt:formatDate value="${schedule.endDay}" pattern="MM-dd" /></td>
+						<td><fmt:formatDate value="${schedule.endDay}" pattern="MM-dd"/></td>
 					</tr>
 					<tr>
 						<td class="td">내용</td>
@@ -104,7 +104,7 @@
 				</tbody>
 			</table>
 			<div class="checkbox">
-				<a href="/schedule/detail?update&id=${schedule.id}" class="button">수정</a> 
+				<a href="/schedule/update?id=${schedule.id}" class="button">수정</a> 
 				<a href="/schedule/delete?id=${schedule.id}" class="button">삭제</a>
 			</div>
 		</form>

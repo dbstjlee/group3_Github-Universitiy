@@ -20,7 +20,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	private static final String UPDATE_SCHEDULE_DETAIL = " UPDATE schedule_tb SET start_day = ? , end_day = ? , information = ? WHERE id = ? ; ";
 	private static final String DELETE_SCHEDULE_DETAIL = " DELETE FROM schedule_tb WHERE id = ? ; ";
 	private static final String ADD_SCHEDULE_DETAIL = " INSERT INTO schedule_tb(staff_id, start_day, end_day, information) values ( ? , ? , ? , ? ); ";
-	
+//	private static final String SELECT_ALL_INFO = " SELECT * FROM schedule_tb";
 	
 	/**
 	 * 전체 학사일정 조회
@@ -155,7 +155,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(ADD_SCHEDULE_DETAIL)){
 				pstmt.setInt(1, schedule.getStaffId());
-				pstmt.setDate(2, (Date) schedule.getStartDay()); // TODO - DATE 확인
+				pstmt.setDate(2, (Date) schedule.getStartDay());
 				pstmt.setDate(3, (Date) schedule.getEndDay());
 				pstmt.setString(4, schedule.getInformation());
 				pstmt.executeUpdate();

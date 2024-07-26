@@ -76,8 +76,18 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		
 		<div class="paging--container">
-			<a href="/notice/list">${currentList}</a> &nbsp;&nbsp; 
+		<c:forEach begin="1" end="${totalPages}"  var="i" >
+			<c:choose>
+				<c:when test="${ i == currentPage }">
+					<span class="current-page">${i}&nbsp;&nbsp;</span>
+				</c:when>
+				<c:otherwise>
+					<span><a href="/notice/list?page=${i}">${i}</a>&nbsp;&nbsp;</span>	
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
 			<c:if test="${principal.userRole == 'staff'}">
 			<a href="/notice/create" class="button">등록</a>
 			</c:if>

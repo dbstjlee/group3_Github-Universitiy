@@ -2,9 +2,6 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/notice.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin.css">
-
 <style>
 .room--table {
 	text-align: center;
@@ -15,10 +12,6 @@
 .room--table td {
 	padding: 10px;
 	width: 300px;
-}
-
-.first--tr {
-	font-weight: bold;
 }
 
 .mouth {
@@ -33,15 +26,20 @@
 	margin-top: 100px;
 }
 
-.table {
-	width: 800px;
-}
-
 .first--tr {
 	background-color: #f7f6f6;
 	font-weight: bolder;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.info {
+	height: 100px;
+}
+
+.td {
+	background-color: #fff;
+	width: 300px;
 }
 
 .button {
@@ -51,7 +49,15 @@
 	background-color: #031734;
 	color: #ccc;
 	text-decoration: none;
-	margin-left: 770px;
+}
+
+.checkbox {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.checkbox>a {
+	margin: 0 10px;
 }
 </style>
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
@@ -67,6 +73,7 @@
 				<tr>
 					<td><a href="/schedule/list">학사일정</a></td>
 				</tr>
+
 				<tr>
 					<td><a href="/schedule/create" class="selected--menu"> 학사일정 등록</a></td>
 				</tr>
@@ -75,31 +82,32 @@
 	</div>
 
 	<main>
-		<h1>학사일정</h1>
-		<form action="/schedule/add">
-			<div class="container">
-				<table class="table">
-					<thead>
-						<tr class="first--tr">
-							<th>ID</th>
-							<th>날짜</th>
-							<th>내용</th>
-						</tr>
-					</thead>
-					<c:forEach var="scheduleListById" items="${scheduleListById}">
-						<tbody>
-							<tr onclick="location.href='/schedule/detail?id=${scheduleListById.id}'">
-								<td>${scheduleListById.id}</td>
-								<td><fmt:formatDate value="${scheduleListById.startDay}" pattern="MM-dd" />~<fmt:formatDate value="${scheduleListById.endDay}" pattern="MM-dd" /></td>
-								<td>${scheduleListById.information}</td>
-							</tr>
-						</tbody>
-					</c:forEach>
-				</table>
+		<form action="/schedule/add" method="post">
+			<table class="table">
+				<thead>
+					<tr class="first--tr">
+						<th colspan="2">2023년 학교 학사일정</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>시작날짜</td>
+						<td><input type="date" name="startDay" value="${scheduleList.startDay}"></td>
+					</tr>
+					<tr>
+						<td>종료날짜</td>
+						<td><input type="date" name="endDay" value="${scheduleList.endDay}"></td>
+					</tr>
+					<tr>
+						<td class="td">내용</td>
+						<td class="info"><input type="text" name="information" value="${scheduleList.information}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="checkbox">
+				<button class="button">등록</button>
 			</div>
 		</form>
-		<a href="/schedule/add" class="button">등록</a>
-
 	</main>
 </div>
 </body>

@@ -83,7 +83,7 @@
 	</div>
 
 	<main>
-		<form action="/schedule/update?id=1" method="post">
+		<form action="/schedule/update?id=${schedule.id}" method="post">
 			<table class="table">
 				<thead>
 					<tr class="first--tr">
@@ -93,15 +93,15 @@
 				<tbody>
 					<tr>
 						<td>시작날짜</td>
-						<td><input type="date" name="startDay" value="${scheduleList.startDay}"></td>
+						<td><input type="date" name="startDay" value="${schedule.startDay}"></td>
 					</tr>
 					<tr>
 						<td>종료날짜</td>
-						<td><input type="date" name="endDay" value="${scheduleList.endDay}"></td>
+						<td><input type="date" name="endDay" value="${schedule.endDay}"></td>
 					</tr>
 					<tr>
 						<td class="td">내용</td>
-						<td class="info"><input type="text" name="information" value="${scheduleList.information}"></td>
+						<td class="info"><input type="text" name="information" value="${schedule.information}"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -109,15 +109,7 @@
 				<button class="button">수정</button>
 			</div>
 		</form>
-
 	</main>
-
-
-	<footer>
-		<!-- 필요 시 -->
-	</footer>
-
 </div>
-
 </body>
 </html>
