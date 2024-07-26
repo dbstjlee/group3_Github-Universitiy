@@ -9,5 +9,6 @@ public interface CollTuitRepository {
 	List<CollegeTuition> getAllColTuit(); // 단과대학 별 등록금
 	int addCollegeTuition(CollegeTuition collegeTuition); // 단과대학 별 등록금 추가
 	int deleteCollegeTuition(int id); // 단과대학 별 등록금 삭제
+	int updateCollegeTuition(CollegeTuition collegeTuition); // 단과대학 별 등록금 수정
 	CollegeTuition getCollegeTutionById(int id);
 }

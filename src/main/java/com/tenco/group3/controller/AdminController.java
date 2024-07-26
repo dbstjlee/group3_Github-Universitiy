@@ -146,12 +146,86 @@ public class AdminController extends HttpServlet {
 		case "addCollTuit":
 			handleAddCollegeTuition(request, response);
 			break;
+		case "/updateCollTuit":
+			handleUpdateCollegeTuition(request, response);
+			break;
+		case "/deleteCollTuit":
+			handleDeleteCollegeTuition(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 	}
 
+	private void handleDeleteCollegeTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		String idParam = request.getParameter("id");
+//
+//	    if (idParam == null || idParam.trim().isEmpty()) {
+//	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+//	        return;
+//	    }
+//	    int collegeId;
+//	    try {
+//	    	collegeId = Integer.parseInt(idParam);
+//	    } catch (NumberFormatException e) {
+//	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+//	        return;
+//	    }
+//	    CollegeTuition collegeTuition = collegeRepository.get(collegeId);
+//	    if (department == null) {
+//	        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+//	        return;
+//	    }
+//	    int result = departmentRepository.deleteDepartment(collegeId);
+//	    if (result > 0) {
+//	        response.sendRedirect(request.getContextPath() + "/admin/tuition");
+//	    } else {
+//	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//	    }
+//	}
+	
+
+	/**
+	 * 단과대학별 등록금 수정
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+		private void handleUpdateCollegeTuition(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		    // 파라미터 값 가져오기
+		    String idParam = request.getParameter("id");
+		    String amountParam = request.getParameter("amount");
+
+		    // 파라미터 유효성 검사
+		    if (idParam == null || idParam.trim().isEmpty() || amountParam == null || amountParam.trim().isEmpty()) {
+		        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+		        return;
+		    }
+		    int id;
+		    int amount;
+		    try {
+		        id = Integer.parseInt(idParam);
+		        amount = Integer.parseInt(amountParam);
+		    } catch (NumberFormatException e) {
+		        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameter format");
+		        return;
+		    }
+		    CollegeTuition collegeTuition = CollegeTuition.builder()
+		            .college_id(id)
+		            .amount(amount)
+		            .build();
+		    int result = collTuitRepository.updateCollegeTuition(collegeTuition);
+		    if (result > 0) {
+		        List<CollegeTuition> collegeTuitions = collTuitRepository.getAllColTuit();
+		        request.setAttribute("collegeTuitions", collegeTuitions);
+		        request.getRequestDispatcher("/WEB-INF/views/admin/collegeTuition.jsp").forward(request, response);
+		    } else {
+		        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to update college tuition");
+		    }
+		 
+	}	
 	/**
 	 * 단과대학별 등록금 등록
 	 * @param request
@@ -196,7 +270,7 @@ public class AdminController extends HttpServlet {
 	 * @throws IOException 
 	 */
 	private void handleUpdateDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String idParam = request.getParameter("id");
+	    String idParam = request.getParameter("id");
 	    String name = request.getParameter("name");
 	    if (idParam == null || idParam.trim().isEmpty() || name == null || name.trim().isEmpty()) {
 	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -215,7 +289,13 @@ public class AdminController extends HttpServlet {
 	            .build();
 	    int result = departmentRepository.updateDepartment(department);
 	    if (result > 0) {
-	        response.sendRedirect(request.getContextPath() + "/admin/department");
+	        request.setAttribute("department", department);
+	        try {
+	            request.getRequestDispatcher("/WEB-INF/views/admin/department.jsp").forward(request, response);
+	        } catch (ServletException e) {
+	            e.printStackTrace();
+	            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        }
 	    } else {
 	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	    }

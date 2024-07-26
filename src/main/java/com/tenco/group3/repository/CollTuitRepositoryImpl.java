@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.CollegeTuition;
+import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.interfaces.CollTuitRepository;
 import com.tenco.group3.repository.interfaces.CollegeRepository;
 import com.tenco.group3.util.DBUtil;
@@ -17,6 +18,8 @@ public class CollTuitRepositoryImpl implements CollTuitRepository{
 	private static final String GET_ALL_COLLTUIT = " SELECT c.id AS college_id, c.name AS college_name, t.amount AS tuition_amount "
 			+ " FROM  college_tb c JOIN coll_tuit_tb t ON c.id = t.college_id ORDER BY c.id ASC ";
 	private static final String ADD_COLLEGE_TUITION = " INSERT INTO coll_tuit_tb (college_id, amount) VALUES (?, ?) ";
+	private static final String UPDATE_COLLEGE_TUITION = " update coll_tuit_tb set amount = ? where college_id = ? ";
+	private static final String DELETE_COLLEGE_TUITION = " delete from coll_tuit_tb where college_id = ? ";
 	
 	@Override
 	public List<CollegeTuition> getAllColTuit() {
@@ -62,14 +65,54 @@ public class CollTuitRepositoryImpl implements CollTuitRepository{
 	
 	@Override
 	public int deleteCollegeTuition(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int resultCount = 0;
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(DELETE_COLLEGE_TUITION)) {
+		        conn.setAutoCommit(false); 
+		        pstmt.setInt(1, id); 
+		        resultCount = pstmt.executeUpdate(); 
+		        
+		        if (resultCount > 0) {
+		            conn.commit(); 
+		        } else {
+		            conn.rollback(); 
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace(); 
+		        try (Connection conn = DBUtil.getConnection()) {
+		            conn.rollback();
+		        } catch (SQLException ex) {
+		            ex.printStackTrace();
+		        }
+		    }
+		return resultCount;
 	}
 
 	@Override
 	public CollegeTuition getCollegeTutionById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+
+
+	/**
+	 * 단과대학별 등록금 수정
+	 */
+	@Override
+	public int updateCollegeTuition(CollegeTuition collegeTuition) {
+	    int resultCount = 0;
+	    try (Connection conn = DBUtil.getConnection()) {
+	        conn.setAutoCommit(false);
+	        try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_COLLEGE_TUITION)) {
+	            pstmt.setInt(1, collegeTuition.getAmount());
+	            pstmt.setInt(2, collegeTuition.getCollege_id());
+	            resultCount = pstmt.executeUpdate();
+	            conn.commit();
+	        } catch (Exception e) {
+	            conn.rollback();
+	            e.printStackTrace();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return resultCount;
 	}
 
 

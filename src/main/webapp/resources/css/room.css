@@ -74,7 +74,7 @@ main h1:first-of-type {
 }
 
 .button {
-	background-color: #66b5fe;
+	background-color: rgb(2, 50, 104);
 	border-radius: 5px;
 	color: #fff;
 	text-decoration: none;

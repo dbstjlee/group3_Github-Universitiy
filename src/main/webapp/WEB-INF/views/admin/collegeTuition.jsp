@@ -36,12 +36,12 @@
 		<h1>단과대학별 등록금</h1>
 		<div class="split-div"></div>
 		<div class="select-button">
-			<a href="${pageContext.request.contextPath}/admin/tuition?showForm=true" class="button">등록</a> <a href="${pageContext.request.contextPath}/admin/tuition?showUpdateButtons=true"
+			<%-- <a href="${pageContext.request.contextPath}/admin/tuition?showForm=true" class="button">등록</a> --%> <a href="${pageContext.request.contextPath}/admin/tuition?showUpdateButtons=true"
 				class="button">수정</a> <a href="${pageContext.request.contextPath}/admin/tuition?showDeleteButtons=true" class="button">삭제</a>
 		</div>
 		<br>
 
-		<!-- 등록금 등록 -->
+		<%-- <!-- 등록금 등록 -->
 		<c:if test="${param.showForm == 'true'}">
 			<form action="${pageContext.request.contextPath}/admin/addCollTuit" method="post" class="tuition-form">
 				<div class="insert-form">
@@ -57,24 +57,27 @@
 					</div>
 				</div>
 			</form>
-		</c:if>
+		</c:if> --%>
 
 
 		<!-- 단과대학별 등록금 수정 -->
-		<c:if test="${param.showUpdateButtons == 'true'}">
-			<form action="${pageContext.request.contextPath}/admin/updateCollTuit" method="post" class="tuition-update-form">
-				<div class="insert-form">
-					<div class="form-header">
-						<span class="form-title">등록금 수정하기</span>
-					</div>
-					<select name="id" class="input-box">
-						<c:forEach var="tuition" items="${collegeTuitions}">
-							<option value="${tuition.college_id}">${tuition.college_name}</option>
-						</c:forEach>
-					</select> <input type="text" class="input-box" name="name" placeholder="등록금을 입력하세요"> <input type="submit" value="수정" class="button">
-				</div>
-			</form>
-		</c:if>
+<c:if test="${param.showUpdateButtons == 'true'}">
+    <form action="${pageContext.request.contextPath}/admin/updateCollTuit" method="post" class="tuition-update-form">
+        <div class="insert-form">
+            <div class="form-header">
+                <span class="form-title">등록금 수정하기</span>
+            </div>
+            <select name="id" class="input-box">
+                <c:forEach var="tuition" items="${collegeTuitions}">
+                    <option value="${tuition.college_id}">${tuition.college_name}</option>
+                </c:forEach>
+            </select>
+            <input type="text" class="input-box" name="amount" placeholder="등록금을 입력하세요">
+            <input type="submit" value="수정" class="button">
+        </div>
+    </form>
+</c:if>
+
 
 
 

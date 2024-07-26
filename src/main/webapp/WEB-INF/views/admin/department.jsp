@@ -56,7 +56,7 @@
                                 <option value="3">사회과학대학</option>
                                 <option value="4">상경대학</option>
                             </select>
-                            <input type="submit" value="입력" class="button-add">
+                            <input type="submit" value="입력" class="button">
                         </div>
                     </div>
                 </form>
@@ -101,7 +101,7 @@
                                     <c:if test="${param.showDeleteButtons == 'true'}">
                                         <form action="${pageContext.request.contextPath}/admin/deleteDepartment" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
                                             <input type="hidden" name="id" value="${department.id}">
-                                            <input type="submit" value="삭제" class="button-delete">
+                                            <input type="submit" value="삭제" class="button">
                                         </form>
                                     </c:if>
                                 </td>

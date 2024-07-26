@@ -49,7 +49,7 @@
 						</div>
 						<div class="form-body">
 							<input type="text" id="roomName" class="input-box" name="roomId" placeholder="강의실을 입력하세요"> <input type="text" name="collegeId" class="input-box"
-								placeholder="단과대 번호를 입력하세요"> <input type="submit" value="입력" class="button-add">
+								placeholder="단과대 번호를 입력하세요"> <input type="submit" value="입력" class="button">
 						</div>
 					</div>
 				</form>
@@ -71,7 +71,7 @@
 								<td>${room.collegeId}</td>
 								<td><c:if test="${param.showDeleteButtons == 'true'}">
 										<form action="${pageContext.request.contextPath}/admin/deleteRoom" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
-											<input type="hidden" name="id" value="${room.id}"> <input type="submit" value="삭제" class="button-delete">
+											<input type="hidden" name="id" value="${room.id}"> <input type="submit" value="삭제" class="button">
 										</form>
 									</c:if></td>
 							</tr>
