@@ -14,10 +14,14 @@ import com.tenco.group3.util.DBUtil;
 
 public class ManagementRepositoryImpl implements ManagementRepository {
 
-	private static final String SELECT_ALL_STUDENTS = " SELECT * FROM student_tb limit ? offset ? ";
+	private static final String SELECT_ALL_STUDENTS = " SELECT * FROM student_tb LIMIT ? OFFSET ? ";
+	private static final String SELECT_STUDENTS_BY_SEARCH = " SELECT * FROM student_tb WHERE id LIKE ? AND dept_id LIKE ? LIMIT ? OFFSET ? ";
 	private static final String SELECT_ALL_PROFESSORS = " SELECT * FROM professor_tb limit ? offset ? ";
+	private static final String SELECT_PROFESSORS_BY_SEARCH = " SELECT * FROM professor_tb WHERE id LIKE ? AND dept_id LIKE ? LIMIT ? OFFSET ? ";
 	private static final String COUNT_ALL_STUDENTS = " SELECT COUNT(*) AS count FROM student_tb ";
+	private static final String COUNT_STUDENTS_BY_SEARCH = " SELECT COUNT(*) AS count FROM student_tb WHERE id LIKE ? AND dept_id LIKE ? ";
 	private static final String COUNT_ALL_PROFESSORS = " SELECT COUNT(*) AS count FROM professor_tb ";
+	private static final String COUNT_PROFESSORS_BY_SEARCH = " SELECT COUNT(*) AS count FROM professor_tb WHERE id LIKE ? AND dept_id LIKE ? ";
 	private static final String INSERT_STUDENT_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id, entrance_date) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
 	private static final String SELECT_STUDENT_ID_LAST = " SELECT id FROM student_tb ORDER BY id DESC LIMIT 1 ";
@@ -65,7 +69,43 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 		return studentList;
 	}
+	
+	@Override
+	public List<Student> getAllStudents(String id, String deptId, int limit, int offset) {
+		List<Student> studentList = new ArrayList<>();
 
+		try (Connection conn = DBUtil.getConnection(); //
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENTS_BY_SEARCH)) {
+			pstmt.setString(1, "%" + id + "%");
+			pstmt.setString(2, "%" + deptId + "%");
+			pstmt.setInt(3, limit);
+			pstmt.setInt(4, offset);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				studentList.add(Student.builder()
+					.id(rs.getInt("id"))
+					.name(rs.getString("name"))
+					.birthDate(rs.getDate("birth_date"))
+					.gender(rs.getString("gender"))
+					.address(rs.getString("address"))
+					.tel(rs.getString("tel"))
+					.email(rs.getString("email"))
+					.deptId(rs.getInt("dept_id"))
+					.grade(rs.getInt("grade"))
+					.semester(rs.getInt("semester"))
+					.entranceDate(rs.getDate("entrance_date"))
+					.graduationDate(rs.getDate("graduation_date"))
+					.build());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return studentList;
+	}
+	
 	@Override
 	public List<Professor> getAllProfessors(int limit, int offset) {
 		List<Professor> professorList = new ArrayList<>();
@@ -96,6 +136,39 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 		return professorList;
 	}
+	
+	@Override
+	public List<Professor> getAllProfessors(String id, String deptId, int limit, int offset) {
+		List<Professor> professorList = new ArrayList<>();
+
+		try (Connection conn = DBUtil.getConnection(); //
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_PROFESSORS_BY_SEARCH)) {
+			pstmt.setString(1, "%" + id + "%");
+			pstmt.setString(2, "%" + deptId + "%");
+			pstmt.setInt(3, limit);
+			pstmt.setInt(4, offset);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				professorList.add(Professor.builder()
+						.id(rs.getInt("id"))
+						.name(rs.getString("name"))
+						.birthDate(rs.getDate("birth_date"))
+						.gender(rs.getString("gender"))
+						.address(rs.getString("address"))
+						.tel(rs.getString("tel"))
+						.email(rs.getString("email"))
+						.deptId(rs.getInt("dept_id"))
+						.hireDate(rs.getDate("hire_date"))
+						.build());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return professorList;
+	}
 
 	@Override
 	public int getTotalStudentCount() {
@@ -113,12 +186,50 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		}
 		return totalCounts;
 	}
+	
+	@Override
+	public int getTotalStudentCount(String id, String deptId) {
+		int totalCounts = 0;
+		try (Connection conn = DBUtil.getConnection(); //
+				PreparedStatement pstmt = conn.prepareStatement(COUNT_STUDENTS_BY_SEARCH)) {
+			pstmt.setString(1, "%" + id + "%");
+			pstmt.setString(2, "%" + deptId + "%");
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				totalCounts = rs.getInt("count");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return totalCounts;
+	}
 
 	@Override
 	public int getTotalProfessorCount() {
 		int totalCounts = 0;
 		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_PROFESSORS)) {
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				totalCounts = rs.getInt("count");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return totalCounts;
+	}
+	
+	@Override
+	public int getTotalProfessorCount(String id, String deptId) {
+		int totalCounts = 0;
+		try (Connection conn = DBUtil.getConnection(); //
+				PreparedStatement pstmt = conn.prepareStatement(COUNT_PROFESSORS_BY_SEARCH)) {
+			pstmt.setString(1, "%" + id + "%");
+			pstmt.setString(2, "%" + deptId + "%");
 			ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {

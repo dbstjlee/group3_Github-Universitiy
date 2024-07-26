@@ -10,14 +10,26 @@ public interface ManagementRepository {
 	// 모든 학생 명단 호출
 	List<Student> getAllStudents(int limit, int offset);
 
+	// 검색된 학생 명단 호출
+	List<Student> getAllStudents(String id, String deptId, int limit, int offset);
+
 	// 모든 학생 수 확인
 	int getTotalStudentCount();
+
+	// 검색된 학생 수 확인
+	int getTotalStudentCount(String id, String deptId);
 
 	// 모든 교수 명단 호출
 	List<Professor> getAllProfessors(int limit, int offset);
 
+	// 검색된 교수 명단 호출
+	List<Professor> getAllProfessors(String id, String deptId, int limit, int offset);
+
 	// 모든 교수 수 확인
 	int getTotalProfessorCount();
+
+	// 검색된 교수 수 확인
+	int getTotalProfessorCount(String id, String deptId);
 
 	// 학생 등록
 	boolean createStudent(Student student);

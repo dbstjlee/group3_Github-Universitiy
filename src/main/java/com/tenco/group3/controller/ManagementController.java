@@ -123,11 +123,22 @@ public class ManagementController extends HttpServlet {
 			page = 1;
 		}
 		int offset = (page - 1) * pageSize; // 시작 위치 계산 (offset 값 계산)
+		
+		String deptId = request.getParameter("deptId");
+		String studentId = request.getParameter("studentId");
+		List<Student> studentList = null;
+		int totalStudents = 0;
+		if (deptId == null && studentId == null) {
+			studentList = managementRepository.getAllStudents(pageSize, offset);
+			// 전체 학생 수 조회
+			totalStudents = managementRepository.getTotalStudentCount();
+		} else {
+			studentList = managementRepository.getAllStudents(studentId, deptId, pageSize, offset);
+			totalStudents = managementRepository.getTotalStudentCount(studentId, deptId);
+		}
+		
+		
 
-		List<Student> studentList = managementRepository.getAllStudents(pageSize, offset);
-
-		// 전체 학생 수 조회
-		int totalStudents = managementRepository.getTotalStudentCount();
 
 		// 총 페이지 수 계산
 		int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
@@ -155,10 +166,18 @@ public class ManagementController extends HttpServlet {
 		}
 		int offset = (page - 1) * pageSize; // 시작 위치 계산 (offset 값 계산)
 
-		List<Professor> professorList = managementRepository.getAllProfessors(pageSize, offset);
-
-		// 전체 학생 수 조회
-		int totalProfessors = managementRepository.getTotalProfessorCount();
+		String deptId = request.getParameter("deptId");
+		String studentId = request.getParameter("professorId");
+		List<Professor> professorList = null;
+		int totalProfessors = 0;
+		if (deptId == null && studentId == null) {
+			professorList = managementRepository.getAllProfessors(pageSize, offset);
+			// 전체 학생 수 조회
+			totalProfessors = managementRepository.getTotalProfessorCount();
+		} else {
+			professorList = managementRepository.getAllProfessors(studentId, deptId, pageSize, offset);
+			totalProfessors = managementRepository.getTotalProfessorCount(studentId, deptId);
+		}
 
 		// 총 페이지 수 계산
 		int totalPages = (int) Math.ceil((double) totalProfessors / pageSize);

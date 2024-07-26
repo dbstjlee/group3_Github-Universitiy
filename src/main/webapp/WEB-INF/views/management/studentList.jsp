@@ -136,11 +136,11 @@
 								<li style="height: 24px;"><span class="material-symbols-outlined" style="font-size: 18px; padding-top: 4px;">search</span>
 							</ul>
 						</button>
-						<!-- <button type="button" onclick="location.href='/user/student/update'" style="margin-left: 10px;">
+						<button type="button" onclick="location.href='/user/student/update'" style="margin-left: 10px;">
 							<ul>
 								<li style="height: 24px;">새학기 적용
 							</ul>
-						</button> -->
+						</button>
 					</div>
 				</form>
 			</div>
