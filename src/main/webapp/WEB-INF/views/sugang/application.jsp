@@ -15,7 +15,7 @@
 				<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
 			</tr>
 			<tr>
-				<td><a href="${pageContext.request.contextPath}/sugang/application">수강 신청</a></td>
+				<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=1">수강 신청</a></td>
 			</tr>
 			<tr>
 				<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
@@ -204,17 +204,24 @@
 					<td>${sugangItem.numOfStudent}</td>
 					<td>${sugangItem.capacity}</td>
 					<td><c:choose>
-							<c:when test="${sugangItem.hasConfirmed == true}">
-								<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-									<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="1">
-									<button type="submit" onclick="return confirm('해당 강의를 수강 취소 하시겠습니까?');" style="background-color: #548AC2;">수강 취소</button>
-								</form>
+							<c:when test="${sugangItem.result != 0}">
+								<c:choose>
+									<c:when test="${sugangItem.hasConfirmed == true}">
+										<form action="${pageContext.request.contextPath}/sugang/application" method="post">
+											<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="1">
+											<button type="submit" onclick="return confirm('해당 강의를 수강 취소 하시겠습니까?');" style="background-color: #548AC2;">수강 취소</button>
+										</form>
+									</c:when>
+									<c:otherwise>
+										<form action="${pageContext.request.contextPath}/sugang/application" method="post">
+											<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
+											<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
+										</form>
+									</c:otherwise>
+								</c:choose>
 							</c:when>
 							<c:otherwise>
-								<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-									<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
-									<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
-								</form>
+								<p>신청마감</p>
 							</c:otherwise>
 						</c:choose></td>
 				</tr>

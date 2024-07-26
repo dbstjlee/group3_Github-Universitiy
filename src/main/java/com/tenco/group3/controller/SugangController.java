@@ -30,6 +30,8 @@ public class SugangController extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
+		// TODO - 수강 신청 기간이 아닐 때 접근 막고, 수강 신청 기간으로 변경시 신청 값이 강의 인원수 제한을 
+		// 넘길 경우 해당 강의 초기화
 		switch (action) {
 		case "/subjectList":
 			showSubjectList(request, response, session);
@@ -103,7 +105,7 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
-		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang);
+		List<Sugang> sugangList = sugangRepository.getAppSubjectBySearch(sugang);
 		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
@@ -136,10 +138,13 @@ public class SugangController extends HttpServlet {
 		}
 		int offset = (page - 1) * pageSize;
 		int totalCount = sugangRepository.getAllSubjectCount();
-
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+		List<Sugang> subSugangs = sugangRepository.resultStudentCount();
+		for (Sugang sugang : subSugangs) {
+            sugangRepository.resetStudentCount(sugang.getSubjectId());
+        }
 		List<Sugang> sugangList = sugangRepository.getApplicationSubject(user.getId(), pageSize, offset);
-		System.out.println(sugangList);
+//		System.out.println(sugangList);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -160,9 +165,10 @@ public class SugangController extends HttpServlet {
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		String listType = (String) request.getParameter("type");
+		List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
 		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
-		System.out.println(listType);
 		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
+		request.setAttribute("sugangPreList", sugangPreList);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalGrade", totalGrade);
 		request.setAttribute("listType", listType);
@@ -193,7 +199,7 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
-		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang);
+		List<Sugang> sugangList = sugangRepository.getPreSubjectBySearch(sugang);
 		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
@@ -229,7 +235,7 @@ public class SugangController extends HttpServlet {
 
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		List<Sugang> sugangList = sugangRepository.getPreApplicationSubject(user.getId(), pageSize, offset);
-		System.out.println(sugangList);
+//		System.out.println(sugangList);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -254,7 +260,6 @@ public class SugangController extends HttpServlet {
 			deptId = Integer.parseInt(request.getParameter("deptId"));
 		} catch (NumberFormatException e) {
 			deptId = -1;
-			e.printStackTrace();
 		}
 		String name = request.getParameter("name");
 		if (name == null || name.trim().isEmpty()) {
@@ -263,7 +268,7 @@ public class SugangController extends HttpServlet {
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
 		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang);
 		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
-		System.out.println(totalCount);
+//		System.out.println(totalCount);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.getRequestDispatcher("/WEB-INF/views/sugang/subjectList.jsp").forward(request, response);
@@ -335,9 +340,9 @@ public class SugangController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
-
+		System.out.println("type : " + type);
 		if (type.equals("1")) {
-			int rowCount = sugangRepository.deletePreConfirmSubject(subjectId);
+			int rowCount = sugangRepository.deleteConfirmSubject(subjectId);
 			if (rowCount != 0) {
 				response.sendRedirect(request.getContextPath() + "/sugang/application");
 			} else {
@@ -367,7 +372,6 @@ public class SugangController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
-
 		if (type.equals("1")) {
 			int rowCount = sugangRepository.deletePreConfirmSubject(subjectId);
 			if (rowCount != 0) {
@@ -376,7 +380,7 @@ public class SugangController extends HttpServlet {
 				AlertUtil.backAlert(response, "신청 내역이 존재하지 않습니다.");
 			}
 		} else {
-			int rowCount = sugangRepository.addEnrolment(user.getId(), subjectId);
+			int rowCount = sugangRepository.addPreEnrolment(user.getId(), subjectId);
 			if (rowCount != 0) {
 				response.sendRedirect(request.getContextPath() + "/sugang/pre");
 			} else {

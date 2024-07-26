@@ -28,4 +28,6 @@ public class Sugang {
 	private int deptId;
 	private int studentId;
 	private boolean hasConfirmed;
+	private int result;
+	private int sub;
 }
