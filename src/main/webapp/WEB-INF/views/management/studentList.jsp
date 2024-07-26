@@ -117,6 +117,11 @@
 								<a href="/management/sugang">수강 신청 기간 설정</a>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								<a href="/management/new-semester">새학기 적용</a>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -134,11 +139,6 @@
 							<ul class="d-flex justify-content-center" style="margin: 0;">
 								<li style="height: 24px; margin-right: 2px;">조회
 								<li style="height: 24px;"><span class="material-symbols-outlined" style="font-size: 18px; padding-top: 4px;">search</span>
-							</ul>
-						</button>
-						<button type="button" onclick="location.href='/user/student/update'" style="margin-left: 10px;">
-							<ul>
-								<li style="height: 24px;">새학기 적용
 							</ul>
 						</button>
 					</div>

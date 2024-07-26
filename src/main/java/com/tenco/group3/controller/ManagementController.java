@@ -7,6 +7,7 @@ import java.util.List;
 import com.tenco.group3.model.BreakApp;
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.RankedStudent;
+import com.tenco.group3.model.Schedule;
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
@@ -95,6 +96,9 @@ public class ManagementController extends HttpServlet {
 		case "/breakState":
 			handleBreakState(request, response, Integer.parseInt(request.getParameter("state")));
 			break;
+		case "/new-semester":
+			handleNewSemester(request, response);
+			break;
 		default:
 			break;
 		}
@@ -123,7 +127,7 @@ public class ManagementController extends HttpServlet {
 			page = 1;
 		}
 		int offset = (page - 1) * pageSize; // 시작 위치 계산 (offset 값 계산)
-		
+
 		String deptId = request.getParameter("deptId");
 		String studentId = request.getParameter("studentId");
 		List<Student> studentList = null;
@@ -136,9 +140,6 @@ public class ManagementController extends HttpServlet {
 			studentList = managementRepository.getAllStudents(studentId, deptId, pageSize, offset);
 			totalStudents = managementRepository.getTotalStudentCount(studentId, deptId);
 		}
-		
-		
-
 
 		// 총 페이지 수 계산
 		int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
@@ -218,9 +219,6 @@ public class ManagementController extends HttpServlet {
 		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
 		stuStatRepository.updateStatusById(studentIdList, "복학");
 
-		// 2. 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
-		List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
-		stuSchRepository.insertStuSch(rankedStudentList);
 		// 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
@@ -275,6 +273,29 @@ public class ManagementController extends HttpServlet {
 			scheduleStateRepository.updateSchedule("break_app", state);
 			getServletContext().setAttribute("breakApp", state);
 			showBreakPage(request, response);
+		}
+	}
+
+	/**
+	 * 새학기 적용
+	 * (새학기 적용을 누르는 시점은 모든 수업이 끝나고 다음 학기 학사일정을 진행하기 직전)
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void handleNewSemester(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int breakAppState = (int) getServletContext().getAttribute("breakApp");
+		int sugangState = (int) getServletContext().getAttribute("sugang");
+		int tuitionState = (int) getServletContext().getAttribute("tuition");
+		if (breakAppState == ScheduleState.END && sugangState == ScheduleState.END && tuitionState == ScheduleState.END) {
+			// 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
+			List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
+			stuSchRepository.insertStuSch(rankedStudentList);
+			// 학사일정 상태 테이블에 다음 학기 추가
+			scheduleStateRepository.addSchedule();
+			// TODO 입학, 복학 상태인 모든 학생 학년, 학기 상승 (4학년 2학기 학생은 졸업)
+		} else {
+			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
 		}
 	}
 

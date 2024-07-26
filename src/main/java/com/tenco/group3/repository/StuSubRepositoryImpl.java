@@ -9,6 +9,7 @@ import java.util.List;
 import com.tenco.group3.model.RankedStudent;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
 import com.tenco.group3.util.DBUtil;
+import com.tenco.group3.util.SemesterUtil;
 
 public class StuSubRepositoryImpl implements StuSubRepository {
 
@@ -17,6 +18,8 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 			+ "    SELECT ss.student_id, AVG(g.grade_value * ss.complete_grade) AS avg_grade "
 			+ "    FROM stu_sub_tb ss "
 			+ "    JOIN grade_tb g ON ss.grade = g.grade "
+			+ "    JOIN subject_tb s ON ss.subject_id = s.id "
+			+ "    WHERE s.sub_year = ? AND s.semester ? "
 			+ "    GROUP BY ss.student_id "
 			+ " ), "
 			+ " ranked_grades AS ( "
@@ -34,6 +37,8 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 		List<RankedStudent> studentList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection(); //
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_RANKED_STUDENT)) {
+			pstmt.setInt(1, SemesterUtil.getCurrentYear());
+			pstmt.setInt(2, SemesterUtil.getCurrentSemester());
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {

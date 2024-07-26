@@ -310,6 +310,6 @@ create table schedule_state_tb(
 	break_app int default 0,
     sugang int default 0,
     tuition int default 0,
-    year int default 2024, -- 최초 세팅값
+    year int default 2023, -- 최초 세팅값
     semester int default 1 -- 최초 세팅값
 );

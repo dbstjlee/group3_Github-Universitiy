@@ -9,10 +9,10 @@ public interface ScheduleStateRepository {
 	// 학사일정 모두 조회
 	ScheduleState getAllScheduleStates();
 
-	// 존재하는 학사일정 년도 조회
-	List<Integer> getAllYears();
-
 	// 학사일정 스케줄 상태 변경
 	void updateSchedule(String columName, int state);
-
+	
+	// 다음 학기 학사 스케쥴 생성
+	void addSchedule();
+	
 }

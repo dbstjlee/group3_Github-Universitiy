@@ -55,6 +55,11 @@
 							<a href="/management/sugang">수강 신청 기간 설정</a>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<a href="/management/new-semester">새학기 적용</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>

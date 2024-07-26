@@ -10,8 +10,8 @@ public class SemesterUtil {
 	// 현재 학기는 2024년 1학기 고정 --> 새학기 버튼 누르면 2024년 2학기 됨
 	private static int currentYear;
 	private static int currentSemester;
-	private static int beforeYear;
-	private static int beforeSemester;
+	private static int afterYear;
+	private static int afterSemester;
 
 	// 2024년 2학기 이전으로 설정된 학기라면 true 반환
 	public static boolean isBeforeSemester(int year, int semester) {
@@ -49,34 +49,34 @@ public class SemesterUtil {
 		return currentYear;
 	}
 
-	public static int getBeforeYear() {
-		if (beforeYear == 0) {
+	public static int getAfterYear() {
+		if (afterYear == 0) {
 			if (currentSemester == 2) {
-				beforeYear = currentYear;
+				afterYear = currentYear + 1;
 			} else {
-				beforeYear = currentYear - 1;
+				afterYear = currentYear;
 			}
 		}
-		return beforeYear;
+		return afterYear;
 	}
 
-	public static int getBeforeSemester() {
-		if (beforeSemester == 0) {
+	public static int getAfterSemester() {
+		if (afterSemester == 0) {
 			if (currentSemester == 2) {
-				beforeSemester = currentSemester - 1;
+				afterSemester = currentSemester - 1;
 			} else {
-				beforeSemester = currentSemester + 1;
+				afterSemester = currentSemester + 1;
 			}
 		}
-		return beforeSemester;
+		return afterSemester;
 	}
 
 	public static void setBeforeYear(int beforeYear) {
-		SemesterUtil.beforeYear = beforeYear;
+		SemesterUtil.afterYear = beforeYear;
 	}
 
 	public static void setBeforeSemester(int beforeSemester) {
-		SemesterUtil.beforeSemester = beforeSemester;
+		SemesterUtil.afterSemester = beforeSemester;
 	}
 
 	public static void setCurrentYear(int currentYear) {

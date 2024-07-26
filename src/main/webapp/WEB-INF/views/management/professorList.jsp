@@ -61,6 +61,7 @@
 .sub--plan--view li a:hover {
 	color: black;
 }
+
 .paging--container {
 	display: flex;
 	justify-content: center;
@@ -116,6 +117,11 @@
 								<a href="/management/sugang">수강 신청 기간 설정</a>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								<a href="/management/new-semester">새학기 적용</a>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -127,7 +133,9 @@
 				<form action="/management/professorList" method="get">
 					<div>
 						<!-- 개설연도 숫자 -->
-						<label for="deptId">학과 번호</label> <input type="text" name="deptId" id="deptId"> <label for="professorId">사번</label> <input type="text" name="professorId" list="professorId">
+						<label for="deptId">학과 번호</label> <input type="text" name="deptId" id="deptId"> <label for="professorId">사번</label> <input type="text" name="professorId"
+							list="professorId"
+						>
 						<!-- 검색 버튼 -->
 						<button type="submit">
 							<ul class="d-flex justify-content-center" style="margin: 0;">
