@@ -7,32 +7,30 @@
 <title>단과대학</title>
 
     <div class="sub-main">
-        <div class="sub-menu">
-            <div class="sub-menu-top">
-                <h2>등록</h2>
-            </div>
-            <div class="sub-menu-mid">
-                <table class="mid-table">
-                    <tbody>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/college" class="selected-menu">단과대학</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/department">학과</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/room">강의실</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/subject">강의</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/tuition">단과대학별 등록금</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>등록</h2>
+		</div>
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/college" class="selected--menu">단과대학</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/department">학과</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/room">강의실</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/subject">강의</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/tuition">단과대학별 등록금</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
         <main>
             <h1>단과대학</h1>
             <div class="split-div"></div>
@@ -50,7 +48,7 @@
                         </div>
                         <div class="form-body">
                             <input type="text" id="collegeName" class="input-box" name="collegeName" placeholder="단과대학을 입력해주세요" required>
-                            <input type="submit" value="입력" class="button-add">
+                            <input type="submit" value="입력" class="button">
                         </div>
                     </div>
                 </form>
@@ -75,7 +73,7 @@
                                     <c:if test="${param.showDeleteButtons == 'true'}">
                                         <form action="${pageContext.request.contextPath}/admin/deleteCollege" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
                                             <input type="hidden" name="id" value="${college.id}">
-                                            <input type="submit" value="삭제" class="button-delete">
+                                            <input type="submit" value="삭제" class="button">
                                         </form>
                                     </c:if>
                                 </td>

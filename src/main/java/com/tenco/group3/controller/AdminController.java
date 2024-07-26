@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import com.tenco.group3.model.College;
+import com.tenco.group3.model.CollegeTuition;
 import com.tenco.group3.model.Department;
 import com.tenco.group3.model.Room;
+import com.tenco.group3.repository.CollTuitRepositoryImpl;
 import com.tenco.group3.repository.CollegeRepositoryImpl;
 import com.tenco.group3.repository.DepartmentRepositoryImpl;
 import com.tenco.group3.repository.RoomRepositoryImpl;
+import com.tenco.group3.repository.interfaces.CollTuitRepository;
 import com.tenco.group3.repository.interfaces.CollegeRepository;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;
 import com.tenco.group3.repository.interfaces.RoomRepository;
@@ -25,12 +28,14 @@ public class AdminController extends HttpServlet {
 	private CollegeRepository collegeRepository;
 	private DepartmentRepository departmentRepository;
 	private RoomRepository roomRepository;
+	private CollTuitRepository collTuitRepository;
 	
 	@Override
 	public void init() throws ServletException {
 		collegeRepository = new CollegeRepositoryImpl();
 		departmentRepository = new DepartmentRepositoryImpl();
 		roomRepository = new RoomRepositoryImpl();
+		collTuitRepository = new CollTuitRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,11 +58,20 @@ public class AdminController extends HttpServlet {
 		case "/room":
 			roomList(request, response);
 			break;
+		case "/tuition":
+			colTuitList(request, response);
+			break;
 		default:
 			collegeList(request, response);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
+	}
+
+	private void colTuitList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<CollegeTuition> collegeTuitions = collTuitRepository.getAllColTuit();
+		request.setAttribute("collegeTuitions", collegeTuitions);
+		request.getRequestDispatcher("/WEB-INF/views/admin/collegeTuition.jsp").forward(request, response);
 	}
 
 	/**
@@ -129,11 +143,51 @@ public class AdminController extends HttpServlet {
 		case "/deleteRoom":
 			handleDeleteRoom(request, response);
 			break;
+		case "addCollTuit":
+			handleAddCollegeTuition(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 	}
+
+	/**
+	 * 단과대학별 등록금 등록
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void handleAddCollegeTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String collegeIdStr = request.getParameter("collegeId");
+	    String amountStr = request.getParameter("amount");
+
+	    if (collegeIdStr == null || collegeIdStr.trim().isEmpty() || amountStr == null || amountStr.trim().isEmpty()) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    int collegeId;
+	    int amount;
+	    try {
+	        collegeId = Integer.parseInt(collegeIdStr);
+	        amount = Integer.parseInt(amountStr);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    CollegeTuition collegeTuition = CollegeTuition.builder()
+	            .college_id(collegeId)
+	            .amount(amount)
+	            .build();
+	    int result = collTuitRepository.addCollegeTuition(collegeTuition);
+	    if (result > 0) {
+	        response.sendRedirect(request.getContextPath() + "/admin/tuition");
+	    } else {
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
+	}
+		
+	
 
 	/**
 	 * 학과 이름 수정
@@ -261,7 +315,6 @@ public class AdminController extends HttpServlet {
 	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 	        return;
 	    }
-	    
 	    int collegeId;
 	    try {
 	        collegeId = Integer.parseInt(collegeIdStr);
@@ -269,11 +322,9 @@ public class AdminController extends HttpServlet {
 	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 	        return;
 	    }
-	    
 	    Department department = new Department();
 	    department.setName(departmentName);
 	    department.setCollegeId(collegeId);
-	    
 	    departmentRepository.addDepartment(department);
 	    response.sendRedirect(request.getContextPath() + "/admin/department");
 	}

@@ -10,11 +10,6 @@ body {
 	background-color: #fff;
 }
 
-.sub-menu {
-	min-width: 230px;
-	margin-right: 80px;
-}
-
 .sub-main {
 	display: flex;
 	justify-content: center;
@@ -22,10 +17,15 @@ body {
 	min-width: 100em;
 }
 
+.sub-menu {
+	min-width: 230px;
+	margin-right: 80px;
+}
+
 .sub-menu-top {
-	text-align: center;
-	padding: 25px 0;
-	border-bottom: 3px solid black;
+	    text-align: center;
+    padding: 25px 0;
+    border-bottom: 3px solid #33688F
 }
 
 .sub-menu-mid {
@@ -45,15 +45,8 @@ tbody {
 	border-color: inherit;
 }
 
-.split-div {
-	margin: 20px 0 20px;
-	min-width: 1100px;
-	background-color: gray;
-	height: 2px;
-}
-
 .selected-menu {
-	color: #0108d5;
+	color: rgb(7, 90, 164);
 	font-weight: 600;
 }
 
@@ -67,13 +60,24 @@ main h1:first-of-type {
 	font-weight: 600;
 }
 
+.split-div {
+    min-width: 1100px;
+    height: 2px;
+    background-color: gray;
+    margin: 20px 0 50px;
+}
+
+.select--button {
+    margin-bottom: 30px;
+}
+
 .button {
-	background-color: rgb(2, 50, 104);
-	border-radius: 5px;
-	color: #fff;
-	text-decoration: none;
-	margin: 5px;
-	padding: 3px;
+    background-color: rgb(2, 50, 104);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 5px;
+    padding: 3px;
 }
 
 .total-container {
@@ -95,10 +99,24 @@ main h1:first-of-type {
 	font-weight: bolder;
 }
 
+.sub--menu--top h2 {
+    margin: 0;
+    font-weight: 600;
+    color: #133c63;
+}
 
-.d-flex {
-	display: flex;
-	margin: 0;
+.h2, h2 {
+    font-size: 2rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .input-box {
@@ -112,43 +130,4 @@ main h1:first-of-type {
 	border-radius: 3px;
 	padding: 5px;
 	
-}
-
-
-/* .form-body {
-    display: flex;
-    flex-direction: column;
-} */
-
-.form-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.button-delete:hover {
-	background-color: #d32f2f;
-}
-
-.button-add {
-    background-color: rgb(210, 209, 209);
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.button-add:hover {
-    background-color: #45a049; 
-}
-
-
-.hidden {
-    display: none;
 }

@@ -25,7 +25,7 @@ body {
 .sub-menu-top {
 	text-align: center;
 	padding: 25px 0;
-	border-bottom: 3px solid black;
+	border-bottom: 3px solid #33688F;
 }
 
 .sub-menu-mid {
@@ -150,4 +150,22 @@ main h1:first-of-type {
 
 .hidden {
     display: none;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    unicode-bidi: isolate;
+    border-color: inherit;
+}
+
+td {
+    display: table-cell;
+    vertical-align: inherit;
+    unicode-bidi: isolate;
+}
+
+.selected-menu, .sub-menu-table td a:hover {
+    color: #075AA4;
+    font-weight: 600;
 }

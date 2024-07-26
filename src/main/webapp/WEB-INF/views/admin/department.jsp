@@ -7,32 +7,30 @@
 <title>학과</title>
 
     <div class="sub-main">
-        <div class="sub-menu">
-            <div class="sub-menu-top">
-                <h2>등록</h2>
-            </div>
-            <div class="sub-menu-mid">
-                <table class="mid-table">
-                    <tbody>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/college">단과대학</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/department" class="selected-menu">학과</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/room">강의실</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/subject">강의</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="${pageContext.request.contextPath}/admin/tuition">단과대학별 등록금</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <div class="sub--menu">
+		<div class="sub--menu--top">
+			<h2>등록</h2>
+		</div>
+		<div class="sub--menu--mid">
+			<table class="sub--menu--table" border="1">
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/college">단과대학</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/department" class="selected--menu">학과</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/room">강의실</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/subject">강의</a></td>
+				</tr>
+				<tr>
+					<td><a href="${pageContext.request.contextPath}/admin/tuition">단과대학별 등록금</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
 
         <main>
             <h1>학과</h1>
@@ -66,39 +64,23 @@
 
             <!-- 학과 수정 -->
             <c:if test="${param.showUpdateButtons == 'true'}">
-                <form action="${pageContext.request.contextPath}/admin/updateDepartment" method="post" class="department-update-form">
-                    <div class="insert-form">
-                        <div class="form-header">
-                            <span class="form-title">학과 수정하기</span>
-                        </div>
-                        <select name="id" class="input-box">
-                            <option value="101">컴퓨터공학과</option>
-                            <option value="102">전자공학과</option>
-                            <option value="103">화학공학과</option>
-                            <option value="104">기계공학과</option>
-                            <option value="105">신소재공학과</option>
-                            <option value="106">철학과</option>
-                            <option value="107">국사학과</option>
-                            <option value="108">언어학과</option>
-                            <option value="109">국어국문학과</option>
-                            <option value="110">영어영문학과</option>
-                            <option value="111">심리학과</option>
-                            <option value="112">정치외교학과</option>
-                            <option value="113">사회복지학과</option>
-                            <option value="114">언론정보학과</option>
-                            <option value="115">인류학과</option>
-                            <option value="116">경영학과</option>
-                            <option value="117">경제학과</option>
-                            <option value="118">회계학과</option>
-                            <option value="119">농업경영학과</option>
-                            <option value="120">무역학과</option>
-                        </select>
-                        <input type="text" class="input-box" name="name" placeholder="변경할 학과명을 입력하세요">
-                        <input type="submit" value="수정" class="button">
-                    </div>
-                </form>
-            </c:if>
-            
+    <form action="${pageContext.request.contextPath}/admin/updateDepartment" method="post" class="department-update-form">
+        <div class="insert-form">
+            <div class="form-header">
+                <span class="form-title">학과 수정하기</span>
+            </div>
+            <select name="id" class="input-box">
+                <c:forEach var="department" items="${departments}">
+                    <option value="${department.id}">${department.name}</option>
+                </c:forEach>
+            </select>
+            <input type="text" class="input-box" name="name" placeholder="변경할 학과명을 입력하세요">
+            <input type="submit" value="수정" class="button">
+        </div>
+    </form>
+</c:if>
+
+            <!-- 학과 조회 -->
             <div class="total-container">
                 <table class="table-container">
                     <thead>
