@@ -32,6 +32,12 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " ON st.grade = gr.grade " + " INNER JOIN student_tb AS stud " + " on st.student_id = stud.id "
 			+ " WHERE st.student_id = ? AND su.sub_year = ? AND su.semester = ? AND su.type = ? ";
 
+	private static final String GET_THIS_SEMESTER_GRADE = " SELECT su.sub_year, su.semester, SUM(su.grades) AS sum_grades,SUM(st.complete_grade) AS my_grades, AVG(gr.grade_value) AS average "
+			+ " FROM stu_sub_tb AS st " + "LEFT JOIN subject_tb AS su " + "ON st.subject_id = su.id "
+			+ " LEFT JOIN grade_tb AS gr " + "ON st.grade = gr.grade "
+			+ " WHERE st.student_id = ? AND su.semester = ? AND su.sub_year = ? "
+			+ " GROUP BY su.sub_year, su.semester ";
+
 	private static final String GET_TOTAL_GRADE = " SELECT su.sub_year, su.semester, SUM(su.grades) AS sum_grades,SUM(st.complete_grade) AS my_grades, AVG(gr.grade_value) AS average "
 			+ " FROM stu_sub_tb AS st " + " LEFT JOIN subject_tb AS su " + " ON st.subject_id = su.id "
 			+ " LEFT JOIN grade_tb AS gr " + " ON st.grade = gr.grade " + " WHERE st.student_id = ? "
@@ -40,12 +46,11 @@ public class GradeRepositoryImpl implements GradeRepository {
 	private static final String GET_SEMESTER = " select su.semester " + " FROM stu_sub_tb AS st "
 			+ " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id " + " WHERE st.student_id = ?"
 			+ " GROUP BY su.semester ";
+
 	private static final String GET_SUBYEAR = " select su.sub_year " + " FROM stu_sub_tb AS st "
-			+ " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id\r\n" + " WHERE st.student_id = ? "
+			+ " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id " + " WHERE st.student_id = ? "
 			+ " group by su.sub_year " + " ORDER BY su.sub_year DESC ";
 
-	
-	
 	@Override
 	public List<Grade> getThisSemester(int studentId, int semester, int sub_year) {
 		List<Grade> gradeList = new ArrayList<Grade>();
@@ -183,6 +188,29 @@ public class GradeRepositoryImpl implements GradeRepository {
 	public Student getStudentInfo(int studentId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Grade getThisSemesterGrade(int studentId, int semester, int sub_year) {
+		Grade grade = null;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(GET_THIS_SEMESTER_GRADE)) {
+			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, semester);
+			pstmt.setInt(3, sub_year);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					grade = Grade.builder().subYear(rs.getInt("sub_year")).semester(rs.getInt("semester"))
+							.sumGrades(rs.getDouble("sum_grades")).myGrades(rs.getDouble("my_grades"))
+							.average(rs.getDouble("average")).build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return grade;
 	}
 
 }

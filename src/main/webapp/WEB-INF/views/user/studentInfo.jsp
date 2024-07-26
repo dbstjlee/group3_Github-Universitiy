@@ -27,7 +27,7 @@
 							<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/tuition/list">등록금 내역 조회</a></td>
+							<td><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 조회</a></td>
 						</tr>
 						<tr>
 							<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>

@@ -125,8 +125,11 @@ public class GradeController extends HttpServlet {
 //		Grade year = gradeRepository.getSubYear(student.getId());
 //		Grade semester = gradeRepository.getSemester(student.getId());
 		List<Grade> gradeList = gradeRepository.getThisSemester(user.getId(), 1, 2023);
+		Grade thisGrade = gradeRepository.getThisSemesterGrade(user.getId(), 1, 2023);
 //		List<Grade> gradeList = gradeRepository.getThisSemester(student.getId(), semester.getSemester(), year.getSubYear());
+//		List<Grade> gradeTotalList = gradeRepository.getThisSemesterGrade(user.getId(), semester.getSemester(), year.getSubYear());
 		request.setAttribute("gradeList", gradeList);
+		request.setAttribute("thisGrade", thisGrade);
 		request.getRequestDispatcher("/WEB-INF/views/grade/thisSemester.jsp").forward(request, response);
 	}
 

@@ -12,6 +12,8 @@ public interface GradeRepository {
 	
 	List<Grade> getSemesterByType(int studentId, Grade grade);
 
+	Grade getThisSemesterGrade(int studentId, int semester, int sub_year);
+	
 	Grade getTotalGrade(int studentId);
 	
 	Grade getSemester(int studentId);

@@ -6,10 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <title>휴학 신청 상세 내역</title>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/breakDetail.css">
 </head>
 <body>
 	<div>
-		<div>
+		<form action="${pageContext.request.contextPath}/break/cancle" method="post">
 			<table border="1">
 				<c:set var="breakApp" value="${breakApp}" />
 				<h3>휴학 내역</h3>
@@ -38,7 +39,7 @@
 					</tr>
 					<tr>
 						<th>기간</th>
-						<td>${breakApp.fromYear}년${breakApp.fromSemester}학기 부터 ${breakApp.toYear}년${breakApp.toSemester}학기 까지</td>
+						<td>${breakApp.fromYear}년${breakApp.fromSemester}학기부터${breakApp.toYear}년${breakApp.toSemester}학기까지</td>
 					</tr>
 					<tr>
 						<th>휴학 구분</th>
@@ -62,7 +63,9 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
+			<button type="submit">신청 취소</button>
+		</form>
+	</div>
 	</div>
 </body>
 </html>
