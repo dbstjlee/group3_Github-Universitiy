@@ -293,6 +293,7 @@ public class ManagementController extends HttpServlet {
 			stuSchRepository.insertStuSch(rankedStudentList);
 			// 학사일정 상태 테이블에 다음 학기 추가
 			scheduleStateRepository.addSchedule();
+			// TODO 변수 업데이트
 			// TODO 입학, 복학 상태인 모든 학생 학년, 학기 상승 (4학년 2학기 학생은 졸업)
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");

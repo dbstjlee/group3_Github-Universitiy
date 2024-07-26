@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
+import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
@@ -58,19 +59,19 @@ public class BreakController extends HttpServlet {
 	 */
 	private void showApplication(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
-		Boolean isBreakDay = (Boolean) getServletContext().getAttribute("breakApp");
+		int isBreakDay = (int) getServletContext().getAttribute("breakApp");
 		int thisYear = (int) getServletContext().getAttribute("year");
 		int thisSemester = (int) getServletContext().getAttribute("semester");
 		User user = (User) session.getAttribute("principal");
-		if(isBreakDay) {
+		if(isBreakDay == ScheduleState.TRUE) {
 			Student student = breakAppRepository.getStudentInfo(user.getId());
 			request.setAttribute("student", student);
 			request.setAttribute("thisYear", thisYear);
 			request.setAttribute("thisSemester", thisSemester);
+			request.getRequestDispatcher("/WEB-INF/views/break/application.jsp").forward(request, response);
 		} else {
 			AlertUtil.backAlert(response, "휴학 신청 기간이 아닙니다.");
 		}
-		request.getRequestDispatcher("/WEB-INF/views/break/application.jsp").forward(request, response);
 	}
 
 	/**
