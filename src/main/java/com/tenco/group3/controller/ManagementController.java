@@ -139,6 +139,8 @@ public class ManagementController extends HttpServlet {
 		} else {
 			studentList = managementRepository.getAllStudents(studentId, deptId, pageSize, offset);
 			totalStudents = managementRepository.getTotalStudentCount(studentId, deptId);
+			request.setAttribute("deptId", deptId);
+			request.setAttribute("studentId", studentId);
 		}
 
 		// 총 페이지 수 계산
@@ -293,8 +295,18 @@ public class ManagementController extends HttpServlet {
 			stuSchRepository.insertStuSch(rankedStudentList);
 			// 학사일정 상태 테이블에 다음 학기 추가
 			scheduleStateRepository.addSchedule();
-			// TODO 변수 업데이트
+			// 변수 업데이트
+			getServletContext().setAttribute("breakApp", ScheduleState.FALSE);
+			getServletContext().setAttribute("sugang", ScheduleState.FALSE);
+			getServletContext().setAttribute("tuition", ScheduleState.FALSE);
+			getServletContext().setAttribute("year", SemesterUtil.getAfterYear());
+			getServletContext().setAttribute("semester", SemesterUtil.getAfterSemester());
+			SemesterUtil.setCurrentYear(SemesterUtil.getAfterYear());
+			SemesterUtil.setCurrentSemester(SemesterUtil.getAfterSemester());
+			SemesterUtil.setAfterYear(0);
+			SemesterUtil.setAfterSemester(0);
 			// TODO 입학, 복학 상태인 모든 학생 학년, 학기 상승 (4학년 2학기 학생은 졸업)
+			List<Student> studentList =  stuStatRepository.getCurrentGrade();
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
 		}

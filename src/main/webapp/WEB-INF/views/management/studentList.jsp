@@ -133,7 +133,20 @@
 				<form action="/management/studentList" method="get">
 					<div>
 						<!-- 개설연도 숫자 -->
-						<label for="deptId">학과 번호</label> <input type="text" name="deptId" id="deptId"> <label for="studentId">학번</label> <input type="text" name="studentId" list="studentId">
+						<c:choose>
+							<c:when test="${deptId != null || studentId != null}">
+								<label for="deptId">학과 번호</label>
+								<input type="text" name="deptId" id="deptId" value="${deptId}">
+								<label for="studentId">학번</label>
+								<input type="text" name="studentId" list="studentId" value="${studentId}">
+							</c:when>
+							<c:otherwise>
+								<label for="deptId">학과 번호</label>
+								<input type="text" name="deptId" id="deptId">
+								<label for="studentId">학번</label>
+								<input type="text" name="studentId" list="studentId">
+							</c:otherwise>
+						</c:choose>
 						<!-- 검색 버튼 -->
 						<button type="submit">
 							<ul class="d-flex justify-content-center" style="margin: 0;">
@@ -193,10 +206,24 @@
 				<c:forEach begin="1" end="${totalPages}" var="i">
 					<c:choose>
 						<c:when test="${i == currentPage}">
-							<li><a href="/management/studentList?page=${i}" class="selected--page">${i}</a></li>
+							<c:choose>
+								<c:when test="${deptId != null || studentId != null}">
+									<li><a href="/management/studentList?page=${i}&deptId=${deptId}&studentId=${studentId}" class="selected--page">${i}</a></li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="/management/studentList?page=${i}" class="selected--page">${i}</a></li>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
-							<li><a href="/management/studentList?page=${i}">${i}</a></li>
+							<c:choose>
+								<c:when test="${deptId != null || studentId != null}">
+									<li><a href="/management/studentList?page=${i}&deptId=${deptId}&studentId=${studentId}">${i}</a></li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="/management/studentList?page=${i}">${i}</a></li>
+								</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 					</c:choose>
 			&nbsp;&nbsp;

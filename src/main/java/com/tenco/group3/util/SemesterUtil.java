@@ -71,12 +71,12 @@ public class SemesterUtil {
 		return afterSemester;
 	}
 
-	public static void setBeforeYear(int beforeYear) {
-		SemesterUtil.afterYear = beforeYear;
+	public static void setAfterYear(int afterYear) {
+		SemesterUtil.afterYear = afterYear;
 	}
 
-	public static void setBeforeSemester(int beforeSemester) {
-		SemesterUtil.afterSemester = beforeSemester;
+	public static void setAfterSemester(int afterSemester) {
+		SemesterUtil.afterSemester = afterSemester;
 	}
 
 	public static void setCurrentYear(int currentYear) {
