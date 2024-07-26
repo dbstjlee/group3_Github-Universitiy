@@ -4,9 +4,8 @@
 <style>
 #btn--danger {
 	background-color: #dc3545;
-    border-color: #dc3545;
+	border-color: #dc3545;
 }
-
 </style>
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
@@ -64,14 +63,17 @@
 		<h1>등록금 고지서 발송</h1>
 		<div class="split--div"></div>
 		<c:choose>
-		<c:when test="${tuition}">
-		<a href="/management/billEnd"><button type="submit" class="btn btn-primary" id="btn--danger">등록금 납부 기한 종료</button></a>
-		<p>등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
-		<p>등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
-		</c:when>
-		<c:otherwise>
-		<a href="/management/bill"><button type="submit" class="btn btn-primary">등록금 고지서 발송</button></a>
-		</c:otherwise>
+			<c:when test="${tuition == 1}">
+				<a href="/management/billEnd"><button type="submit" class="btn btn-primary" id="btn--danger">등록금 납부 기한 종료</button></a>
+				<p class="no--list--p">등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
+				<p class="no--list--p">등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
+			</c:when>
+			<c:when test="${tuition == 2}">
+				<p class="no--list--p">이번 학기 등록금 납부 기간이 종료되었습니다.</p>
+			</c:when>
+			<c:otherwise>
+				<a href="/management/bill"><button type="submit" class="btn btn-primary">등록금 고지서 발송</button></a>
+			</c:otherwise>
 		</c:choose>
 	</main>
 </div>

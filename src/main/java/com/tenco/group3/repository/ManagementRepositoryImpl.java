@@ -30,7 +30,6 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	private static final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
 	// TODO 나중에 암호화해서 자동으로 받을예정
 	private static final String SAMPLE_PASSWORD = "123123";
-	private static final String UPDATE_SCHEDULE = " UPDATE schedule_state_tb SET ";
 	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
 
 	@Override
@@ -44,12 +43,20 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				studentList.add(Student.builder().id(rs.getInt("id")).name(rs.getString("name"))
-						.birthDate(rs.getDate("birth_date")).gender(rs.getString("gender"))
-						.address(rs.getString("address")).tel(rs.getString("tel")).email(rs.getString("email"))
-						.deptId(rs.getInt("dept_id")).grade(rs.getInt("grade")).semester(rs.getInt("semester"))
-						.entranceDate(rs.getDate("entrance_date")).graduationDate(rs.getDate("graduation_date"))
-						.build());
+				studentList.add(Student.builder()
+					.id(rs.getInt("id"))
+					.name(rs.getString("name"))
+					.birthDate(rs.getDate("birth_date"))
+					.gender(rs.getString("gender"))
+					.address(rs.getString("address"))
+					.tel(rs.getString("tel"))
+					.email(rs.getString("email"))
+					.deptId(rs.getInt("dept_id"))
+					.grade(rs.getInt("grade"))
+					.semester(rs.getInt("semester"))
+					.entranceDate(rs.getDate("entrance_date"))
+					.graduationDate(rs.getDate("graduation_date"))
+					.build());
 			}
 
 		} catch (Exception e) {
@@ -70,10 +77,17 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				professorList.add(Professor.builder().id(rs.getInt("id")).name(rs.getString("name"))
-						.birthDate(rs.getDate("birth_date")).gender(rs.getString("gender"))
-						.address(rs.getString("address")).tel(rs.getString("tel")).email(rs.getString("email"))
-						.deptId(rs.getInt("dept_id")).hireDate(rs.getDate("hire_date")).build());
+				professorList.add(Professor.builder()
+					.id(rs.getInt("id"))
+					.name(rs.getString("name"))
+					.birthDate(rs.getDate("birth_date"))
+					.gender(rs.getString("gender"))
+					.address(rs.getString("address"))
+					.tel(rs.getString("tel"))
+					.email(rs.getString("email"))
+					.deptId(rs.getInt("dept_id"))
+					.hireDate(rs.getDate("hire_date"))
+					.build());
 			}
 
 		} catch (Exception e) {
@@ -271,45 +285,9 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	}
 
 	@Override
-	public void updateSchedule(String columName, boolean state) {
-		try (Connection conn = DBUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			String query = UPDATE_SCHEDULE + columName + " = ? ";
-			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-				pstmt.setBoolean(1, state);
-				pstmt.executeUpdate();
-				conn.commit();
-			} catch (Exception e) {
-				conn.rollback();
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public int getScheduleStat(String columName) {
-		int state = -1;
-		String query = " SELECT " + columName + " FROM schedule_state_tb LIMIT 1";
-		try (Connection conn = DBUtil.getConnection(); //
-				PreparedStatement pstmt = conn.prepareStatement(query)) {
-			ResultSet rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				state = rs.getInt(columName);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return state;
-	}
-
-	@Override
 	public boolean checkBreakAppDone() {
 		boolean done = false;
-		try (Connection conn = DBUtil.getConnection();
+		try (Connection conn = DBUtil.getConnection();//
 				PreparedStatement pstmt = conn.prepareStatement(CHECK_BREAK_APP_DONE)) {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				// 조회된 행이 하나라도 있다면 false, 없다면 true

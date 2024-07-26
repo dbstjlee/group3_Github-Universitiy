@@ -90,17 +90,20 @@
 								</tbody>
 							</table>
 						</div>
-					<a href="/management/breakEnd"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
+						<a href="/management/breakEnd"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
 					</c:when>
 
 					<c:otherwise>
 						<p class="no--list--p">대기 중인 신청 내역이 없습니다.</p>
-					<a href="/management/breakState?state=false"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
+						<a href="/management/breakState?state=2"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
+			<c:when test="${isBreak == 2}">
+				<p class="no--list--p">이번 학기 수강 신청 기간이 끝났습니다.</p>
+			</c:when>
 			<c:otherwise>
-				<a href="/management/breakState?state=true"><button type="submit" class="btn btn-primary ">휴학 신청 기간 시작</button></a>
+				<a href="/management/breakState?state=1"><button type="submit" class="btn btn-primary ">휴학 신청 기간 시작</button></a>
 			</c:otherwise>
 		</c:choose>
 	</main>

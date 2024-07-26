@@ -7,23 +7,25 @@ import java.util.List;
 import com.tenco.group3.model.BreakApp;
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.RankedStudent;
+import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
+import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.StuSchRepositoryImpl;
 import com.tenco.group3.repository.StuStatRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
+import com.tenco.group3.repository.interfaces.ScheduleStateRepository;
 import com.tenco.group3.repository.interfaces.StuSchRepository;
 import com.tenco.group3.repository.interfaces.StuStatRepository;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
-import com.tenco.group3.util.Define;
 import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletException;
@@ -42,6 +44,7 @@ public class ManagementController extends HttpServlet {
 	private StuSubRepository stuSubRepository;
 	private StuSchRepository stuSchRepository;
 	private TuitionRepository tuitionRepository;
+	private ScheduleStateRepository scheduleStateRepository;
 
 	public ManagementController() {
 		super();
@@ -55,11 +58,11 @@ public class ManagementController extends HttpServlet {
 		stuSubRepository = new StuSubRepositoryImpl();
 		stuSchRepository = new StuSchRepositoryImpl();
 		tuitionRepository = new TuitionRepositoryImpl();
+		scheduleStateRepository = new ScheduleStateRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		// TODO 관리자 아이디가 아니면 이전 페이지로 돌아가게함
 
 		switch (action) {
 		case "/studentList":
@@ -90,7 +93,7 @@ public class ManagementController extends HttpServlet {
 			showBreakPage(request, response);
 			break;
 		case "/breakState":
-			handleBreakState(request, response, Boolean.parseBoolean(request.getParameter("state")));
+			handleBreakState(request, response, Integer.parseInt(request.getParameter("state")));
 			break;
 		default:
 			break;
@@ -176,8 +179,8 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (managementRepository.getScheduleStat("break_app") == Define.TRUE) {
-			AlertUtil.backAlert(response, "휴학 신청 기간에는 등록금 고지서를 보낼 수 없습니다.");
+		if ((int) getServletContext().getAttribute("breakApp") != ScheduleState.END) {
+			AlertUtil.backAlert(response, "휴학 신청 기간이 끝나야 등록금 고지서 발송이 가능합니다.");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
 		}
@@ -203,8 +206,8 @@ public class ManagementController extends HttpServlet {
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
 		String msg = rowCount + "명에게 등록금 고지서 발송 완료";
-		getServletContext().setAttribute("tuition", true);
-		managementRepository.updateSchedule("tuition", true);
+		getServletContext().setAttribute("tuition", ScheduleState.TRUE);
+		scheduleStateRepository.updateSchedule("tuition", ScheduleState.TRUE);
 		AlertUtil.hrefAlert(response, msg, "/management/tuition");
 	}
 
@@ -216,8 +219,8 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void handleEndTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		getServletContext().setAttribute("tuition", false);
-		managementRepository.updateSchedule("tuition", false);
+		getServletContext().setAttribute("tuition", ScheduleState.END);
+		scheduleStateRepository.updateSchedule("tuition", ScheduleState.END);
 		// TODO 등록금을 납부 하지 않은 학생을 제적 (미등록) 으로 학적 변동
 		int rowCount = 0;
 		String msg = rowCount + "명 제적 처리 완료";
@@ -233,13 +236,9 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int isBreak = managementRepository.getScheduleStat("break_app");
-		if (isBreak == Define.ERROR) {
-			AlertUtil.backAlert(response, "오류 발생");
-		} else {
-			request.setAttribute("isBreak", isBreak);
-			request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
-		}
+		int isBreak = (int) getServletContext().getAttribute("breakApp");
+		request.setAttribute("isBreak", isBreak);
+		request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
 	}
 
 	/**
@@ -250,12 +249,12 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, boolean state) throws ServletException, IOException {
-		if (!state && managementRepository.checkBreakAppDone()) {
+	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, int state) throws ServletException, IOException {
+		if (state == 1 && !managementRepository.checkBreakAppDone()) {
 			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
 		} else {
-			managementRepository.updateSchedule("break_app", state);
-			getServletContext().setAttribute("break_app", state);
+			scheduleStateRepository.updateSchedule("break_app", state);
+			getServletContext().setAttribute("breakApp", state);
 			showBreakPage(request, response);
 		}
 	}

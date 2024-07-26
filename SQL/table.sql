@@ -306,10 +306,10 @@ FOREIGN KEY (staff_id) REFERENCES staff_tb(id)
 
 -- 학사일정 상태
 create table schedule_state_tb(
-	id int default 1 primary key,
-	break_app boolean default false,
-    sugang boolean default false,
-    tuition boolean default false,
+	id int auto_increment primary key,
+	break_app int default 0,
+    sugang int default 0,
+    tuition int default 0,
     year int default 2024, -- 최초 세팅값
     semester int default 1 -- 최초 세팅값
 );
