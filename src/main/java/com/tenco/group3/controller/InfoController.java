@@ -66,17 +66,14 @@ public class InfoController extends HttpServlet {
 		if(principal.getUserRole().equals("student")) {
 			Student studentInfo = userRepository.getStudentInfo(principal.getId());
 			request.setAttribute("studentInfo", studentInfo);
-			System.out.println("address : " + studentInfo); // TODO - 삭제 예정
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
 		} else if(principal.getUserRole().equals("professor")) {
 			Professor professorInfo = userRepository.getProfessorInfo(principal.getId());
 			request.setAttribute("professorInfo", professorInfo);
-			System.out.println("professorInfo : " + professorInfo); // TODO - 삭제 예정
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
 		} else if(principal.getUserRole().equals("staff")) {
 			Staff staffInfo = userRepository.getStaffInfo(principal.getId());
 			request.setAttribute("staffInfo", staffInfo);
-			System.out.println("staffInfo : " + staffInfo); // TODO - 삭제 예정
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
 		} 
 	}
@@ -198,18 +195,20 @@ public class InfoController extends HttpServlet {
 				Student studentUpdate = Student.builder().address(address).email(email).tel(tel).id(principal.getId())
 						.build();
 				userRepository.getStudentInfoUpdate(studentUpdate);
-				System.out.println("studentUpdate: " + studentUpdate); // TODO - 삭제 예정
 				response.sendRedirect(request.getContextPath() + "/info/student");
+				
 			} else if (principal.getUserRole().equals("professor")) {
 				Professor professorUpdate = Professor.builder().address(address).email(email).tel(tel)
 						.id(principal.getId()).build();
 				userRepository.getProfessorInfoUpdate(professorUpdate);
 				response.sendRedirect(request.getContextPath() + "/info/professor");
+				
 			} else if (principal.getUserRole().equals("staff")) {
 				Staff staffUpdate = Staff.builder().address(address).email(email).tel(tel).id(principal.getId())
 						.build();
 				userRepository.getStaffInfoUpdate(staffUpdate);
 				response.sendRedirect(request.getContextPath() + "/info/staff");
+				
 			} else {
 				PrintWriter out = response.getWriter();
 				response.setContentType("text/html; charset=UTF-8");

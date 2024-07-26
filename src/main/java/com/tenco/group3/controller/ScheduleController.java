@@ -82,8 +82,7 @@ public class ScheduleController extends HttpServlet {
 	private void showScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int ScheduleId = Integer.parseInt(request.getParameter("id"));
-		System.out.println("ScheduleId:" + ScheduleId); // TODO - 삭제 예정
-		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId); // TODO - 다시
+		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId); 
 		request.setAttribute("schedule", schedule);
 		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleUpdate.jsp").forward(request, response);
 	}
@@ -167,15 +166,14 @@ public class ScheduleController extends HttpServlet {
 	private void handleScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		int scheduleId = Integer.parseInt(request.getParameter("id"));
-		System.out.println("scheduleId : " + scheduleId); // TODO - 삭제
 		String information = request.getParameter("information");
 		String startDayStr = request.getParameter("startDay");
 		String endDayStr = request.getParameter("endDay");
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 형식에 맞게 설정
+		//SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 형식에 맞게 설정
 
-		java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDayStr);
-		java.sql.Date sqlEndDate = java.sql.Date.valueOf(endDayStr);
+		Date sqlStartDate = Date.valueOf(startDayStr);
+		Date sqlEndDate = Date.valueOf(endDayStr);
 
 		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
 		Schedule schedule = new Schedule();
@@ -186,9 +184,6 @@ public class ScheduleController extends HttpServlet {
 				.information(information).build();
 		scheduleRepository.updateSchedule(scheduleList);
 		response.sendRedirect(request.getContextPath() + "/schedule/create");
-//		request.setAttribute("scheduleList", scheduleList);
-//		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleUpdate.jsp").forward(request, response);
-
 	}
 
 	/**
@@ -208,8 +203,9 @@ public class ScheduleController extends HttpServlet {
 		String startDayStr = request.getParameter("startDay");
 		String endDayStr = request.getParameter("endDay");
 
-		java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDayStr);
-		java.sql.Date sqlEndDate = java.sql.Date.valueOf(endDayStr);
+		//
+		Date sqlStartDate = Date.valueOf(startDayStr);
+		Date sqlEndDate = Date.valueOf(endDayStr);
 
 		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
 		Schedule schedule = new Schedule();
@@ -219,7 +215,6 @@ public class ScheduleController extends HttpServlet {
 		Schedule scheduleListById = Schedule.builder().staffId(staffId).startDay(sqlStartDate).endDay(sqlEndDate)
 				.information(information).build();
 		scheduleRepository.addSchedule(scheduleListById);
-		System.out.println("scheduleListById:" + scheduleListById); // TODO - 삭제
 		response.sendRedirect(request.getContextPath() + "/schedule/create");
 	}
 }

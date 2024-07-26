@@ -17,10 +17,11 @@
 				<tr>
 					<td><a href="/schedule/list" class="selected--menu">학사일정</a></td>
 				</tr>
-
-				<tr>
-					<td><a href="/schedule/create"> 학사일정 등록</a></td>
-				</tr>
+				<c:if test="${principal.userRole == 'staff'}">
+					<tr>
+						<td><a href="/schedule/create"> 학사일정 등록</a></td>
+					</tr>
+				</c:if>
 			</table>
 		</div>
 	</div>
@@ -34,8 +35,7 @@
 						<tbody>
 							<tr>
 								<td class="month" width="100px;"><fmt:formatDate value="${scheduleList.startDay}" pattern="M" /></td>
-								<td class="line"><fmt:formatDate value="${scheduleList.startDay}" pattern="MM-dd" />~<fmt:formatDate value="${scheduleList.endDay}" pattern="MM-dd" />
-								</td>
+								<td class="line"><fmt:formatDate value="${scheduleList.startDay}" pattern="MM-dd" />~<fmt:formatDate value="${scheduleList.endDay}" pattern="MM-dd" /></td>
 								<td class="line">${scheduleList.information}</td>
 							</tr>
 						</tbody>

@@ -20,7 +20,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	private static final String UPDATE_SCHEDULE_DETAIL = " UPDATE schedule_tb SET start_day = ? , end_day = ? , information = ? WHERE id = ? ; ";
 	private static final String DELETE_SCHEDULE_DETAIL = " DELETE FROM schedule_tb WHERE id = ? ; ";
 	private static final String ADD_SCHEDULE_DETAIL = " INSERT INTO schedule_tb(staff_id, start_day, end_day, information) values ( ? , ? , ? , ? ); ";
-//	private static final String SELECT_ALL_INFO = " SELECT * FROM schedule_tb";
+	private static final String SELECT_SCHEDULE_MAIN = " SELECT * FROM schedule_tb limit ? ";
 	
 	/**
 	 * 전체 학사일정 조회
@@ -110,7 +110,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 		try (Connection conn = DBUtil.getConnection()){
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_SCHEDULE_DETAIL)){
-				pstmt.setDate(1, (Date) schedule.getStartDay()); // TODO - DATE 확인
+				pstmt.setDate(1, (Date) schedule.getStartDay());
 				pstmt.setDate(2, (Date) schedule.getEndDay());
 				pstmt.setString(3, schedule.getInformation());
 				pstmt.setInt(4, schedule.getId());
@@ -168,4 +168,32 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 학사 일정 조회(메인 화면)
+	 */
+	@Override
+	public List<Schedule> getAllSchedule(int limit) {
+			List<Schedule> scheduleList = new ArrayList<>();
+			try (Connection conn = DBUtil.getConnection()){
+				try (PreparedStatement pstmt = conn.prepareStatement(SELECT_SCHEDULE_MAIN)){
+					pstmt.setInt(1, limit);
+					ResultSet rs = pstmt.executeQuery();
+					while(rs.next()) {
+						scheduleList.add(
+						 			Schedule.builder()
+						 			.id(rs.getInt("id"))
+									.startDay(rs.getDate("start_day"))
+									.endDay(rs.getDate("end_day"))
+									.information(rs.getString("information"))
+									.build());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return scheduleList;
+		}
 }

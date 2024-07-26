@@ -5,8 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.Notice;
+import com.tenco.group3.model.Schedule;
+import com.tenco.group3.model.User;
 import com.tenco.group3.repository.NoticeRepositoryImpl;
+import com.tenco.group3.repository.ScheduleRepositoryImpl;
+import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.NoticeRepository;
+import com.tenco.group3.repository.interfaces.ScheduleRepository;
+import com.tenco.group3.repository.interfaces.UserRepository;
 
 import jakarta.annotation.Priority;
 import jakarta.servlet.Filter;
@@ -25,6 +31,8 @@ import jakarta.servlet.http.HttpSession;
 public class RootFilter extends HttpFilter implements Filter {
 
 	private NoticeRepository noticeRepository;
+	private ScheduleRepository scheduleRepository;
+	private UserRepository userRepository;
 	
 	List<String> ignoreURLs = new ArrayList<>();
 
@@ -38,6 +46,8 @@ public class RootFilter extends HttpFilter implements Filter {
 		ignoreURLs.add("/favicon.io");
 		
 		noticeRepository = new NoticeRepositoryImpl();
+		scheduleRepository = new ScheduleRepositoryImpl();
+		userRepository = new UserRepositoryImpl();
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -55,35 +65,35 @@ public class RootFilter extends HttpFilter implements Filter {
 		} else {
 			if (path.equals("/")) {
 				// TODO 홈 화면에서 필요한 값들 지정해줘야함
+				// 1. 유저정보, 2. 공지, 3. 학사일정
+				
+				// 1. 유저
+				
+				// 학생
+//				studentId = Integer.parseInt(request);
+//				student = userRepository.getStudentInfoMain(studentId);
+				
+				
 				
 				// 2. 공지
-				int list = 1; // 1페이지
-				int listSize = 5; // 공지글 5개
-				
-				try {
-					String listStr = request.getParameter("list");
+				int pageSize = 6; 
+				int offset = 1;
 
-					if (listStr != null) {
-						list = Integer.parseInt(listStr);
-					}
-
-				} catch (Exception e) {
-					list = 1;
-				}
+				List<Notice> noticeList =  noticeRepository.getAllNotice(pageSize, offset);
+				request.setAttribute("noticeList", noticeList);
 				
-				int offset = (list - 1) * listSize;
-
-				List<Notice> noticeList = noticeRepository.getAllNotice(listSize, offset);
-
+				// 3. 학사 일정
+				List<Schedule> scheduleList = scheduleRepository.getAllSchedule(pageSize);
+				request.setAttribute("scheduleList", scheduleList);
 				
-				
-				// 1. 유저정보, 2. 공지, 3. 학사일정
 				request.getRequestDispatcher("/WEB-INF/views/main.jsp").forward(httpRequest, response);
+				
 			} else {
 				chain.doFilter(request, response);
 				return;
 			}
 		}
 	}
+
 
 }

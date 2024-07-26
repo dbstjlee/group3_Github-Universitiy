@@ -28,5 +28,6 @@ public class Student {
 	private Date graduationDate;
 	private String deptname;
 	private String collname;
+	private String status;
 	
 }

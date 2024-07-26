@@ -27,4 +27,6 @@ public interface UserRepository {
 	
 	void getStaffInfoUpdate(Staff staff); // 직원 정보 수정
 	
+	Student getStudentInfoMain(int id); // 학생 프로필 정보 조회
+	
 }

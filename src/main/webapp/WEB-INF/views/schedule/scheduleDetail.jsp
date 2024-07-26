@@ -73,9 +73,11 @@
 				<tr>
 					<td><a href="/schedule/list">학사일정</a></td>
 				</tr>
-				<tr>
-					<td><a href="/schedule/create"> 학사일정 등록</a></td>
-				</tr>
+				<c:if test="${principal.userRole == 'staff'}">
+					<tr>
+						<td><a href="/schedule/create"> 학사일정 등록</a></td>
+					</tr>
+				</c:if>
 			</table>
 		</div>
 	</div>
@@ -91,11 +93,11 @@
 				<tbody>
 					<tr>
 						<td>시작날짜</td>
-						<td><fmt:formatDate value="${schedule.startDay}" pattern="MM-dd"/></td>
+						<td><fmt:formatDate value="${schedule.startDay}" pattern="MM-dd" /></td>
 					</tr>
 					<tr>
 						<td>종료날짜</td>
-						<td><fmt:formatDate value="${schedule.endDay}" pattern="MM-dd"/></td>
+						<td><fmt:formatDate value="${schedule.endDay}" pattern="MM-dd" /></td>
 					</tr>
 					<tr>
 						<td class="td">내용</td>
@@ -104,8 +106,7 @@
 				</tbody>
 			</table>
 			<div class="checkbox">
-				<a href="/schedule/update?id=${schedule.id}" class="button">수정</a> 
-				<a href="/schedule/delete?id=${schedule.id}" class="button">삭제</a>
+				<a href="/schedule/update?id=${schedule.id}" class="button">수정</a> <a href="/schedule/delete?id=${schedule.id}" class="button">삭제</a>
 			</div>
 		</form>
 	</main>

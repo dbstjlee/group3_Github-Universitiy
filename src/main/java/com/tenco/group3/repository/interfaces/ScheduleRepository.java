@@ -8,6 +8,7 @@ public interface ScheduleRepository {
 
 	List<Schedule> getAllScheduleList();
 	List<Schedule> getAllScheduleListById();
+	List<Schedule> getAllSchedule(int limit);
 	Schedule getScheduleById(int id);
 	void updateSchedule(Schedule schedule);
 	void deleteSchedule(int id);

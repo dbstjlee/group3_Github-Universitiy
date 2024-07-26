@@ -172,7 +172,6 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("totalNotices : " + totalNotices); // TODO - 삭제 예정
 		return totalNotices;
 	}
 }

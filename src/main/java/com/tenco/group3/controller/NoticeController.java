@@ -108,7 +108,7 @@ public class NoticeController extends HttpServlet {
 	private void handleListNotices(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int page = 1; // 기본 페이지 번호
-		int pageSize = 6; // TODO - 페이지 당 공지사항 개수 확인
+		int pageSize = 6; // 페이지 당 공지사항 개수
 
 		try {
 			String pageStr = request.getParameter("page");
@@ -116,12 +116,10 @@ public class NoticeController extends HttpServlet {
 			if (pageStr != null) {
 				page = Integer.parseInt(pageStr);
 			}
-
 		} catch (Exception e) {
 			page = 1;
 		}
 
-		// TODO - offset 처리 확인
 		int offset = (page - 1) * pageSize;
 
 		List<Notice> noticeList = noticeRepository.getAllNotice(pageSize, offset);
@@ -178,7 +176,6 @@ public class NoticeController extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		// TODO - 다시 확인
 		request.setAttribute("notice", notice);
 		request.getRequestDispatcher("/WEB-INF/views/notice/read.jsp").forward(request, response);
 	}
@@ -211,7 +208,6 @@ public class NoticeController extends HttpServlet {
 
 		User principal = (User) request.getSession().getAttribute("principal");
 		int noticeId = Integer.parseInt(request.getParameter("id"));
-		System.out.println("noticeId : " + noticeId); //TODO - 삭제
 		String noticeTitle = request.getParameter("title");
 		String noticeContent = request.getParameter("content");
 

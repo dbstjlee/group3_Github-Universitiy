@@ -161,7 +161,6 @@ public class UserController extends HttpServlet {
 					}
 				}
 			}
-			// TODO - 수정(학생, 교수, 직원일 때 main.jsp에 값 넣기)
 			session.setAttribute("principal", principal);
 			response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
 		} else {

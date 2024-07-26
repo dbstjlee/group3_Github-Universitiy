@@ -67,9 +67,11 @@
 				<tr>
 					<td><a href="/schedule/list">학사일정</a></td>
 				</tr>
-				<tr>
-					<td><a href="/schedule/create" class="selected--menu"> 학사일정 등록</a></td>
-				</tr>
+				<c:if test="${principal.userRole == 'staff'}">
+					<tr>
+						<td><a href="/schedule/create" class="selected--menu"> 학사일정 등록</a></td>
+					</tr>
+				</c:if>
 			</table>
 		</div>
 	</div>
