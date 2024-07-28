@@ -5,11 +5,10 @@
 <title>그린대학교 학사관리시스템</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 	<header>
-		<form action="${pageContext.request.contextPath}/" method="get">
+		<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">
 			<div class="header--top">
 				<ul>
 					<li>${principal.username}님(${principal.id})</li>
