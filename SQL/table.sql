@@ -120,7 +120,6 @@ CREATE TABLE pre_stu_sub_tb
 (
    student_id INT,
    subject_id INT,
-   status int default 0,
    PRIMARY KEY
    (
       student_id,
