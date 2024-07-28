@@ -15,7 +15,7 @@
 					<table class="sub--menu--table" border="1">
 						<tbody>
 							<tr>
-								<td><a href="/notice" class="selected--menu">공지사항</a></td>
+								<td><a href="/notice/list" class="selected--menu">공지사항</a></td>
 							</tr>
 							<tr>
 								<td><a href="/schedule/list">학사일정</a></td>

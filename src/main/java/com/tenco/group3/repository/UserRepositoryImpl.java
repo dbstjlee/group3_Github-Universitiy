@@ -75,7 +75,8 @@ public class UserRepositoryImpl implements UserRepository {
 	// 학생 학적 변동 조회
 	private static final String SELECT_STUDENT_STAT = " SELECT student_id, status, from_date, description from stu_stat_tb where student_id = ? ; ";
 	
-	
+	// 비밀번호 수정
+	private static final String UPDATE_USER_PASSWORD = "  UPDATE user_tb SET password = ? WHERE id = ?; ";
 	
 	/**
 	 * ID로 로그인
@@ -371,5 +372,26 @@ public class UserRepositoryImpl implements UserRepository {
 			e.printStackTrace();
 		}
 		return student;
+	}
+
+	/**
+	 * 사용자 비밀번호 수정
+	 */
+	@Override
+	public void getUpdatePassword(User user) {
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_USER_PASSWORD)) {
+				pstmt.setString(1, user.getPassword());
+				pstmt.setInt(2, user.getId());
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

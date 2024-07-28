@@ -31,4 +31,6 @@ public interface UserRepository {
 	
 	Student getStudentStat(int id); // 학생 학적 변동 조회
 	
+	void getUpdatePassword(User user); // 사용자 비밀번호 변경
+	
 }

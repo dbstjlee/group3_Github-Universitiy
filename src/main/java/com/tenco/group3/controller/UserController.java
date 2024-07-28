@@ -49,6 +49,9 @@ public class UserController extends HttpServlet {
 		case "/findPwd":
 			request.getRequestDispatcher("/WEB-INF/views/user/findPwd.jsp").forward(request, response);
 			break;
+		case "/password":
+			request.getRequestDispatcher("/WEB-INF/views/user/updatePassword.jsp").forward(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
@@ -80,12 +83,65 @@ public class UserController extends HttpServlet {
 		case "/findId":
 			handleFindId(request, response);
 			break;
+		case "/password":
+			handleUpdatePassword(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 	}
 
+	/**
+	 * 비밀번호 변경 기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void handleUpdatePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		 User principal = (User) request.getSession().getAttribute("principal");
+	        String currentPassword = request.getParameter("currentPassword");
+	        String newPassword = request.getParameter("newPassword");
+	        String confirmPassword = request.getParameter("confirmPassword");
+
+	        if (principal == null) {
+	            response.sendRedirect(request.getContextPath() + "/login");
+	            return;
+	        }
+
+	        if (!principal.getPassword().equals(currentPassword)) {
+	            // 현재 비밀번호가 일치하지 않는 경우
+	        	sendMessage(response, "현재 비밀번호가 일치하지 않습니다.");
+	        	System.out.println("principal.getPassword() : " + principal.getPassword());
+	        	System.out.println("currentPassword: " + currentPassword);
+	            return;
+	        }
+
+	        if (!newPassword.equals(confirmPassword)) {
+	            // 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
+	        	sendMessage(response, "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+	            return;
+	        }
+
+	        // 비밀번호 변경
+	        User updatedUser = User.builder()
+	                .id(principal.getId())
+	                .password(newPassword)
+	                .build();
+
+	        userRepository.getUpdatePassword(updatedUser);
+	        sendMessage(response, "비밀번호가 변경되었습니다.");
+	    }
+
+	    private void sendMessage(HttpServletResponse response, String message) throws IOException {
+	        PrintWriter out = response.getWriter();
+	        response.setContentType("text/html; charset=UTF-8");
+	        out.println("<script>alert('" + message + "');");
+	        out.println("history.go(-1);</script>");
+	        out.close();
+	    }
+		
 	/**
 	 * id 찾기
 	 * 

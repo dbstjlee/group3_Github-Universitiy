@@ -20,7 +20,7 @@
 
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/password">비밀번호 변경</a></td>
+						<td><a href="${pageContext.request.contextPath}/user/password">비밀번호 변경</a></td>
 
 					</tr>
 					<tr>
