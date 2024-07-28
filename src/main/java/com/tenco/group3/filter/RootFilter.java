@@ -66,7 +66,6 @@ public class RootFilter extends HttpFilter implements Filter {
 			httpResponse.sendRedirect("/user/logIn");
 		} else {
 			if (path.equals("/")) {
-				// TODO 홈 화면에서 필요한 값들 지정해줘야함
 				// 1. 유저정보, 2. 공지, 3. 학사일정
 				
 				// 1. 유저

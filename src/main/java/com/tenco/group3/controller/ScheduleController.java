@@ -1,10 +1,12 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.tenco.group3.model.Schedule;
 import com.tenco.group3.model.User;
@@ -82,7 +84,7 @@ public class ScheduleController extends HttpServlet {
 	private void showScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int ScheduleId = Integer.parseInt(request.getParameter("id"));
-		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId); 
+		Schedule schedule = scheduleRepository.getScheduleById(ScheduleId);
 		request.setAttribute("schedule", schedule);
 		request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleUpdate.jsp").forward(request, response);
 	}
@@ -165,24 +167,40 @@ public class ScheduleController extends HttpServlet {
 	 */
 	private void handleScheduleUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+	
 		int scheduleId = Integer.parseInt(request.getParameter("id"));
+
 		String information = request.getParameter("information");
 		String startDayStr = request.getParameter("startDay");
 		String endDayStr = request.getParameter("endDay");
 
-		//SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 형식에 맞게 설정
+		try {
+			Date sqlStartDate = Date.valueOf(startDayStr);
+			Date sqlEndDate = Date.valueOf(endDayStr);
 
-		Date sqlStartDate = Date.valueOf(startDayStr);
-		Date sqlEndDate = Date.valueOf(endDayStr);
+			if (sqlEndDate.equals(sqlStartDate) || sqlEndDate.after(sqlStartDate)) {
+				// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
+				Schedule schedule = new Schedule();
+				schedule.setStartDay(sqlStartDate);
+				schedule.setEndDay(sqlEndDate);
 
-		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
-		Schedule schedule = new Schedule();
-		schedule.setStartDay(sqlStartDate);
-		schedule.setEndDay(sqlEndDate);
-
-		Schedule scheduleList = Schedule.builder().id(scheduleId).startDay(sqlStartDate).endDay(sqlEndDate)
-				.information(information).build();
-		scheduleRepository.updateSchedule(scheduleList);
+				if (information == null || information.isEmpty()) {
+					sendError(response, "수정할 내용을 입력해주세요.");
+					return;
+				}
+				Schedule scheduleList = Schedule.builder()
+						.id(scheduleId)
+						.startDay(sqlStartDate)
+						.endDay(sqlEndDate)
+						.information(information)
+						.build();
+				scheduleRepository.updateSchedule(scheduleList);
+			} else {
+				sendError(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
+			}
+		} catch (IllegalArgumentException e) {
+			sendError(response, "날짜를 입력해주세요.");
+		}
 		response.sendRedirect(request.getContextPath() + "/schedule/create");
 	}
 
@@ -196,6 +214,7 @@ public class ScheduleController extends HttpServlet {
 	 */
 	private void handleScheduleAdd(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		User principal = (User) request.getSession().getAttribute("principal");
 		int staffId = principal.getId();
 
@@ -203,18 +222,39 @@ public class ScheduleController extends HttpServlet {
 		String startDayStr = request.getParameter("startDay");
 		String endDayStr = request.getParameter("endDay");
 
-		//
-		Date sqlStartDate = Date.valueOf(startDayStr);
-		Date sqlEndDate = Date.valueOf(endDayStr);
+		try {
+			Date sqlStartDate = Date.valueOf(startDayStr);
+			Date sqlEndDate = Date.valueOf(endDayStr);
 
-		// 여기서 startDay와 endDay를 Schedule 객체에 설정하고 저장
-		Schedule schedule = new Schedule();
-		schedule.setStartDay(sqlStartDate);
-		schedule.setEndDay(sqlEndDate);
+			if (sqlEndDate.equals(sqlStartDate) || sqlEndDate.after(sqlStartDate)) {
+				Schedule schedule = new Schedule();
+				schedule.setStartDay(sqlStartDate);
+				schedule.setEndDay(sqlEndDate);
 
-		Schedule scheduleListById = Schedule.builder().staffId(staffId).startDay(sqlStartDate).endDay(sqlEndDate)
-				.information(information).build();
-		scheduleRepository.addSchedule(scheduleListById);
+				if (information == null || information.isEmpty()) {
+					sendError(response, "내용을 입력해주세요.");
+					return;
+				}
+
+				Schedule scheduleListById = Schedule.builder().staffId(staffId).startDay(sqlStartDate)
+						.endDay(sqlEndDate).information(information).build();
+				scheduleRepository.addSchedule(scheduleListById);
+				request.setAttribute("scheduleListById", scheduleListById);
+			} else {
+				sendError(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
+			}
+		} catch (IllegalArgumentException e) {
+			sendError(response, "날짜를 입력해주세요.");
+		}
 		response.sendRedirect(request.getContextPath() + "/schedule/create");
+	}
+
+	// 에러 메시지
+	private void sendError(HttpServletResponse response, String message) throws IOException {
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html; charset=UTF-8");
+		out.println("<script> alert('" + message + "');");
+		out.println("history.go(-1); </script>");
+		out.close();
 	}
 }

@@ -12,10 +12,8 @@
 		<form action="${pageContext.request.contextPath}/" method="get">
 			<div class="header--top">
 				<ul>
-					<li>.</li>
 					<li>${principal.username}님(${principal.id})</li>
 					<li style="margin: 0 15px;">|</li>
-					<li>.</li>
 					<li><a href="${pageContext.request.contextPath}/user/logOut">로그아웃</a></li>
 				</ul>
 			</div>

@@ -144,7 +144,6 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 							.views(rs.getInt("views"))
 							.build());
 				}
-				System.out.println("count : " + noticeList.size());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

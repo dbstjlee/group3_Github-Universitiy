@@ -147,7 +147,7 @@ public class InfoController extends HttpServlet {
 
 			if (principal.getId() == studentInfo.getId()) {
 				request.setAttribute("studentInfo", studentInfo);
-				request.setAttribute("studentStat", studentStat); // TODO studentStat 수정
+				request.setAttribute("studentStat", studentStat);
 				
 				// 4. jsp에 뿌리기
 				request.getRequestDispatcher("/WEB-INF/views/user/studentInfo.jsp").forward(request, response);
