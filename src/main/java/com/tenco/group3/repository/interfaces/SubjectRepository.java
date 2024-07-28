@@ -3,6 +3,7 @@ package com.tenco.group3.repository.interfaces;
 import java.util.List;
 
 import com.tenco.group3.model.Subject;
+import com.tenco.group3.model.Syllabus;
 
 public interface SubjectRepository {
 	// 강의 시간표 조회
@@ -21,4 +22,6 @@ public interface SubjectRepository {
 	int getSearchSubjectCount(int year, int semester, String name, int deptId);
 
 	int getAllSubjectCount();
+	
+	Syllabus getSyllabusById(int subjectId);
 }

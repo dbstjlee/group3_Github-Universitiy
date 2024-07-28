@@ -3,8 +3,12 @@ package com.tenco.group3.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.tenco.group3.model.Department;
 import com.tenco.group3.model.Subject;
+import com.tenco.group3.model.Syllabus;
+import com.tenco.group3.repository.DepartmentRepositoryImpl;
 import com.tenco.group3.repository.SubjectRepositoryImpl;
+import com.tenco.group3.repository.interfaces.DepartmentRepository;
 import com.tenco.group3.repository.interfaces.SubjectRepository;
 
 import jakarta.servlet.ServletException;
@@ -18,7 +22,7 @@ import jakarta.servlet.http.HttpSession;
 public class SubjectController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private SubjectRepository subjectRepository;
-
+	private DepartmentRepository departmentRepository;
 	public SubjectController() {
 		super();
 	}
@@ -26,12 +30,14 @@ public class SubjectController extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		subjectRepository = new SubjectRepositoryImpl();
+		departmentRepository =new DepartmentRepositoryImpl();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
+		System.out.println(action);
 //		HttpSession session = request.getSession(false);
 //		if (session != null || session.getAttribute("principal") != null) {
 
@@ -47,6 +53,8 @@ public class SubjectController extends HttpServlet {
 				searchSubject(request, response);
 				break;
 			case "/syllabus":
+				showSyllabus(request, response);
+				
 				break;
 				
 			}
@@ -74,10 +82,13 @@ public class SubjectController extends HttpServlet {
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		
 		List<Subject> subjectlist = subjectRepository.getSubjectAll(pageSize,offset);
+		List<Department> departList = departmentRepository.getAllDepartment();
 		request.setAttribute("subjectList", subjectlist);
+		request.setAttribute("departList", departList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
 		request.setAttribute("currentPage", page);
+		System.out.println("departList :" + departList);
 		try {
 			request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
 		} catch (ServletException e) {
@@ -153,5 +164,19 @@ public class SubjectController extends HttpServlet {
 			throws ServletException, IOException {
 
 	}
+	
+	private void showSyllabus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            Syllabus syllabus = subjectRepository.getSyllabusById(subjectId);
+            request.setAttribute("syllabus", syllabus);
+            request.getRequestDispatcher("/WEB-INF/views/subject/syllabus.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "잘못된 접근");
+            return;
+        }
+    }
 
 }
