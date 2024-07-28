@@ -33,7 +33,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " JOIN department_tb as de on de.id = su.dept_id " + " JOIN college_tb as co on co.id = de.college_id "
 			+ " order by id asc " + " limit ? offset ? ";
 
-	// 예비 수강 신청
+	// 예비 수강 신청 내역
 	private static final String GET_PRE_APPLICATION_SUBJECT = " SELECT pre.student_id, su.id, su.name AS '강의명', "
 			+ " pr.name AS '담당교수', de.name AS '개설학과', co.name AS '단과대학', "
 			+ " su.grades, su.type, su.sub_day, su.start_time, su.end_time, su.room_id, su.num_of_student, su.capacity, "
@@ -43,7 +43,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " inner JOIN department_tb AS de ON su.dept_id = de.id"
 			+ " inner JOIN college_tb AS co ON co.id = de.college_id"
 			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id" + " ORDER BY su.id ASC limit ? offset ? ";
-	// 수강 신청
+
+	// 수강 신청 내역
 	private static final String GET_APPLICATION_SUBJECT = " SELECT sst.student_id, su.id, su.name AS '강의명', "
 			+ " pr.name AS '담당교수', de.name AS '개설학과', co.name AS '단과대학', "
 			+ " su.grades, su.type, su.sub_day, su.start_time, su.end_time, su.room_id, su.num_of_student, su.capacity, "
@@ -87,6 +88,9 @@ public class SugangRepositoryImpl implements SugangRepository {
 
 	// 예비 수강 취소
 	private static final String DELETE_PRE_CONFIRM_SUBJECT_SQL = " DELETE FROM pre_stu_sub_tb WHERE subject_id = ? ";
+
+	// 예비 수강신청 -> 수강 신청 초기화된 리스트
+	private static final String PRE_TO_APP_SUBJECT = " SELECT *, CASE WHEN pre.student_id IS NOT NULL THEN 1 ELSE 0 END AS confirmss FROM pre_stu_sub_tb WHERE student_id = ? ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -144,51 +148,31 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int addEnrolment(int studentId, int subjectId) {
+	public int addPreEnrolment(int studentId, int subjectId) {
 		int rowCount = 0;
-		int nomOfStudent = 0;
-		int capacity = 0;
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmtNumOFStudnet = conn.prepareStatement(NUM_OF_STUDENT);
-				PreparedStatement pstmtCapacity = conn.prepareStatement(CAPACITY)) {
-			pstmtNumOFStudnet.setInt(1, subjectId);
-			pstmtCapacity.setInt(1, subjectId);
-			try (ResultSet rsNum = pstmtNumOFStudnet.executeQuery(); ResultSet rsCap = pstmtCapacity.executeQuery()) {
-				if (rsNum.next()) {
-					nomOfStudent = rsNum.getInt("num_of_student");
-				}
-				if (rsCap.next()) {
-					capacity = rsCap.getInt("capacity");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
-			try (PreparedStatement pstmtAddEnorolment = conn.prepareStatement(ADD_ENROLMENT_SQL);
-					PreparedStatement pstmtAddPreSub = conn.prepareStatement(ADD_PRE_ENROLMENT_SQL);
+			try (PreparedStatement pstmtAddPreSub = conn.prepareStatement(ADD_PRE_ENROLMENT_SQL);
 					PreparedStatement pstmtAddCount = conn.prepareStatement(UPDATE_ADD_ENROLMENT_SQL)) {
-				pstmtAddEnorolment.setInt(1, studentId);
-				pstmtAddEnorolment.setInt(2, subjectId);
+
 				pstmtAddPreSub.setInt(1, studentId);
 				pstmtAddPreSub.setInt(2, subjectId);
 				pstmtAddCount.setInt(1, subjectId);
-				if ((capacity - nomOfStudent) > 0) {
-					rowCount = pstmtAddEnorolment.executeUpdate();
-					pstmtAddPreSub.executeUpdate();
-					pstmtAddCount.executeUpdate();
-					conn.commit();
-				}
+
+				rowCount = pstmtAddPreSub.executeUpdate();
+				pstmtAddCount.executeUpdate();
+
+				conn.commit();
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return rowCount;
 	}
 
@@ -325,7 +309,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 			} else {
 				rowCount = 0;
 			}
-			// DELETE_CONFIRM_SUBJECT_SQL 실행
+			// DELETE_PRE_CONFIRM_SUBJECT_SQL 실행
 			try (PreparedStatement pstmtDeletePre = conn.prepareStatement(DELETE_PRE_CONFIRM_SUBJECT_SQL)) {
 				pstmtDeletePre.setInt(1, subjectId);
 				rowCount += pstmtDeletePre.executeUpdate();
@@ -372,8 +356,46 @@ public class SugangRepositoryImpl implements SugangRepository {
 
 	@Override
 	public int deleteConfirmSubject(int subjectId) {
-		// TODO Auto-generated method stub
-		return 0;
+		int rowCount = 0;
+		int numOfStudent = 0;
+
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			// NUM_OF_STUDENT 실행
+			try (PreparedStatement pstmtNumOfStudent = conn.prepareStatement(NUM_OF_STUDENT)) {
+				pstmtNumOfStudent.setInt(1, subjectId);
+				try (ResultSet rsNum = pstmtNumOfStudent.executeQuery()) {
+					if (rsNum.next()) {
+						numOfStudent = rsNum.getInt("num_of_student");
+					}
+				}
+			}
+			// 수강 인원이 0 이상일 경우 UPDATE_CANCLE_ENROLMENT_SQL 실행
+			if (numOfStudent > 0) {
+				try (PreparedStatement pstmtUpdate = conn.prepareStatement(UPDATE_CANCLE_ENROLMENT_SQL)) {
+					pstmtUpdate.setInt(1, subjectId);
+					rowCount += pstmtUpdate.executeUpdate();
+				}
+			} else {
+				rowCount = 0;
+			}
+			// DELETE_CONFIRM_SUBJECT_SQL 실행
+			try (PreparedStatement pstmtDeletePre = conn.prepareStatement(DELETE_CONFIRM_SUBJECT_SQL)) {
+				pstmtDeletePre.setInt(1, subjectId);
+				rowCount += pstmtDeletePre.executeUpdate();
+			}
+			conn.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			try (Connection conn = DBUtil.getConnection()) {
+				if (conn != null) {
+					conn.rollback();
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return rowCount;
 	}
 
 	@Override
@@ -400,6 +422,77 @@ public class SugangRepositoryImpl implements SugangRepository {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(); // SQLException 처리
+		}
+		return sugangList;
+	}
+
+	// 수강 신청
+	@Override
+	public int addEnrolment(int studentId, int subjectId) {
+		int rowCount = 0;
+		int nomOfStudent = 0;
+		int capacity = 0;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmtNumOFStudnet = conn.prepareStatement(NUM_OF_STUDENT);
+				PreparedStatement pstmtCapacity = conn.prepareStatement(CAPACITY)) {
+			pstmtNumOFStudnet.setInt(1, subjectId);
+			pstmtCapacity.setInt(1, subjectId);
+			try (ResultSet rsNum = pstmtNumOFStudnet.executeQuery(); ResultSet rsCap = pstmtCapacity.executeQuery()) {
+				if (rsNum.next()) {
+					nomOfStudent = rsNum.getInt("num_of_student");
+				}
+				if (rsCap.next()) {
+					capacity = rsCap.getInt("capacity");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmtAddSub = conn.prepareStatement(ADD_ENROLMENT_SQL);
+					PreparedStatement pstmtAddCount = conn.prepareStatement(UPDATE_ADD_ENROLMENT_SQL)) {
+				pstmtAddSub.setInt(1, studentId);
+				pstmtAddSub.setInt(2, subjectId);
+				pstmtAddCount.setInt(1, subjectId);
+				if ((capacity - nomOfStudent) > 0) {
+					rowCount = pstmtAddSub.executeUpdate();
+					pstmtAddCount.executeUpdate();
+					conn.commit();
+				}
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowCount;
+	}
+
+	@Override
+	public List<Sugang> getResetPreSubject(int studentId) {
+		List<Sugang> sugangList = new ArrayList<Sugang>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(PRE_TO_APP_SUBJECT)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					Sugang sugang = Sugang.builder().subjectId(rs.getInt("subject_id")).subjectName(rs.getString("강의명"))
+							.professorName(rs.getString("담당교수")).grades(rs.getInt("grades"))
+							.subjectDay(rs.getString("sub_day")).startTime(rs.getInt("start_time"))
+							.endTime(rs.getInt("end_time")).roomId(rs.getString("room_id"))
+							.numOfStudent(rs.getInt("num_of_student")).capacity(rs.getInt("capacity"))
+							.hasConfirmed(rs.getInt("confirm") == 1).build();
+					sugangList.add(sugang);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return sugangList;
 	}

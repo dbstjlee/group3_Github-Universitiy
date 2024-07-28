@@ -54,8 +54,8 @@
 						<td>${grade.grades}</td>
 						<td>${grade.grade}</td>
 						<td>
-							<form action="${pageContext.request.contextPath}/evaluation" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
-								<input type="hidden" name="id" value="${grade.subjectId}">
+							<form action="${pageContext.request.contextPath}/evaluation" method="get" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
+								<input type="hidden" name="subjectId" value="${grade.subjectId}">
 								<button type="submit">Click</button>
 							</form>
 						</td>

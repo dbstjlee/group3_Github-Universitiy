@@ -31,4 +31,7 @@ public interface SugangRepository {
 
 	int deletePreConfirmSubject(int subjectId);
 
+	int addPreEnrolment(int studentId, int subjectId);
+
+	List<Sugang> getResetPreSubject(int studentId);
 }
