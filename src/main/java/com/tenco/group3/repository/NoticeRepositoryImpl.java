@@ -25,9 +25,11 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	
 	private static final String COUNT_ALL_NOTICES = " SELECT count(*) AS count FROM notice_tb; ";
 	
+	private static final String SEARCH_TITLE = " SELECT * FROM notice_tb WHERE title LIKE ?; ";
 	
-	// TODO - 검색
+	private static final String SEARCH_TITLE_AND_CONTENT = " SELECT * FROM notice_tb WHERE title AND content LIKE ? ";
 	
+	 private static final String UPDATE_VIEWS_COUNT = " UPDATE notice_tb SET views = views + 1 WHERE id = ? ";
 	
 	/**
 	 * 공지사항 등록
@@ -172,5 +174,85 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			e.printStackTrace();
 		}
 		return totalNotices;
+	}
+	
+	/**
+	 * 제목 검색
+	 */
+	@Override
+	public List<Notice> searchTitle(String title) {
+		List<Notice> noticeList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(SEARCH_TITLE)){
+				pstmt.setString(1, "%" + title + "%");
+				ResultSet rs = pstmt.executeQuery();
+				while(rs.next()) {
+					noticeList.add(
+							Notice.builder()
+							.id(rs.getInt("id"))
+							.category(rs.getString("category"))
+							.title(rs.getString("title"))
+							.content(rs.getString("content"))
+							.createdTime(rs.getTimestamp("created_time"))
+							.views(rs.getInt("views"))
+							.build());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return noticeList;
+	}
+
+	/**
+	 * 제목 + 내용 검색
+	 */
+	@Override
+	public List<Notice> searchTitleAndContent(String titleAndcontent) {
+		List<Notice> noticeList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(SEARCH_TITLE_AND_CONTENT)){
+				pstmt.setString(1, "%" + titleAndcontent + "%");
+				ResultSet rs = pstmt.executeQuery();
+				while(rs.next()) {
+					noticeList.add(
+							Notice.builder()
+							.id(rs.getInt("id"))
+							.category(rs.getString("category"))
+							.title(rs.getString("title"))
+							.content(rs.getString("content"))
+							.createdTime(rs.getTimestamp("created_time"))
+							.views(rs.getInt("views"))
+							.build());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return noticeList;
+	}
+
+	/**
+	 * 조회수 상승
+	 */
+	@Override
+	public void incrementViewCount(int noticeId) {
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_VIEWS_COUNT)){
+				pstmt.setInt(1, noticeId);
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -91,6 +91,21 @@ public class UserController extends HttpServlet {
 			break;
 		}
 	}
+	
+	/**
+	 * 알림 메시지
+	 * 
+	 * @param response
+	 * @param message
+	 * @throws IOException
+	 */
+	private void sendMessage(HttpServletResponse response, String message) throws IOException {
+        PrintWriter out = response.getWriter();
+        response.setContentType("text/html; charset=UTF-8");
+        out.println("<script>alert('" + message + "');");
+        out.println("history.go(-1);</script>");
+        out.close();
+    }
 
 	/**
 	 * 비밀번호 변경 기능
@@ -113,8 +128,6 @@ public class UserController extends HttpServlet {
 	        if (!principal.getPassword().equals(currentPassword)) {
 	            // 현재 비밀번호가 일치하지 않는 경우
 	        	sendMessage(response, "현재 비밀번호가 일치하지 않습니다.");
-	        	System.out.println("principal.getPassword() : " + principal.getPassword());
-	        	System.out.println("currentPassword: " + currentPassword);
 	            return;
 	        }
 
@@ -131,17 +144,9 @@ public class UserController extends HttpServlet {
 	                .build();
 
 	        userRepository.getUpdatePassword(updatedUser);
-	        sendMessage(response, "비밀번호가 변경되었습니다.");
+	        sendMessage(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 사용해주세요.");
 	    }
 
-	    private void sendMessage(HttpServletResponse response, String message) throws IOException {
-	        PrintWriter out = response.getWriter();
-	        response.setContentType("text/html; charset=UTF-8");
-	        out.println("<script>alert('" + message + "');");
-	        out.println("history.go(-1);</script>");
-	        out.close();
-	    }
-		
 	/**
 	 * id 찾기
 	 * 
@@ -173,11 +178,7 @@ public class UserController extends HttpServlet {
 				user = userRepository.getStaffByNameAndEmail(name, email);
 			}
 			if(user == null) {
-				PrintWriter out = response.getWriter();
-				response.setContentType("text/html; charset=UTF-8");
-				out.println("<script> alert('아이디를 찾을 수 없습니다.');");
-				out.println("history.go(-1); </script>");
-				out.close();
+				sendMessage(response, "아이디를 찾을 수 없습니다.");
 			}
 			request.setAttribute("user", user);
 			request.setAttribute("userRole", userRole);
@@ -221,11 +222,7 @@ public class UserController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
 		} else {
 			// 에러 메시지 (로그인 실패)
-			PrintWriter out = response.getWriter();
-			response.setContentType("text/html; charset=UTF-8");
-			out.println("<script> alert('아이디 또는 비밀번호가 틀립니다.');");
-			out.println("history.go(-1); </script>");
-			out.close();
+			sendMessage(response, "아이디 또는 비밀번호가 틀립니다.");
 
 			request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
 		}

@@ -154,6 +154,9 @@ public class ScheduleController extends HttpServlet {
 		case "/update":
 			handleScheduleUpdate(request, response);
 			break;
+		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			break;
 		}
 	}
 

@@ -1,10 +1,53 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin.css">
 
-<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
+<style>
+<style>
+.room--table {
+	text-align: center;
+	margin-top: 20px;
+	margin: 10px;
+}
+
+.room--table td {
+	padding: 10px;
+	width: 300px;
+}
+
+.first--tr {
+	font-weight: bold;
+}
+
+.mouth {
+	background-color: #f5f5f5;
+}
+
+.line {
+	
+}
+
+.container {
+	margin-top: 100px;
+}
+
+.table {
+	width: 800px;
+}
+
+.first--tr {
+	background-color: #f7f6f6;
+	font-weight: bolder;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
+
+<div class="d-flex justify-content-center align-items-start"
+	style="min-width: 100em;">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
 			<h2>학사정보</h2>
@@ -34,8 +77,9 @@
 					<table class="room--table">
 						<tbody>
 							<tr>
-								<td class="month" width="100px;"><fmt:formatDate value="${scheduleList.startDay}" pattern="M" /></td>
-								<td class="line"><fmt:formatDate value="${scheduleList.startDay}" pattern="MM-dd" />~<fmt:formatDate value="${scheduleList.endDay}" pattern="MM-dd" /></td>
+								<td class="line"><fmt:formatDate
+										value="${scheduleList.startDay}" pattern="MM-dd" />~<fmt:formatDate
+										value="${scheduleList.endDay}" pattern="MM-dd" /></td>
 								<td class="line">${scheduleList.information}</td>
 							</tr>
 						</tbody>

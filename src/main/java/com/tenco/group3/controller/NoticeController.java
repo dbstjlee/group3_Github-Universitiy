@@ -1,19 +1,21 @@
 package com.tenco.group3.controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.Notice;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.NoticeRepositoryImpl;
 import com.tenco.group3.repository.interfaces.NoticeRepository;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/notice/*")
 public class NoticeController extends HttpServlet {
@@ -50,10 +52,42 @@ public class NoticeController extends HttpServlet {
 		case "/create":
 			showCreateNoticeForm(request, response);
 			break;
+		case "/search":
+			handleSearchNotice(request, response);
+			break;
 		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 
+	}
+
+	/**
+	 * 공지사항 검색 기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void handleSearchNotice(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String searchType = request.getParameter("type");
+	    String keyword = request.getParameter("keyword");
+
+		List<Notice> noticeList = new ArrayList<>();
+	    
+	    if (searchType.equals("title")) {
+	        // 제목으로 검색
+	        noticeList = noticeRepository.searchTitle(keyword);
+	    } else if (searchType.equals("keyword")) {
+	        // 제목 + 내용으로 검색
+	        noticeList = noticeRepository.searchTitleAndContent(keyword);
+	    }
+
+	    request.setAttribute("noticeList", noticeList);
+		request.getRequestDispatcher("/WEB-INF/views/notice/searchResult.jsp").forward(request, response);
 	}
 
 	/**
@@ -176,6 +210,10 @@ public class NoticeController extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
+		
+		// 조회수 증가
+		noticeRepository.incrementViewCount(noticeId);
+
 		request.setAttribute("notice", notice);
 		request.getRequestDispatcher("/WEB-INF/views/notice/read.jsp").forward(request, response);
 	}
@@ -190,11 +228,10 @@ public class NoticeController extends HttpServlet {
 		case "/create":
 			handleCreateNotice(request, response);
 			break;
-
 		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
-
 	}
 
 	/**
@@ -227,7 +264,6 @@ public class NoticeController extends HttpServlet {
 	 * @param response
 	 * @throws IOException
 	 */
-	
 
 	private void handleCreateNotice(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
