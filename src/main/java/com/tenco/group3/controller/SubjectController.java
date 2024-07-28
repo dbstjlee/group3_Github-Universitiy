@@ -53,8 +53,9 @@ public class SubjectController extends HttpServlet {
 				searchSubject(request, response);
 				break;
 			case "/syllabus":
+
 				showSyllabus(request, response);
-				
+
 				break;
 				
 			}
@@ -146,6 +147,10 @@ public class SubjectController extends HttpServlet {
 	 * @throws IOException
 	 */
 
+	
+	
+	
+	
 	private void subjectById(HttpServletRequest request, HttpServletResponse response)
 			throws SecurityException, IOException, ServletException {
 		// TODO 유효성 검사
@@ -157,6 +162,14 @@ public class SubjectController extends HttpServlet {
 		List<Subject> subjectlist = subjectRepository.getSubjectById(id, year, semester, name);
 		request.setAttribute("subjectlist", subjectlist);
 		request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
+	}
+	
+	
+	
+	private void seeSyllabus(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException, ServletException {
+	
+		request.getRequestDispatcher("/WEB-INF/views/syllabus/syllabus.jsp").forward(request, response);
 	}
 
 	@Override
