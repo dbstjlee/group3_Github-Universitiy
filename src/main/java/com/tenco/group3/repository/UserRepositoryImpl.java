@@ -67,10 +67,10 @@ public class UserRepositoryImpl implements UserRepository {
 			+ " tel =  ? , email =  ?  WHERE id = ? ; ";
 
 	// 학생 프로필 정보 조회
-	private static final String SELECT_STUDENT_INFO_MAIN = " SELECT st.id, st.name, st.email, st.grade, st.semester, "
-			+ " stat.status, dept.name FROM student_tb as st " + " JOIN department_tb as dept ON st.dept_id = dept.id "
-			+ " JOIN stu_stat_tb as stat on st.id = stat.student_id "
-			+ " WHERE stat.to_date = '9999-01-01' AND st.id = ? ; ";
+		private static final String SELECT_STUDENT_INFO_MAIN = " SELECT st.id, st.name, st.email, st.grade, st.semester, "
+				+ " stat.status, dept.name as deptname FROM student_tb as st " + " JOIN department_tb as dept ON st.dept_id = dept.id "
+				+ " JOIN stu_stat_tb as stat on st.id = stat.student_id "
+				+ " WHERE stat.to_date = '9999-01-01' AND st.id = ? ; ";
 
 	// 학생 학적 변동 조회
 	private static final String SELECT_STUDENT_STAT = " SELECT student_id, status, from_date, description from stu_stat_tb where student_id = ? ; ";

@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.Notice;
+import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.Schedule;
+import com.tenco.group3.model.Staff;
+import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.NoticeRepositoryImpl;
 import com.tenco.group3.repository.ScheduleRepositoryImpl;
@@ -14,7 +17,6 @@ import com.tenco.group3.repository.interfaces.NoticeRepository;
 import com.tenco.group3.repository.interfaces.ScheduleRepository;
 import com.tenco.group3.repository.interfaces.UserRepository;
 
-import jakarta.annotation.Priority;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -68,12 +70,19 @@ public class RootFilter extends HttpFilter implements Filter {
 				// 1. 유저정보, 2. 공지, 3. 학사일정
 				
 				// 1. 유저
+				User principal = (User) httpRequest.getSession().getAttribute("principal");
 				
 				// 학생
-//				studentId = Integer.parseInt(request);
-//				student = userRepository.getStudentInfoMain(studentId);
+				Student student = userRepository.getStudentInfoMain(principal.getId());
+				request.setAttribute("student", student);
 				
+				// 교수
+				Professor professor = userRepository.getProfessorInfo(principal.getId());
+				request.setAttribute("professor", professor);
 				
+				// 직원
+				Staff staff = userRepository.getStaffInfo(principal.getId());
+				request.setAttribute("staff", staff);
 				
 				// 2. 공지
 				int pageSize = 6; 
@@ -87,7 +96,6 @@ public class RootFilter extends HttpFilter implements Filter {
 				request.setAttribute("scheduleList", scheduleList);
 				
 				request.getRequestDispatcher("/WEB-INF/views/main.jsp").forward(httpRequest, response);
-				
 			} else {
 				chain.doFilter(request, response);
 				return;
