@@ -89,9 +89,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(SEARCH_SUBJECT)) {
 		
+		
 			if (name == null) {
 				name = "";
 			}
+			
+			
 			pstmt.setInt(1, subYear);
 			pstmt.setInt(2,semester);
 			pstmt.setString(3, "%" + name + "%");
@@ -280,6 +283,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
                         .deptName(rs.getString("dept_name")).tel(rs.getString("tel")).email(rs.getString("email"))
                         .overview(rs.getString("overview")).objective(rs.getString("objective"))
                         .textbook(rs.getString("textbook")).program(rs.getString("program")).build();
+                
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -109,7 +109,7 @@ a:hover {
 				<td>강의 시간</td>
 				<td>${syllabus.subDay} ${syllabus.startTime}:00 - ${syllabus.endTime}:00</td>
 				<td>강의실</td>
-				<td>${syllabus.roomId}(${syllabus.collegeName})</td>
+				<td>${syllabus.roomId}(${syllabus.collName})</td>
 			</tr>
 		</table>
 		<br>
@@ -159,10 +159,10 @@ a:hover {
 			</tr>
 		</table>
 		<c:choose>
-			<c:when test="${principal.userRole == \"professor\"}">
+			<c:when test="${principal.userRole == 'professor'}">
 		<table>
 			<tr>
-				<td><a href="/professor/syllabus/update/${syllabus.subjectId }">수정하기</a></td>
+				<td><a href="/professor/veiwSyllabusUpdate?subjectId=${syllabus.subjectId }" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;" >수정하기</a></td>
 			</tr>
 		</table>
 			</c:when>

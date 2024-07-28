@@ -3,6 +3,7 @@ package com.tenco.group3.repository.interfaces;
 import java.util.List;
 
 import com.tenco.group3.model.Professor;
+import com.tenco.group3.model.Syllabus;
 
 public interface ProfessorRepository {
 
@@ -19,4 +20,7 @@ public interface ProfessorRepository {
 	Professor getProfessorAmount(); // 교수 수 조회
 	
 	int addProfessor( Professor professor); // 교수 추가
+	void updateSyllabus(Syllabus syllabus);
+	
+	Syllabus veiwSyllabus(int subjectId);
 }

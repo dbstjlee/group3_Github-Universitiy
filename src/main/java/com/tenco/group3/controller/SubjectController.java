@@ -53,9 +53,8 @@ public class SubjectController extends HttpServlet {
 				searchSubject(request, response);
 				break;
 			case "/syllabus":
-
 				showSyllabus(request, response);
-
+				
 				break;
 				
 			}
@@ -121,6 +120,7 @@ public class SubjectController extends HttpServlet {
 		
 		int offset = (page - 1) * pageSize;
 		List<Subject> subjectlist = subjectRepository.searchSubject(year, semester, name,deptId, pageSize,offset);
+		List<Department> departList = departmentRepository.getAllDepartment();
 		int totalCount = subjectRepository.getSearchSubjectCount(year, semester, name, deptId);
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		
@@ -128,6 +128,7 @@ public class SubjectController extends HttpServlet {
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
 		request.setAttribute("currentPage", page);
+		request.setAttribute("departList", departList);
 		try {
 			request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
 		} catch (ServletException e) {
@@ -147,10 +148,6 @@ public class SubjectController extends HttpServlet {
 	 * @throws IOException
 	 */
 
-	
-	
-	
-	
 	private void subjectById(HttpServletRequest request, HttpServletResponse response)
 			throws SecurityException, IOException, ServletException {
 		// TODO 유효성 검사
@@ -158,18 +155,10 @@ public class SubjectController extends HttpServlet {
 		int semester = Integer.parseInt(request.getParameter("semester"));
 		int year = Integer.parseInt(request.getParameter("year"));
 		int id = Integer.parseInt(request.getParameter("id"));
-
+	
 		List<Subject> subjectlist = subjectRepository.getSubjectById(id, year, semester, name);
 		request.setAttribute("subjectlist", subjectlist);
 		request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
-	}
-	
-	
-	
-	private void seeSyllabus(HttpServletRequest request, HttpServletResponse response)
-			throws SecurityException, IOException, ServletException {
-	
-		request.getRequestDispatcher("/WEB-INF/views/syllabus/syllabus.jsp").forward(request, response);
 	}
 
 	@Override
@@ -183,8 +172,9 @@ public class SubjectController extends HttpServlet {
         try {
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             Syllabus syllabus = subjectRepository.getSyllabusById(subjectId);
+    		
             request.setAttribute("syllabus", syllabus);
-            request.getRequestDispatcher("/WEB-INF/views/subject/syllabus.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/syllabus/syllabus.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "잘못된 접근");
