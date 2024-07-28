@@ -42,5 +42,6 @@ public interface SugangRepository {
 	List<Sugang> resultStudentCount();
 
 	List<Sugang> getPreApplicatedSubjectList(int studentId);
-
+	
+	List<Sugang> getResetPreSubject(int studentId);
 }

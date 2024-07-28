@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet(urlPatterns = {"/evaluation", "/evaluationSubmit"})
+@WebServlet("/evaluation")
 public class EvaluationContorller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private EvaluationRepository evaluationRepository;
@@ -29,9 +29,6 @@ public class EvaluationContorller extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getServletPath();
 		HttpSession session = request.getSession();
-//		if (session == null) {
-//			response.sendRedirect(request.getContextPath() + "/user/login");
-//		}
 		switch (action) {
 		case "/evaluation":
 			showEvaluation(request, response, session);
@@ -53,6 +50,8 @@ public class EvaluationContorller extends HttpServlet {
 	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		session.setAttribute("principal", session);
+		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+		request.setAttribute("subjectId", subjectId);
 		request.getRequestDispatcher("/WEB-INF/views/grade/evaluation.jsp").forward(request, response);
 	}
 
@@ -61,7 +60,7 @@ public class EvaluationContorller extends HttpServlet {
 		String action = request.getServletPath();
 		HttpSession session = request.getSession();
 		switch (action) {
-		case "/evaluationSubmit":
+		case "/evaluation":
 			handlerEvaluation(request, response, session);
 			break;
 		default:
@@ -79,21 +78,50 @@ public class EvaluationContorller extends HttpServlet {
 	 */
 	private void handlerEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException {
-		User user = (User) session.getAttribute("principal");
-		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-		int[] answers = new int[7];
-		for (int i = 0; i < 7; i++) {
-			answers[i] = Integer.parseInt(request.getParameter("answer" + (i + 1)));
-		} // 각 문항 답을 배열로 저장
-		String improvements = request.getParameter("improvements");
-		// 필터를 사용해 이미 평가를 작성한 경우 alert 호출 후 창 종료 (유효성 검사)
-		Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
-				.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
-				.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
-		evaluationRepository.addEvaluation(evaluation);
-		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<script> alert('제출 되었습니다. '); window.close(); </script>");
+		Object principal = session.getAttribute("principal");
+
+		// 디버깅 코드 추가
+		if (principal != null) {
+			System.out.println("principal class: " + principal.getClass().getName());
+			System.out.println("principal content: " + principal.toString());
+		} else {
+			System.out.println("principal is null");
+		}
+
+		if (principal instanceof User) {
+			User user = (User) principal;
+			int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+
+			int[] answers = new int[7];
+			for (int i = 0; i < 7; i++) {
+				answers[i] = Integer.parseInt(request.getParameter("answer" + (i + 1)));
+			} // 각 문항 답을 배열로 저장
+			String improvements = request.getParameter("improvements");
+
+			// 이미 평가를 작성한 경우 처리
+			if (evaluationRepository.isEvaluation(user.getId(), subjectId)) {
+				response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script> alert('이미 평가를 작성했습니다.'); window.close(); </script>");
+				return;
+			}
+
+			// 평가 작성
+			Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
+					.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
+					.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
+
+			evaluationRepository.addEvaluation(evaluation);
+
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script> alert('제출 되었습니다.'); window.close(); </script>");
+		} else {
+			// principal 객체가 User 타입이 아닐 경우 오류 처리
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script> alert('세션 정보가 올바르지 않습니다. 다시 로그인 해주세요.'); window.close(); </script>");
+		}
 	}
 
 }
