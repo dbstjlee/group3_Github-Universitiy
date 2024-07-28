@@ -33,7 +33,7 @@ public interface ManagementRepository {
 
 	// 학생 등록
 	boolean createStudent(Student student);
-
+	
 	// 교수 등록
 	boolean createProfessor(Professor professor);
 
@@ -42,5 +42,8 @@ public interface ManagementRepository {
 
 	// 처리중인 휴학 신청이 있는지 조회
 	boolean checkBreakAppDone();
+	
+	// 학생의 학년 학기 업데이트
+	void updateGradeAndSemester(List<Student> studentList);
 
 }

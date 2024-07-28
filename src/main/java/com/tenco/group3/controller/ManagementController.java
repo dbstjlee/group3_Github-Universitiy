@@ -2,12 +2,12 @@ package com.tenco.group3.controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.RankedStudent;
-import com.tenco.group3.model.Schedule;
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
@@ -201,7 +201,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((int) getServletContext().getAttribute("breakApp") != ScheduleState.END) {
+		if ((int) getServletContext().getAttribute("sugang") != ScheduleState.END) {
 			AlertUtil.backAlert(response, "휴학 신청 기간이 끝나야 등록금 고지서 발송이 가능합니다.");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
@@ -279,8 +279,8 @@ public class ManagementController extends HttpServlet {
 	}
 
 	/**
-	 * 새학기 적용
-	 * (새학기 적용을 누르는 시점은 모든 수업이 끝나고 다음 학기 학사일정을 진행하기 직전)
+	 * 새학기 적용 (새학기 적용을 누르는 시점은 모든 수업이 끝나고 다음 학기 학사일정을 진행하기 직전)
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -306,7 +306,19 @@ public class ManagementController extends HttpServlet {
 			SemesterUtil.setAfterYear(0);
 			SemesterUtil.setAfterSemester(0);
 			// TODO 입학, 복학 상태인 모든 학생 학년, 학기 상승 (4학년 2학기 학생은 졸업)
-			List<Student> studentList =  stuStatRepository.getCurrentGrade();
+			List<Student> studentList = stuStatRepository.getCurrentGrade();
+			List<Student> updatedList = new ArrayList<>();
+			List<Integer> graduatedList = new ArrayList<>();
+			for (Student student : studentList) {
+				student = SemesterUtil.updateStudent(student);
+				if (student.getGrade() == 5) {
+					graduatedList.add(student.getId());
+				} else {
+					updatedList.add(student);
+				}
+			}
+			managementRepository.updateGradeAndSemester(updatedList);
+			stuStatRepository.updateStatusById(graduatedList, "졸업");
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
 		}
@@ -330,7 +342,7 @@ public class ManagementController extends HttpServlet {
 	}
 
 	/**
-	 * 학사관리 학생 등록 학생 테이블, 유저 테이블 동시 등록
+	 * 학사관리 학생 등록 학생 테이블, 유저 테이블, 학적 상태 테이블 동시 등록
 	 * 
 	 * @param request
 	 * @param response
@@ -351,7 +363,6 @@ public class ManagementController extends HttpServlet {
 				.build();
 			if (managementRepository.createStudent(student)) {
 				AlertUtil.hrefAlert(response, "등록 성공", "/management/student");
-				;
 			} else {
 				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
