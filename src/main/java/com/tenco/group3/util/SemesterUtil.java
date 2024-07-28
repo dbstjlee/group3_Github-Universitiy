@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
+import com.tenco.group3.model.Student;
 
 public class SemesterUtil {
 
@@ -39,6 +40,17 @@ public class SemesterUtil {
 			}
 		}
 		return studentList;
+	}
+	
+	// 해당 학생의 학기 상승
+	public static Student updateStudent(Student student){
+		if (student.getSemester() == 2) {
+			student.setGrade(student.getGrade() + 1);
+			student.setSemester(1);
+		} else {
+			student.setSemester(2);
+		}
+		return student;
 	}
 
 	public static int getCurrentSemester() {

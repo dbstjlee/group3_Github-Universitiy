@@ -11,4 +11,5 @@ public interface StuStatRepository {
 	
 	// 재학 중인 학생의 현재 학년, 학기를 조회
 	List<Student> getCurrentGrade();
+	
 }
