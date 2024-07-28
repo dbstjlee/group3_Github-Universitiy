@@ -25,6 +25,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	private static final String INSERT_STUDENT_SQL = " INSERT INTO student_tb (name, birth_date, gender, address, tel, email, dept_id, entrance_date) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
 	private static final String SELECT_STUDENT_ID_LAST = " SELECT id FROM student_tb ORDER BY id DESC LIMIT 1 ";
+	private static final String INSERT_NEW_STUDENT = " INSERT INTO stu_stat_tb (student_id, from_date) VALUES (?, CURDATE()) ";
 	private static final String INSERT_PROFESSOR_SQL = " INSERT INTO professor_tb (name, birth_date, gender, address, tel, email, dept_id) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?) ";
 	private static final String SELECT_PROFESSOR_ID_LAST = " SELECT id FROM professor_tb ORDER BY id DESC LIMIT 1 ";
@@ -35,6 +36,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	// TODO 나중에 암호화해서 자동으로 받을예정
 	private static final String SAMPLE_PASSWORD = "123123";
 	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
+	private static final String UPDATE_GRADE_AND_SEMESTER = " UPDATE student_tb SET grade = ? , semester = ? WHERE = ? ";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
@@ -69,7 +71,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 		return studentList;
 	}
-	
+
 	@Override
 	public List<Student> getAllStudents(String id, String deptId, int limit, int offset) {
 		List<Student> studentList = new ArrayList<>();
@@ -105,7 +107,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 		return studentList;
 	}
-	
+
 	@Override
 	public List<Professor> getAllProfessors(int limit, int offset) {
 		List<Professor> professorList = new ArrayList<>();
@@ -136,7 +138,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 		return professorList;
 	}
-	
+
 	@Override
 	public List<Professor> getAllProfessors(String id, String deptId, int limit, int offset) {
 		List<Professor> professorList = new ArrayList<>();
@@ -151,16 +153,16 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 
 			while (rs.next()) {
 				professorList.add(Professor.builder()
-						.id(rs.getInt("id"))
-						.name(rs.getString("name"))
-						.birthDate(rs.getDate("birth_date"))
-						.gender(rs.getString("gender"))
-						.address(rs.getString("address"))
-						.tel(rs.getString("tel"))
-						.email(rs.getString("email"))
-						.deptId(rs.getInt("dept_id"))
-						.hireDate(rs.getDate("hire_date"))
-						.build());
+					.id(rs.getInt("id"))
+					.name(rs.getString("name"))
+					.birthDate(rs.getDate("birth_date"))
+					.gender(rs.getString("gender"))
+					.address(rs.getString("address"))
+					.tel(rs.getString("tel"))
+					.email(rs.getString("email"))
+					.deptId(rs.getInt("dept_id"))
+					.hireDate(rs.getDate("hire_date"))
+					.build());
 			}
 
 		} catch (Exception e) {
@@ -186,7 +188,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		}
 		return totalCounts;
 	}
-	
+
 	@Override
 	public int getTotalStudentCount(String id, String deptId) {
 		int totalCounts = 0;
@@ -222,7 +224,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 		}
 		return totalCounts;
 	}
-	
+
 	@Override
 	public int getTotalProfessorCount(String id, String deptId) {
 		int totalCounts = 0;
@@ -281,12 +283,20 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 				pstmt.setInt(1, id);
 				pstmt.setString(2, SAMPLE_PASSWORD);
 				pstmt.executeUpdate();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+				return success;
+			}
+			// 학적 테이블에 입학으로 등록
+			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_NEW_STUDENT)) {
+				pstmt.setInt(1, id);
+				pstmt.executeUpdate();
 				conn.commit();
 				success = true;
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -410,6 +420,27 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			e.printStackTrace();
 		}
 		return done;
+	}
+
+	@Override
+	public void updateGradeAndSemester(List<Student> studentList) {
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			for (int i = 0; i < studentList.size(); i++) {
+				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_GRADE_AND_SEMESTER)) {
+					Student student = studentList.get(i);
+					pstmt.setInt(1, student.getGrade());
+					pstmt.setInt(2, student.getSemester());
+					pstmt.setInt(3, student.getId());
+				} catch (Exception e) {
+					conn.rollback();
+					e.printStackTrace();
+				}
+			}
+			conn.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

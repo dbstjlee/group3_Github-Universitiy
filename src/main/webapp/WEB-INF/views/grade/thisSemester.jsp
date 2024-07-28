@@ -1,11 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-center align-items-start"
+		style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
 				<h2>My</h2>
@@ -15,16 +17,18 @@
 			<div class="sub--menu--mid">
 				<table class="sub--menu--table" border="1">
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/grade/thisSemester">이번 학기 성적 조회</a></td>
-
+						<td><a
+							href="${pageContext.request.contextPath}/grade/thisSemester">이번
+								학기 성적 조회</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/grade/semester">학기별 성적 조회</a></td>
-
+						<td><a
+							href="${pageContext.request.contextPath}/grade/semester">학기별
+								성적 조회</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/grade/total">전체 성적 조회</a></td>
-
+						<td><a href="${pageContext.request.contextPath}/grade/total">전체
+								성적 조회</a></td>
 					</tr>
 				</table>
 			</div>
@@ -57,15 +61,19 @@
 									<td>${grade.grades}</td>
 									<td>${grade.grade}</td>
 									<td>
-										<form action="${pageContext.request.contextPath}/evaluation" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
-											<input type="hidden" name="id" value="${grade.subjectId}">
+										<form action="${pageContext.request.contextPath}/evaluation"
+											method="get" target="popupWindow"
+											onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
+											<input type="hidden" name="subjectId"
+												value="${grade.subjectId}">
 											<button type="submit">Click</button>
 										</form>
 									</td>
 								</tr>
 							</c:forEach>
 						</table>
-						<p style="color: #888; margin-bottom: 40px;">※ 강의 평가 후 성적 조회 가능</p>
+						<p style="color: #888; margin-bottom: 40px;">※ 강의 평가 후 성적 조회
+							가능</p>
 					</div>
 					<hr>
 					<br>
@@ -85,8 +93,10 @@
 								<tr>
 									<td>${thisGrade.subYear}년</td>
 									<td>${thisGrade.semester}학기</td>
-									<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${thisGrade.sumGrades}" /></td>
-									<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${thisGrade.myGrades}" /></td>
+									<td><fmt:formatNumber type="number" maxFractionDigits="0"
+											value="${thisGrade.sumGrades}" /></td>
+									<td><fmt:formatNumber type="number" maxFractionDigits="0"
+											value="${thisGrade.myGrades}" /></td>
 									<td>${thisGrade.average}</td>
 								</tr>
 							</tbody>

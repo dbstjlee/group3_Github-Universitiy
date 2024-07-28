@@ -223,7 +223,7 @@ CREATE TABLE stu_stat_tb
 (
    id INT PRIMARY KEY AUTO_INCREMENT,
    student_id INT NOT NULL,
-   status VARCHAR (3) NOT NULL DEFAULT '재학', -- 재학, 휴학, 졸업, 자퇴
+   status VARCHAR (3) NOT NULL DEFAULT '입학', -- 입학, 복학, 휴학, 졸업, 자퇴
    from_date DATE,
    to_date DATE DEFAULT '9999-01-01', -- '9999-01-01' 현재 상태
    description VARCHAR (10),

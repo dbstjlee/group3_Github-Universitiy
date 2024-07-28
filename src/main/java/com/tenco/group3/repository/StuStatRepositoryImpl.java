@@ -77,11 +77,7 @@ public class StuStatRepositoryImpl implements StuStatRepository {
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				studentList.add(Student.builder()
-					.id(rs.getInt("student_id"))
-					.grade(rs.getInt("grade"))
-					.semester(rs.getInt("semester"))
-					.build());
+				studentList.add(Student.builder().id(rs.getInt("student_id")).grade(rs.getInt("grade")).semester(rs.getInt("semester")).build());
 			}
 
 		} catch (Exception e) {
@@ -89,4 +85,5 @@ public class StuStatRepositoryImpl implements StuStatRepository {
 		}
 		return studentList;
 	}
+
 }

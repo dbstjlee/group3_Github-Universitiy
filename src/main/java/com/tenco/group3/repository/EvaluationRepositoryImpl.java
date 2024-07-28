@@ -41,11 +41,11 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return rowCount;
 	}
 
 	@Override
-	public boolean isEvaluation(int studentId) {
+	public boolean isEvaluation(int studentId, int subjectId) {
 		boolean isGetEvaluation = true;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(IS_EVALUATION_SQL)) {
