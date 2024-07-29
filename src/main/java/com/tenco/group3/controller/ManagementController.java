@@ -93,6 +93,9 @@ public class ManagementController extends HttpServlet {
 		case "/break":
 			showBreakPage(request, response);
 			break;
+		case "/breakDetail":
+			showBreakDetailPage(request, response);
+			break;
 		case "/breakState":
 			handleBreakState(request, response, Integer.parseInt(request.getParameter("state")));
 			break;
@@ -262,6 +265,10 @@ public class ManagementController extends HttpServlet {
 	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = (int) getServletContext().getAttribute("breakApp");
 		request.setAttribute("isBreak", isBreak);
+		if (isBreak == ScheduleState.TRUE) {
+			List<BreakApp> breakAppList = breakAppRepository.getAllBreakAppInProgress();
+			request.setAttribute("breakAppList", breakAppList);
+		}
 		request.getRequestDispatcher("/WEB-INF/views/management/break.jsp").forward(request, response);
 	}
 
@@ -284,16 +291,30 @@ public class ManagementController extends HttpServlet {
 		}
 	}
 	
-	/** 
-	 * 새학기 적용을 실행할 지 다시 물어봄 (돌이킬수 없음)
+	/**
+	 * 휴학 상세 보기 페이지
 	 * @param request
 	 * @param response
 	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void showBreakDetailPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		BreakApp breakApp = breakAppRepository.getBreakAppDetail(Integer.parseInt(request.getParameter("id")));
+		request.setAttribute("breakApp", breakApp);
+		request.getRequestDispatcher("/WEB-INF/views/management/breakDetail.jsp").forward(request, response);
+	}
+
+	/**
+	 * 새학기 적용을 실행할 지 다시 물어봄 (돌이킬수 없음)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
 	 */
 	private void checkNewSemester(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		AlertUtil.hrefConfirm(response, "새학기를 적용 하시겠습니까 결정은 돌이킬 수 없습니다.", "/management/new-semester-confirm");
 	}
-	
+
 	/**
 	 * 새학기 적용 (새학기 적용을 누르는 시점은 모든 수업이 끝나고 다음 학기 학사일정을 진행하기 직전)
 	 * 
@@ -353,6 +374,9 @@ public class ManagementController extends HttpServlet {
 			break;
 		case "/staff":
 			handleCreateStaff(request, response);
+			break;
+		case "/break":
+			handleBreakState(request, response);
 			break;
 		default:
 			break;
@@ -433,6 +457,21 @@ public class ManagementController extends HttpServlet {
 			e.printStackTrace();
 			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
+	}
+	
+	private void handleBreakState(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int breakId = Integer.parseInt(request.getParameter("id"));
+		String status = request.getParameter("status");
+		String type = request.getParameter("type");
+		System.out.println("status : " + status); // TODO 삭제
+		System.out.println("id : " + breakId); // TODO 삭제
+		breakAppRepository.updateBreakAppStatus(breakId, status);
+		if ("승인".equals(status)) {
+			List<Integer> studentList = new ArrayList<>();
+			studentList.add(Integer.parseInt(request.getParameter("studentId")));
+			stuStatRepository.updateStatusById(studentList, "휴학", type);
+		}
+		response.sendRedirect("/management/break");
 	}
 
 }

@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<style>
+.list--table th {
+	padding: 3px 12px;
+	width: 150px;
+	text-align: center;
+}
+
+.list--table td {
+	padding: 1px 5px;
+	text-align: center;
+}
+</style>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
@@ -36,7 +48,7 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/tuition">등록금 고지서 발송</a>
+							<a href="/management/new-semester">새학기 적용</a>
 						</td>
 					</tr>
 					<tr>
@@ -51,7 +63,7 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/new-semester">새학기 적용</a>
+							<a href="/management/tuition">등록금 고지서 발송</a>
 						</td>
 					</tr>
 				</tbody>
@@ -84,7 +96,7 @@
 										<tr>
 											<td>${breakApp.appDate}</td>
 											<td>${breakApp.studentId}</td>
-											<td>${breakApp.type}휴학</td>
+											<td>${breakApp.type} 휴학</td>
 											<td>${breakApp.fromYear}년도&nbsp;${breakApp.fromSemester}학기</td>
 											<td>${breakApp.toYear}년도&nbsp;${breakApp.toSemester}학기</td>
 											<td>
@@ -95,6 +107,7 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="split--div"></div>
 						<a href="/management/breakEnd"><button type="submit" class="btn btn-primary ">휴학 신청 기간 종료</button></a>
 					</c:when>
 

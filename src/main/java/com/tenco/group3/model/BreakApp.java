@@ -1,5 +1,7 @@
 package com.tenco.group3.model;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +22,7 @@ public class BreakApp {
 	private int toYear; // 종료 년도
 	private int toSemester; // 종료 학기
 	private String type; // 휴학 종류(일반휴학 임신·출산·육아휴학 질병휴학 창업휴학 군입대휴학)
-	private String appDate; // 제출 날짜
+	private Date appDate; // 제출 날짜
 	private String status; // 신청 상태(처리중 등)
 	private String studentName; // 학생이름 <- 학생 ID 값 참조
 	private String departmentName; // 학과 이름

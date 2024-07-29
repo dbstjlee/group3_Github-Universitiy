@@ -87,10 +87,10 @@
 								</tr>
 								<tr>
 									<th>휴학 구분</th>
-									<td colspan="3"><input type="radio" name="breakType" id="nom" value="nom" checked="checked"> <label for="nomalBreak">일반 휴학</label> <input type="radio"
-										name="breakType" id="fam" value="fam"> <label for="familyBreak">임신·출산·육아 휴학</label> <input type="radio" name="breakType" id="med" value="med"> <label
-										for="medicalBreak">질병 휴학</label> <input type="radio" name="breakType" id="bus" value="bus"> <label for="businessBreak">창업 휴학</label> <input type="radio"
-										name="breakType" id="mil" value="mil"> <label for="militaryBreak">군입대 휴학</label></td>
+									<td colspan="3"><input type="radio" name="breakType" id="일반" value="일반" checked="checked"> <label for="일반">일반 휴학</label> <input type="radio"
+										name="breakType" id="임신·출산·육아" value="임신·출산·육아"> <label for="임신·출산·육아">임신·출산·육아 휴학</label> <input type="radio" name="breakType" id="질병" value="질병"> <label
+										for="질병">질병 휴학</label> <input type="radio" name="breakType" id="bus" value="bus"> <label for="businessBreak">창업 휴학</label> <input type="radio"
+										name="breakType" id="군입대" value="군입대"> <label for="군입대">군입대 휴학</label></td>
 								</tr>
 								<tr>
 									<td colspan="4">
