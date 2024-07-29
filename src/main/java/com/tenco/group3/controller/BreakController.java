@@ -1,6 +1,7 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.tenco.group3.model.User;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.util.AlertUtil;
+import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -128,9 +130,27 @@ public class BreakController extends HttpServlet {
 		case "/application":
 			handlerApplication(request, response, session);
 			break;
+		case "/cancle":
+			handlerCancleBreak(request, response, session);
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * 휴학 신청 취소 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @throws IOException 
+	 */
+	private void handlerCancleBreak(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+		User user = (User) session.getAttribute("principal");
+		breakAppRepository.cancleBreakApp(user.getId());
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script> alert('취소되었습니다.'); window.close(); </script>");
+		return;
 	}
 
 	/**
@@ -147,11 +167,10 @@ public class BreakController extends HttpServlet {
 		Student student = breakAppRepository.getStudentInfo(user.getId());
 		String breakType = request.getParameter("breakType");
 		int breakYear = Integer.parseInt(request.getParameter("breakYear"));
-		int semester = Integer.parseInt(request.getParameter("semester"));
-		int currentYear = currentDate.getYear();
+		int semester = SemesterUtil.getCurrentSemester();
+		int currentYear = SemesterUtil.getCurrentYear();
 		// TODO - 샘플데이터 값 학생정보에서 받아오기.
-		System.out.println("student : " + student);
-		BreakApp breakApp = BreakApp.builder().studentId(user.getId()).studentGrade(student.getGrade()).fromYear(currentYear).fromSemester(student.getSemester())
+		BreakApp breakApp = BreakApp.builder().studentId(user.getId()).studentGrade(student.getGrade()).fromYear(currentYear).fromSemester(semester)
 				.toYear(breakYear).toSemester(semester).type(breakType).build();
 		System.out.println("brakApp : " + breakApp);
 		breakAppRepository.addBreakApp(breakApp);

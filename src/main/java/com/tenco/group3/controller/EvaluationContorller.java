@@ -7,6 +7,7 @@ import com.tenco.group3.model.Evaluation;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.interfaces.EvaluationRepository;
+import com.tenco.group3.util.AlertUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -49,7 +50,6 @@ public class EvaluationContorller extends HttpServlet {
 	 */
 	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
-		session.setAttribute("principal", session);
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		request.setAttribute("subjectId", subjectId);
 		request.getRequestDispatcher("/WEB-INF/views/grade/evaluation.jsp").forward(request, response);
@@ -78,49 +78,42 @@ public class EvaluationContorller extends HttpServlet {
 	 */
 	private void handlerEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException {
-		Object principal = session.getAttribute("principal");
+		User user = (User) session.getAttribute("principal");
 
-		// 디버깅 코드 추가
-		if (principal != null) {
-			System.out.println("principal class: " + principal.getClass().getName());
-			System.out.println("principal content: " + principal.toString());
-		} else {
-			System.out.println("principal is null");
-		}
+		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 
-		if (principal instanceof User) {
-			User user = (User) principal;
-			int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-
+		// 방어적 코드 - answer 값이 null 값이면 창 닫기
+		if (request.getParameter("answer") != null) {
 			int[] answers = new int[7];
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 7; i++) { // 각 문항 답을 배열로 저장
 				answers[i] = Integer.parseInt(request.getParameter("answer" + (i + 1)));
-			} // 각 문항 답을 배열로 저장
+			}
 			String improvements = request.getParameter("improvements");
+			
+			Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
+					.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
+					.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
 
-			// 이미 평가를 작성한 경우 처리
+			// 이미 평가를 작성한 경우 처리 - 필터링 하는게 더 좋음(오류가 많이 발생해 일단 보류)
 			if (evaluationRepository.isEvaluation(user.getId(), subjectId)) {
 				response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out = response.getWriter();
 				out.println("<script> alert('이미 평가를 작성했습니다.'); window.close(); </script>");
 				return;
 			}
-
+			
 			// 평가 작성
-			Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
-					.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
-					.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
-
 			evaluationRepository.addEvaluation(evaluation);
 
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<script> alert('제출 되었습니다.'); window.close(); </script>");
+
 		} else {
-			// principal 객체가 User 타입이 아닐 경우 오류 처리
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			out.println("<script> alert('세션 정보가 올바르지 않습니다. 다시 로그인 해주세요.'); window.close(); </script>");
+			out.println("<script> alert('올바른 값을 제출하세요.'); window.close(); </script>");
+			return;
 		}
 	}
 

@@ -35,6 +35,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			+ " JOIN college_tb as co on de.college_id = co.id "
 			+ " WHERE st.id = ? ";
 
+	private static final String CANCLE_BRAKE_APP = " delete from break_app_tb where student_id = ? ";
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
 		try (Connection conn = DBUtil.getConnection()) {
@@ -157,6 +158,25 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 			e.printStackTrace();
 		}
 		return breakAppList;
+	}
+
+	@Override
+	public int cancleBreakApp(int studentId) {
+		int rowCount = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(CANCLE_BRAKE_APP)){
+				pstmt.setInt(1, studentId);
+				rowCount = pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowCount;
 	}
 
 }

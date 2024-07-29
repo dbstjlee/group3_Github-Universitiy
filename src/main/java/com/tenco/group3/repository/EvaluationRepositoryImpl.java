@@ -52,9 +52,9 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (!rs.isBeforeFirst()) {
-					isGetEvaluation = true;
-				} else {
 					isGetEvaluation = false;
+				} else {
+					isGetEvaluation = true;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

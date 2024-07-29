@@ -138,7 +138,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	private static final String NOM_STUDENT_RESET = " UPDATE subject_tb SET num_of_student = 0 WHERE id = ? ";
 
 	// 예비 수강신청 -> 수강 신청 초기화된 리스트
-	private static final String PRE_TO_APP_SUBJECT = " SELECT *, CASE WHEN pre.student_id IS NOT NULL THEN 1 ELSE 0 END AS confirmss FROM pre_stu_sub_tb WHERE student_id = ? ";
+	private static final String PRE_TO_APP_SUBJECT = " SELECT *, CASE WHEN student_id IS NOT NULL THEN 1 ELSE 0 END AS confirmss FROM pre_stu_sub_tb WHERE student_id = ? ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {

@@ -17,4 +17,6 @@ public interface BreakAppRepository {
 	Student getStudentInfo(int studentId);
 	// 승인 상태인 휴학 내역 모두 확인
 	List<BreakApp> getBreakAppByApproval();
+	
+	int cancleBreakApp(int studentId);
 }

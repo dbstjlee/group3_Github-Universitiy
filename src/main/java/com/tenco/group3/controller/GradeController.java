@@ -96,14 +96,14 @@ public class GradeController extends HttpServlet {
 		}
 		Grade grade = Grade.builder().subYear(year).semester(semester).type(type).build();
 		if (type.equals("교양") || type.equals("전공")) {
-			// TODO - 교양 or 전공 타입 성적 조회
-			List<Grade> gradeList = gradeRepository.getSemesterByType(2023000012, grade);
-//			List<Grade> gradeList = gradeRepository.getSemesterByType(user.getId(), grade);
+			// 교양 or 전공 타입 성적 조회
+//			List<Grade> gradeList = gradeRepository.getSemesterByType(2023000012, grade);
+			List<Grade> gradeList = gradeRepository.getSemesterByType(user.getId(), grade);
 			request.setAttribute("gradeList", gradeList);
 		} else {
-			// TODO - 전체 성적 조회
-			List<Grade> gradeList = gradeRepository.getSemester(2023000012, grade);
-//			List<Grade> gradeList = gradeRepository.getSemester(user.getId(), grade);
+			// 전체 성적 조회
+//			List<Grade> gradeList = gradeRepository.getSemester(2023000012, grade);
+			List<Grade> gradeList = gradeRepository.getSemester(user.getId(), grade);
 			request.setAttribute("gradeList", gradeList);
 		}
 		request.getRequestDispatcher("/WEB-INF/views/grade/semester.jsp").forward(request, response);
@@ -122,14 +122,14 @@ public class GradeController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO - 수강신청에서 학기, 연도 받기
 		User user = (User) session.getAttribute("principal");
-//		Grade year = gradeRepository.getSubYear(student.getId());
-//		Grade semester = gradeRepository.getSemester(student.getId());
-		List<Grade> gradeList = gradeRepository.getThisSemester(user.getId(), 1, 2023);
-		Grade thisGrade = gradeRepository.getThisSemesterGrade(user.getId(), 1, 2023);
-//		List<Grade> gradeList = gradeRepository.getThisSemester(student.getId(), semester.getSemester(), year.getSubYear());
-//		List<Grade> gradeTotalList = gradeRepository.getThisSemesterGrade(user.getId(), semester.getSemester(), year.getSubYear());
+		int year = gradeRepository.getCurrentYearBySubject(user.getId());
+		int semester = gradeRepository.getCurrentSemesterBySubject(user.getId());
+//		List<Grade> gradeList = gradeRepository.getThisSemester(user.getId(), 1, 2023);
+//		Grade gradeTotalList = gradeRepository.getThisSemesterGrade(user.getId(), 1, 2023);
+		List<Grade> gradeList = gradeRepository.getThisSemester(user.getId(), semester, year);
+		Grade gradeTotalList = gradeRepository.getThisSemesterGrade(user.getId(), semester, year);
 		request.setAttribute("gradeList", gradeList);
-		request.setAttribute("thisGrade", thisGrade);
+		request.setAttribute("thisGrade", gradeTotalList);
 		request.getRequestDispatcher("/WEB-INF/views/grade/thisSemester.jsp").forward(request, response);
 	}
 
