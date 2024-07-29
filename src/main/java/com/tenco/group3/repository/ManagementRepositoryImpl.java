@@ -245,8 +245,8 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	}
 
 	@Override
-	public boolean createStudent(Student student) {
-		boolean success = false;
+	public int createStudent(Student student, String pwSalt) {
+		int id = 0;
 		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 학생 테이블에 새로운 학생 등록
@@ -263,10 +263,9 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 새로운 학생의 학번 받아오기
-			int id = 0;
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_ID_LAST)) {
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
@@ -275,38 +274,39 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 유저 테이블에 새로운 학생을 유저로 등록
 			String query = INSERT_USER_SQL + "'student') ";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setInt(1, id);
-				pstmt.setString(2, SAMPLE_PASSWORD);
+				pstmt.setString(2, pwSalt);
 				pstmt.executeUpdate();
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return id;
 			}
 			// 학적 테이블에 입학으로 등록
 			try (PreparedStatement pstmt = conn.prepareStatement(INSERT_NEW_STUDENT)) {
 				pstmt.setInt(1, id);
 				pstmt.executeUpdate();
 				conn.commit();
-				success = true;
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
+				return 0;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return success;
+		return id;
 	}
 
 	@Override
-	public boolean createProfessor(Professor professor) {
-		boolean success = false;
+	public int createProfessor(Professor professor, String pwSalt) {
+		int id = 0;
 		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 교수 테이블에 새로운 교수 등록
@@ -322,10 +322,9 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 새로운 교수의 사번 받아오기
-			int id = 0;
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_PROFESSOR_ID_LAST)) {
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
@@ -334,30 +333,30 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 유저 테이블에 새로운 교수를 유저로 등록
 			String query = INSERT_USER_SQL + "'professor') ";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setInt(1, id);
-				pstmt.setString(2, SAMPLE_PASSWORD);
+				pstmt.setString(2, pwSalt);
 				pstmt.executeUpdate();
 				conn.commit();
-				success = true;
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return success;
+		return id;
 	}
 
 	@Override
-	public boolean createStaff(Staff staff) {
-		boolean success = false;
+	public int createStaff(Staff staff, String pwSalt) {
+		int id = 0;
 		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			// 직원 테이블에 새로운 직원 등록
@@ -372,10 +371,9 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 새로운 직원의 사번 받아오기
-			int id = 0;
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_ID_LAST)) {
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
@@ -384,25 +382,25 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 			// 유저 테이블에 새로운 직원를 유저로 등록
 			String query = INSERT_USER_SQL + "'staff') ";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setInt(1, id);
-				pstmt.setString(2, SAMPLE_PASSWORD);
+				pstmt.setString(2, pwSalt);
 				pstmt.executeUpdate();
 				conn.commit();
-				success = true;
 			} catch (Exception e) {
 				conn.rollback();
 				e.printStackTrace();
-				return success;
+				return 0;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return success;
+		return id;
 	}
 
 	@Override

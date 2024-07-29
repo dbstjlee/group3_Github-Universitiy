@@ -31,14 +31,14 @@ public interface ManagementRepository {
 	// 검색된 교수 수 확인
 	int getTotalProfessorCount(String id, String deptId);
 
-	// 학생 등록
-	boolean createStudent(Student student);
+	// 학생 등록 id 반환
+	int createStudent(Student student, String pwSalt);
 	
 	// 교수 등록
-	boolean createProfessor(Professor professor);
+	int createProfessor(Professor professor, String pwSalt);
 
 	// 직원 등록
-	boolean createStaff(Staff staff);
+	int createStaff(Staff staff, String pwSalt);
 
 	// 처리중인 휴학 신청이 있는지 조회
 	boolean checkBreakAppDone();
