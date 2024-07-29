@@ -1,19 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/subject.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subject.css">
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <title>수업-전체 강의 조회</title>
 
 </head>
 <body>
 
-	<div class="d-flex justify-content-center align-items-start"
-		style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 
 		<div class="sub--menu">
 			<div class="sub--menu--top">
@@ -23,8 +20,7 @@
 			<div class="sub--menu--mid">
 				<table class="sub--menu--table" border="1">
 					<tr>
-						<td><a href="/subject/allSubject" class="selected--menu">전체
-								강의 조회</a></td>
+						<td><a href="/subject/allSubject" class="selected--menu">전체 강의 조회</a></td>
 					</tr>
 
 					<tr>
@@ -50,42 +46,20 @@
 			<div class="sub--filter">
 				<form action="/subject/search" method="get">
 					<div>
-
-						<label for="subYear">연도 </label> <input type="number" value="2023"
-							name="subYear" id="subYear" min="2005" max="2033"> <label
-							for="subSemester">학기 </label> 
-						<select name="subSemester"
-							id="subSemester">
+						<label for="subYear">연도 </label> <input type="number" value="2023" name="subYear" id="subYear" min="2005" max="2033"> <label for="subSemester">학기 </label> <select
+							name="subSemester" id="subSemester">
 							<option value="1">1학기</option>
 							<option value="2">2학기</option>
-						</select> 
-						
-						
-						<label for="deptId">개설학과</label> 
-						<select name="deptId"
-							id="deptId">
-							
-								<option value="-1">전체</option>
+						</select> <label for="deptId">개설학과</label> <select name="deptId" id="deptId">
+							<option value="-1">전체</option>
 							<c:forEach var="depart" items="${departList}">
 								<option value="${depart.id}">${depart.name}</option>
 							</c:forEach>
-							
-							
-							
-						</select> 
-						
-						
-						
-						
-						
-						<label for="subName">강의명</label> <input type="text" name="name"
-							list="subName">
+						</select> <label for="subName">강의명</label> <input type="text" name="name" list="subName">
 						<button type="submit">
 							<ul class="d-flex justify-content-center" style="margin: 0;">
 								<li style="height: 24px; margin-right: 2px;">조회
-								<li style="height: 24px;"><span
-									class="material-symbols-outlined"
-									style="font-size: 18px; padding-top: 4px;">search</span>
+								<li style="height: 24px;"><span class="material-symbols-outlined" style="font-size: 18px; padding-top: 4px;">search</span>
 							</ul>
 						</button>
 					</div>
@@ -94,8 +68,7 @@
 			<c:choose>
 				<c:when test="${subjectList.isEmpty() == false}">
 					<h4>
-						<span style="font-weight: 600;">강의 목록</span>&nbsp; <span
-							style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
+						<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
 					</h4>
 					<table border="1" class="sub--list--table">
 						<thead>
@@ -127,14 +100,9 @@
 									<td>${subject.numOfStudent}</td>
 									<td>${subject.capacity}</td>
 									<td>
-										<ul class="d-flex justify-content-center sub--plan--view"
-											style="margin: 0;">
-											<li style="height: 24px;"><a
-												href="/subject/syllabus?subjectId=${subject.id}"
-												onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
-											<li style="height: 24px;"><a
-												href="/subject/syllabus?subjectId=${subject.id}"
-												onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
+										<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
+											<li style="height: 24px;"><a href="/subject/syllabus?subjectId=${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
+											<li style="height: 24px;"><a href="/subject/syllabus?subjectId=${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
 													class="material-symbols-outlined">content_paste_search</span></a>
 										</ul>
 									</td>
@@ -151,9 +119,7 @@
 									<span>${i}</span>
 								</c:when>
 								<c:otherwise>
-									<span><a
-										href="${pageContext.request.contextPath}/subject/allSubject?page=${i}"
-										style="font-weight: 700; color: #007bff">${i}</a></span>
+									<span><a href="${pageContext.request.contextPath}/subject/allSubject?page=${i}" style="font-weight: 700; color: #007bff">${i}</a></span>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

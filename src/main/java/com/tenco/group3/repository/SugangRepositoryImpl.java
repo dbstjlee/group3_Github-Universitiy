@@ -138,7 +138,34 @@ public class SugangRepositoryImpl implements SugangRepository {
 	private static final String NOM_STUDENT_RESET = " UPDATE subject_tb SET num_of_student = 0 WHERE id = ? ";
 
 	// 예비 수강신청 -> 수강 신청 초기화된 리스트
-	private static final String PRE_TO_APP_SUBJECT = " SELECT *, CASE WHEN student_id IS NOT NULL THEN 1 ELSE 0 END AS confirmss FROM pre_stu_sub_tb WHERE student_id = ? ";
+	private static final String PRE_TO_APP_SUBJECT = " SELECT "
+			+ "    pre.student_id, "
+			+ "    su.id, "
+			+ "    su.name AS '강의명', "
+			+ "    pr.name AS '담당교수', "
+			+ "    de.name AS '개설학과', "
+			+ "    co.name AS '단과대학', "
+			+ "    su.grades, "
+			+ "    su.type, "
+			+ "    su.sub_day, "
+			+ "    su.start_time, "
+			+ "    su.end_time, "
+			+ "    su.room_id, "
+			+ "    su.num_of_student, "
+			+ "    su.capacity, "
+			+ "    CASE "
+			+ "        WHEN pre.student_id IS NOT NULL THEN 1 "
+			+ "        ELSE 0 "
+			+ "    END AS confirm,"
+			+ "    (su.capacity - su.num_of_student) AS result "
+			+ " FROM "
+			+ "    (SELECT student_id, subject_id FROM pre_stu_sub_tb WHERE student_id = ?) AS pre "
+			+ " RIGHT JOIN subject_tb AS su ON pre.subject_id = su.id "
+			+ " INNER JOIN department_tb AS de ON su.dept_id = de.id "
+			+ " INNER JOIN college_tb AS co ON co.id = de.college_id "
+			+ " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id "
+			+ " WHERE pre.student_id = ? "
+			+ " ORDER BY su.id ASC ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -665,14 +692,15 @@ public class SugangRepositoryImpl implements SugangRepository {
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(PRE_TO_APP_SUBJECT)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					Sugang sugang = Sugang.builder().subjectId(rs.getInt("subject_id")).subjectName(rs.getString("강의명"))
+					Sugang sugang = Sugang.builder().subjectId(rs.getInt("id")).subjectName(rs.getString("강의명"))
 							.professorName(rs.getString("담당교수")).grades(rs.getInt("grades"))
 							.subjectDay(rs.getString("sub_day")).startTime(rs.getInt("start_time"))
 							.endTime(rs.getInt("end_time")).roomId(rs.getString("room_id"))
 							.numOfStudent(rs.getInt("num_of_student")).capacity(rs.getInt("capacity"))
-							.hasConfirmed(rs.getInt("confirm") == 1).build();
+							.hasConfirmed(false).build();
 					sugangList.add(sugang);
 				}
 			} catch (Exception e) {

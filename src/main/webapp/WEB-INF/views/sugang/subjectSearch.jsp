@@ -26,7 +26,7 @@
 		<main>
 			<h1>강의 시간표 조회</h1>
 			<div class="split--div"></div>
-			<div>
+			<div class="sub--filter">
 				<form action="${pageContext.request.contextPath}/sugang/subjectList/search" method="get" class="sub--filter">
 					<div>
 						<label for="type">강의 구분</label> <select name="type" id="type">
@@ -167,9 +167,10 @@
 			<main>
 				<c:choose>
 					<c:when test="${not empty sugangList}">
-						<table border="1">
-							<h3>강의 목록</h3>
-							<p>[총 ${totalCount}건]</p>
+						<h4>
+							<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
+						</h4>
+						<table border="1" class="sub--list--table">
 							<thead>
 								<tr>
 									<th>단과대학</th>
@@ -192,7 +193,7 @@
 										<td>${sugangItem.departName}</td>
 										<td>${sugangItem.subjectId}</td>
 										<td>${sugangItem.subjectType}</td>
-										<td>${sugangItem.subjectName}</td>
+										<td class="sub--list--name">${sugangItem.subjectName}</td>
 										<td>${sugangItem.professorName}</td>
 										<td>${sugangItem.grades}</td>
 										<td><c:choose>

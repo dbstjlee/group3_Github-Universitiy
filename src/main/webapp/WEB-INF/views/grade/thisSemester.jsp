@@ -56,7 +56,7 @@
 									<td>${grade.subYear}년</td>
 									<td>${grade.semester}학기</td>
 									<td>${grade.subjectId}</td>
-									<td>${grade.subjectName}</td>
+									<td class="sub--list--name">${grade.subjectName}</td>
 									<td>${grade.type}</td>
 									<td>${grade.grades}</td>
 									<td>${grade.grade}</td>

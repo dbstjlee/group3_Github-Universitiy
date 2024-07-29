@@ -191,17 +191,18 @@ public class SugangController extends HttpServlet {
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
-		List<Sugang> sugangPreList = sugangRepository.getApplicatedSubjectList(user.getId());
+		List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
 		List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
 		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 		int listType = 0;
+		
+		System.out.println(resetList);
 		// TODO - 수강신청 기간
 		if (true) {
 			listType = 1;
 		} else {
 			listType = 0;
 		}
-		System.out.println(listType);
 		if (listType == 0) {
 			request.setAttribute("sugangPreList", sugangPreList);
 			request.setAttribute("totalGrade", totalGrade);
@@ -381,7 +382,6 @@ public class SugangController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
-		System.out.println("type : " + type);
 		if (type.equals("1")) {
 			int rowCount = sugangRepository.deleteConfirmSubject(subjectId);
 			if (rowCount != 0) {
