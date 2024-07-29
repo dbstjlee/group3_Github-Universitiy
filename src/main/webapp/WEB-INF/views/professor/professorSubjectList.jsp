@@ -22,10 +22,10 @@
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
-					<td><a href="/subject/list/1">전체 강의 조회</a></td>
+					<td><a href="/subject/allSubject">전체 강의 조회</a></td>
 				</tr>
 				<tr>
-					<td><a href="/professor/subject" class="selected--menu">내 강의 조회</a></td>
+					<td><a href="${pageContext.request.contextPath}/professor/mySubject" class="selected--menu">내 강의 조회</a></td>
 				</tr>
 				<c:if test="${principal.userRole.equals(\"professor\") }">
 					<tr>
@@ -41,12 +41,12 @@
 		<h1>내 강의 조회</h1>
 		<div class="split--div"></div>
 		<div class="sub--filter">
-		<form action="/professor/subject" method="post">
+		<form action="/professor/mySubjectBySemester" method="post">
 			<div>
 			<select name="period">
-				<c:forEach items="${semesterList}" var="yearSemester">
+				<c:forEach items="${subjectList}" var="yearSemester">
 					<option value="${yearSemester.subYear}year${yearSemester.semester}">${yearSemester.subYear}년도&nbsp;${yearSemester.semester}학기</option>
-			</c:forEach>
+		</c:forEach>
 			</select>
 			<!-- 검색 버튼 -->
 			<button type="submit">

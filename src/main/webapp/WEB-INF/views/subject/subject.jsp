@@ -24,7 +24,7 @@
 					</tr>
 
 					<tr>
-						<td><a href="/professor/subject">내 강의 조회</a></td>
+						<td><a href="${pageContext.request.contextPath}/professor/mySubject">내 강의 조회</a></td>
 					</tr>
 
 

@@ -6,6 +6,7 @@ import java.util.List;
 import com.tenco.group3.model.Department;
 import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Syllabus;
+import com.tenco.group3.model.User;
 import com.tenco.group3.repository.DepartmentRepositoryImpl;
 import com.tenco.group3.repository.SubjectRepositoryImpl;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;
@@ -60,6 +61,7 @@ public class SubjectController extends HttpServlet {
 			}
 
 		}
+
 
 //	}
 
@@ -164,6 +166,9 @@ public class SubjectController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		
+		
 
 	}
 	
@@ -181,5 +186,10 @@ public class SubjectController extends HttpServlet {
             return;
         }
     }
+	
+	
+
+	
+	
 
 }

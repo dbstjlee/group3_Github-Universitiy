@@ -48,7 +48,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 			+ " where sub.sub_year  = ? and sub.semester =  ? and sub.name like ?  and (dept.id = ? OR ? = -1)  ";
 	
 	private static final String SELECT_SYLLABUS_BY_ID = " SELECT sy.subject_id, s.name, s.sub_year, s.semester, s.grades, s.type, s.sub_day, s.start_time, s.end_time, s.room_id, c.name college_name, p.name as professor_name, d.name as dept_name, p.tel, p.email, sy.overview, sy.objective, sy.textbook, sy.program FROM subject_tb s JOIN professor_tb p ON s.professor_id = p.id JOIN department_tb d ON p.dept_id = d.id JOIN syllabus_tb sy ON s.id = sy.subject_id JOIN room_tb r ON s.room_id = r.id JOIN college_tb c ON r.college_id = c.id WHERE subject_id = ? ";
-	
+
 	
 	@Override
 	public List<Subject> getSubjectAll(int limit, int offset) {
@@ -292,6 +292,8 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 
     }
+
+
 
 
 	

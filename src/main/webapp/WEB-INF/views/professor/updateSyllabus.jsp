@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>°­ÀÇ°èÈ¹¼­</title>
+<title>ê°•ì˜ê³„íšì„œ</title>
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
@@ -51,22 +51,23 @@ textarea {
 	<header>
 		<div class="header--top"></div>
 	</header>
-	<section>
-		<h2>°­ÀÇ °èÈ¹¼­ ¼öÁ¤</h2>
+	<c:set var="syllabus" items="${syllabus}">
+	<section >
+		<h2>ê°•ì˜ ê³„íšì„œ ìˆ˜ì •</h2>
 		<br> 
-		<form action="/professor/syllabus/update${syllabus.subjectId}" method="post">
+		<form action="/professor/update?subjectId=${syllabus.subjectId}" method="post">
 			<input type="hidden" name="_method" value="put"/>
-			<label>°­ÀÇ °³¿ä</label> <br> 
+			<label>ê°•ì˜ ê°œìš”</label> <br> 
 			<textarea rows="5" cols="50" name="overview">${syllabus.overview}</textarea>
-			<br> <label>¼ö¾÷ ¸ñÇ¥</label> <br> 
+			<br> <label>ìˆ˜ì—… ëª©í‘œ</label> <br> 
 			<textarea rows="5" cols="50" name="objective">${syllabus.objective}</textarea>
-			<br> <label>±³Àç</label> <br> <input type="text" name="textbook" value="${syllabus.textbook}"> <br>  
-			<label>ÁÖº° °èÈ¹</label> <br> 
+			<br> <label>êµì¬</label> <br> <input type="text" name="textbook" value="${syllabus.textbook}"> <br>  
+			<label>ì£¼ë³„ ê³„íš</label> <br> 
 			<textarea rows="10" cols="50" name="program">${syllabus.program}</textarea>
 			<br>
-			<button type="submit" class="submit--button">Á¦Ãâ</button>
+			<button type="submit" class="submit--button" >ì œì¶œ</button>
 		</form>
 	</section>
-
+	</c:set>
 </body>
 </html>
