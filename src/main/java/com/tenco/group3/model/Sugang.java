@@ -30,4 +30,5 @@ public class Sugang {
 	private boolean hasConfirmed;
 	private int result;
 	private int sub;
+	private int sugangId;
 }
