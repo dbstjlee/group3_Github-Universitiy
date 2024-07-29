@@ -75,8 +75,6 @@
 								</tr>
 								<tr>
 									<th>기간</th>
-									<c:set var="today" value="<%=new java.util.Date()%>" />
-									<fmt:formatDate value="${thisYear}" pattern="yyyy" var="thisYear" />
 									<td colspan="3">${thisYear}년도${thisSemester}학기부터<select id="breakYear" name="breakYear">
 											<c:forEach begin="0" end="2" var="i">
 												<option value="${thisYear + i}">${thisYear + i}</option>
