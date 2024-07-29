@@ -38,7 +38,7 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/tuition">등록금 고지서 발송</a>
+							<a href="/management/new-semester">새학기 적용</a>
 						</td>
 					</tr>
 					<tr>
@@ -53,7 +53,7 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/new-semester">새학기 적용</a>
+							<a href="/management/tuition">등록금 고지서 발송</a>
 						</td>
 					</tr>
 				</tbody>

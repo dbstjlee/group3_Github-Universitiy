@@ -96,7 +96,12 @@ public class ManagementController extends HttpServlet {
 		case "/breakState":
 			handleBreakState(request, response, Integer.parseInt(request.getParameter("state")));
 			break;
+		case "/sugang":
+			break;
 		case "/new-semester":
+			checkNewSemester(request, response);
+			break;
+		case "/new-semester-confirm":
 			handleNewSemester(request, response);
 			break;
 		default:
@@ -202,7 +207,7 @@ public class ManagementController extends HttpServlet {
 	 */
 	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if ((int) getServletContext().getAttribute("sugang") != ScheduleState.END) {
-			AlertUtil.backAlert(response, "휴학 신청 기간이 끝나야 등록금 고지서 발송이 가능합니다.");
+			AlertUtil.backAlert(response, "수강 신청 기간이 끝나야 등록금 고지서 발송이 가능합니다.");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/management/tuition.jsp").forward(request, response);
 		}
@@ -271,13 +276,24 @@ public class ManagementController extends HttpServlet {
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, int state) throws ServletException, IOException {
 		if (state == 1 && !managementRepository.checkBreakAppDone()) {
 			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
+			return;
 		} else {
 			scheduleStateRepository.updateSchedule("break_app", state);
 			getServletContext().setAttribute("breakApp", state);
 			showBreakPage(request, response);
 		}
 	}
-
+	
+	/** 
+	 * 새학기 적용을 실행할 지 다시 물어봄 (돌이킬수 없음)
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void checkNewSemester(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		AlertUtil.hrefConfirm(response, "새학기를 적용 하시겠습니까 결정은 돌이킬 수 없습니다.", "/management/new-semester-confirm");
+	}
+	
 	/**
 	 * 새학기 적용 (새학기 적용을 누르는 시점은 모든 수업이 끝나고 다음 학기 학사일정을 진행하기 직전)
 	 * 
