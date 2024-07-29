@@ -34,8 +34,28 @@ public class UserRepositoryImpl implements UserRepository {
 	private static final String SELECT_STAFF_BY_FINDID = " SELECT id, name " + "	FROM staff_tb " + "	WHERE name = ? "
 			+ "	AND email = ? ";
 
-	// 정보 조회
+	// 임시 비밀번호 발급
+	// 학생
+	private static final String SELECT_STUDENT_FOR_TEMPWD = " SELECT s.name, s.email, s.id, u.user_role, u.password "
+			+ " FROM user_tb as u " 
+			+ " JOIN student_tb as s on u.id = s.id "
+			+ " WHERE s.name = ? AND s.email = ? AND s.id = ? ; ";
+	
+	// 교수 
+	private static final String SELECT_PROFESSOR_FOR_TEMPWD = " SELECT p.name, p.email, p.id, u.user_role, u.password "
+			+ " FROM user_tb as u "
+			+ " JOIN professor_tb as p on u.id = p.id "
+			+ " WHERE p.name = ? AND p.email = ? AND p.id = ? ; ";
+	
+	// 직원
+	private static final String SELECT_STAFF_FOR_TEMPWD = " SELECT s.name, s.email, s.id, u.user_role, u.password "
+			+ " FROM user_tb as u "
+			+ " JOIN staff_tb as s on u.id = s.id "
+			+ " WHERE s.name = ? AND s.email = ? AND s.id = ? ; ";
+	
+	
 
+	// 정보 조회
 	// 학생 정보 조회
 	private static final String SELECT_STUDENT_INFO_BY_ID = " SELECT s.id, s.name, s.birth_date, "
 			+ " s.gender, s.address, s.tel, s.email, s.grade, s.semester, s.entrance_date, s.graduation_date, "
@@ -67,17 +87,18 @@ public class UserRepositoryImpl implements UserRepository {
 			+ " tel =  ? , email =  ?  WHERE id = ? ; ";
 
 	// 학생 프로필 정보 조회
-		private static final String SELECT_STUDENT_INFO_MAIN = " SELECT st.id, st.name, st.email, st.grade, st.semester, "
-				+ " stat.status, dept.name as deptname FROM student_tb as st " + " JOIN department_tb as dept ON st.dept_id = dept.id "
-				+ " JOIN stu_stat_tb as stat on st.id = stat.student_id "
-				+ " WHERE stat.to_date = '9999-01-01' AND st.id = ? ; ";
+	private static final String SELECT_STUDENT_INFO_MAIN = " SELECT st.id, st.name, st.email, st.grade, st.semester, "
+			+ " stat.status, dept.name as deptname FROM student_tb as st "
+			+ " JOIN department_tb as dept ON st.dept_id = dept.id "
+			+ " JOIN stu_stat_tb as stat on st.id = stat.student_id "
+			+ " WHERE stat.to_date = '9999-01-01' AND st.id = ? ; ";
 
 	// 학생 학적 변동 조회
 	private static final String SELECT_STUDENT_STAT = " SELECT student_id, status, from_date, description from stu_stat_tb where student_id = ? ; ";
-	
+
 	// 비밀번호 수정
 	private static final String UPDATE_USER_PASSWORD = "  UPDATE user_tb SET password = ? WHERE id = ?; ";
-	
+
 	/**
 	 * ID로 로그인
 	 */
@@ -98,7 +119,7 @@ public class UserRepositoryImpl implements UserRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(user); //TODO 삭제
+		System.out.println(user); // TODO 삭제
 		return user;
 	}
 
@@ -327,16 +348,10 @@ public class UserRepositoryImpl implements UserRepository {
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_INFO_MAIN)) {
 				pstmt.setInt(1, id);
 				ResultSet rs = pstmt.executeQuery();
-				if(rs.next()) {
-					student = Student.builder()
-							.id(rs.getInt("id"))
-							.name(rs.getString("name"))
-							.email(rs.getString("email"))
-							.deptname(rs.getString("deptname"))
-							.grade(rs.getInt("grade"))
-							.semester(rs.getInt("semester"))
-							.status(rs.getString("status"))
-							.build();
+				if (rs.next()) {
+					student = Student.builder().id(rs.getInt("id")).name(rs.getString("name"))
+							.email(rs.getString("email")).deptname(rs.getString("deptname")).grade(rs.getInt("grade"))
+							.semester(rs.getInt("semester")).status(rs.getString("status")).build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -358,12 +373,8 @@ public class UserRepositoryImpl implements UserRepository {
 				pstmt.setInt(1, id);
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
-					student = Student.builder()
-							.id(rs.getInt("student_id"))
-							.status(rs.getString("status"))
-							.fromDate(rs.getDate("from_date"))
-							.description(rs.getString("description"))
-							.build();
+					student = Student.builder().id(rs.getInt("student_id")).status(rs.getString("status"))
+							.fromDate(rs.getDate("from_date")).description(rs.getString("description")).build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -393,5 +404,93 @@ public class UserRepositoryImpl implements UserRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 임시 비밀번호 발급
+	 */
+
+	// 학생
+	@Override
+	public User getStudentByNameAndEmailAndId(String username, String email, int id) {
+		User user = null;
+		try (Connection conn = DBUtil.getConnection()) {
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_FOR_TEMPWD)) {
+				pstmt.setString(1, username);
+				pstmt.setString(2, email);
+				pstmt.setInt(3, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					user = User.builder()
+							.id(rs.getInt("id"))
+							.username(rs.getString("name"))
+							.email(rs.getString("email"))
+							.userRole(rs.getString("user_role"))
+							.password(rs.getString("password"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	// 교수 
+	@Override
+	public User getProfessorByNameAndEmailAndId(String username, String email, int id) {
+		User user = null;
+		try (Connection conn = DBUtil.getConnection()) {
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_PROFESSOR_FOR_TEMPWD)) {
+				pstmt.setString(1, username);
+				pstmt.setString(2, email);
+				pstmt.setInt(3, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					user = User.builder()
+							.id(rs.getInt("id"))
+							.username(rs.getString("name"))
+							.email(rs.getString("email"))
+							.userRole(rs.getString("user_role"))
+							.password(rs.getString("password"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	// 직원
+	@Override
+	public User getStaffByNameAndEmailAndId(String username, String email, int id) {
+		User user = null;
+		try (Connection conn = DBUtil.getConnection()) {
+			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_FOR_TEMPWD)) {
+				pstmt.setString(1, username);
+				pstmt.setString(2, email);
+				pstmt.setInt(3, id);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					user = User.builder()
+							.id(rs.getInt("id"))
+							.username(rs.getString("name"))
+							.email(rs.getString("email"))
+							.userRole(rs.getString("user_role"))
+							.password(rs.getString("password"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
 	}
 }

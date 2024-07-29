@@ -60,7 +60,7 @@
 			<h2>아이디 찾기</h2>
 			<br>
 		</div>
-		<form action="${pageContext.request.contextPath}/user/findId" method="post">
+		<form action="/user/findId" method="post">
 		<table class="search--table">
 			<colgroup>
 				<col class="col1">

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,21 +11,21 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
-.header-top {
+.header--top {
 	width: 100%;
 	height: 40px;
 	background-color: #031734;
 }
 
-.section-header {
+.section--header {
 	text-align: center;
 }
 
-.search-table {
+.search--table {
 	width: 400px;
 }
 
-.search-table td {
+.search--table td {
 	padding: 4px;
 	text-align: left;
 }
@@ -39,7 +38,7 @@
 	width: 80%;
 }
 
-.submit-button {
+.submit--button {
 	margin-top: 20px;
 	margin-left: 150px;
 	padding: 10px 15px;
@@ -53,62 +52,47 @@
 </head>
 <body>
 	<header>
-		<div class="header-top"></div>
+		<div class="header--top"></div>
 	</header>
 	<section>
-		<div class="section-header">
+		<div class="section--header">
 			<h2>비밀번호 찾기</h2>
 			<br>
 		</div>
 		<form action="${pageContext.request.contextPath}/user/findPwd" method="post">
-		<table class="search-table">
-			<colgroup>
-				<col class="col1">
-				<col class="col2">
-			</colgroup>
-			<tbody>
-				<tr>
-					<td>
-						<label for="name">이름</label>
-					</td>
-					<td>
-						<input type="text" name="name" id="name">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label for="userId">아이디</label>
-					</td>
-					<td>
-						<input type="text" name="userId" id="userId">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label for="email">이메일</label>
-					</td>
-					<td>
-						<input type="text" name="email" id="email">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<label for="student">학생</label>
-						<input type="radio" name="userRole" value="student" id="student">
-						
-						<label for="professor">교수</label>
-						<input type="radio" name="userRole" value="professor" id="professor">
-						
-						<label for="staff">직원</label>
+			<table class="search--table">
+				<colgroup>
+					<col class="col1">
+					<col class="col2">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td><label for="name">이름</label></td>
+						<td><input type="text" name="name" id="name"></td>
+					</tr>
+					<tr>
+						<td><label for="userId">아이디</label></td>
+						<td><input type="text" name="userId" id="userId"></td>
+					</tr>
+					<tr>
+						<td><label for="email">이메일</label></td>
+						<td><input type="text" name="email" id="email"></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+						<label for="student">학생</label> 
+						<input type="radio" name="userRole" value="student" id="student"> 
+						<label for="professor">교수</label> 
+						<input type="radio" name="userRole" value="professor" id="professor"> 
+						<label for="staff">직원</label> 
 						<input type="radio" name="userRole" value="staff" id="staff">
-					</td>
-				</tr>
-			</tbody>
-		</table>
-			<div class="button-container">
-				<button type="submit" class="submit-button">임시 비밀번호 발급받기</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="button--container">
+				<button type="submit" class="submit--button">임시 비밀번호 발급받기</button>
 			</div>
-		
 		</form>
 	</section>
 </body>

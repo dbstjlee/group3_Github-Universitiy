@@ -8,6 +8,7 @@ import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
+import com.tenco.group3.util.Define;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -82,6 +83,8 @@ public class UserController extends HttpServlet {
 			break;
 		case "/findId":
 			handleFindId(request, response);
+		case "/findPwd":
+			handleFindPwd(request, response);
 			break;
 		case "/password":
 			handleUpdatePassword(request, response);
@@ -91,7 +94,56 @@ public class UserController extends HttpServlet {
 			break;
 		}
 	}
-	
+
+	/**
+	 * 비밀번호 임시 발급
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void handleFindPwd(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String userRole = request.getParameter("userRole");
+		User user = null;
+
+		if (userRole.equals("student")) {
+			user = userRepository.getStudentByNameAndEmailAndId(name, email, userId);
+
+			// 교수일 때
+		} else if (userRole.equals("professor")) {
+			user = userRepository.getProfessorByNameAndEmailAndId(name, email, userId);
+
+			// 직원일 때
+		} else if (userRole.equals("staff")) {
+			user = userRepository.getStaffByNameAndEmailAndId(name, email, userId);
+		}
+		
+		// TODO - 유효성 검사
+
+			if(user == null) {
+				sendMessage(response, "아이디를 찾을 수 없습니다.");
+			}
+			
+			String tempPwd = Define.TEMP_PWD;
+
+			User updatedPwd = User.builder()
+	                .id(user.getId())
+	                .username(user.getUsername())
+	                .userRole(user.getUserRole())
+	                .email(user.getEmail())
+	                .password(tempPwd)
+	                .build();
+
+	        userRepository.getUpdatePassword(updatedPwd);
+	        request.setAttribute("updatedPwd", updatedPwd);
+	        request.getRequestDispatcher("/WEB-INF/views/user/temporaryPassword.jsp").forward(request, response);
+	}
+
 	/**
 	 * 알림 메시지
 	 * 
@@ -100,52 +152,49 @@ public class UserController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void sendMessage(HttpServletResponse response, String message) throws IOException {
-        PrintWriter out = response.getWriter();
-        response.setContentType("text/html; charset=UTF-8");
-        out.println("<script>alert('" + message + "');");
-        out.println("history.go(-1);</script>");
-        out.close();
-    }
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html; charset=UTF-8");
+		out.println("<script>alert('" + message + "');");
+		out.println("history.go(-1);</script>");
+		out.close();
+	}
 
 	/**
 	 * 비밀번호 변경 기능
 	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void handleUpdatePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		 User principal = (User) request.getSession().getAttribute("principal");
-	        String currentPassword = request.getParameter("currentPassword");
-	        String newPassword = request.getParameter("newPassword");
-	        String confirmPassword = request.getParameter("confirmPassword");
+		User principal = (User) request.getSession().getAttribute("principal");
+		String currentPassword = request.getParameter("currentPassword");
+		String newPassword = request.getParameter("newPassword");
+		String confirmPassword = request.getParameter("confirmPassword");
 
-	        if (principal == null) {
-	            response.sendRedirect(request.getContextPath() + "/login");
-	            return;
-	        }
+		if (principal == null) {
+			response.sendRedirect(request.getContextPath() + "/user/logIn");
+			return;
+		}
 
-	        if (!principal.getPassword().equals(currentPassword)) {
-	            // 현재 비밀번호가 일치하지 않는 경우
-	        	sendMessage(response, "현재 비밀번호가 일치하지 않습니다.");
-	            return;
-	        }
+		if (!principal.getPassword().equals(currentPassword)) {
+			// 현재 비밀번호가 일치하지 않는 경우
+			sendMessage(response, "현재 비밀번호가 일치하지 않습니다.");
+			return;
+		}
 
-	        if (!newPassword.equals(confirmPassword)) {
-	            // 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
-	        	sendMessage(response, "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-	            return;
-	        }
+		if (!newPassword.equals(confirmPassword)) {
+			// 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
+			sendMessage(response, "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+			return;
+		}
 
-	        // 비밀번호 변경
-	        User updatedUser = User.builder()
-	                .id(principal.getId())
-	                .password(newPassword)
-	                .build();
+		// 비밀번호 변경
+		User updatedUser = User.builder().id(principal.getId()).password(newPassword).build();
 
-	        userRepository.getUpdatePassword(updatedUser);
-	        sendMessage(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 사용해주세요.");
-	    }
+		userRepository.getUpdatePassword(updatedUser);
+		sendMessage(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 사용해주세요.");
+	}
 
 	/**
 	 * id 찾기
@@ -165,25 +214,25 @@ public class UserController extends HttpServlet {
 
 		// TODO - 유효성 검사
 
-			// 학생일 때
-			if (userRole.equals("student")) {
-				user = userRepository.getStudentByNameAndEmail(name, email);
-				
+		// 학생일 때
+		if (userRole.equals("student")) {
+			user = userRepository.getStudentByNameAndEmail(name, email);
+
 			// 교수일 때
-			} else if (userRole.equals("professor")) {
-				user = userRepository.getProfessorByNameAndEmail(name, email);
+		} else if (userRole.equals("professor")) {
+			user = userRepository.getProfessorByNameAndEmail(name, email);
 
 			// 직원일 때
-			} else if (userRole.equals("staff")) {
-				user = userRepository.getStaffByNameAndEmail(name, email);
-			}
-			if(user == null) {
-				sendMessage(response, "아이디를 찾을 수 없습니다.");
-			}
-			request.setAttribute("user", user);
-			request.setAttribute("userRole", userRole);
-			request.getRequestDispatcher("/WEB-INF/views/user/findSuccess.jsp").forward(request, response);
+		} else if (userRole.equals("staff")) {
+			user = userRepository.getStaffByNameAndEmail(name, email);
 		}
+		if (user == null) {
+			sendMessage(response, "아이디를 찾을 수 없습니다.");
+		}
+		request.setAttribute("user", user);
+		request.setAttribute("userRole", userRole);
+		request.getRequestDispatcher("/WEB-INF/views/user/findSuccess.jsp").forward(request, response);
+	}
 
 	/**
 	 * 로그인 기능

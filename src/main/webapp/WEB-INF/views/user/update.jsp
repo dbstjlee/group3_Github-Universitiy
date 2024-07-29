@@ -15,23 +15,23 @@
 			<table class="sub--menu--table" border="1">
 				<tbody>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+						<td><a href="info/student" class="selected--menu">내 정보 조회</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/password">비밀번호 변경</a></td>
+						<td><a href="/password">비밀번호 변경</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></td>
+						<td><a href="/break/application">휴학 신청</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
+						<td><a href="/break/list">휴학 내역 조회</a></td>
 
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/tuition/list">등록금 내역 조회</a></td>
+						<td><a href="/tuition/list">등록금 내역 조회</a></td>
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+						<td><a href="/tuition/payment">등록금 납부 고지서</a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -39,7 +39,7 @@
 	</div>
 
 	<!-- 개인 정보 수정  -->
-	<form action="${pageContext.request.contextPath}/info/update" method="post">
+	<form action="/info/update" method="post">
 		<main>
 			<h1>개인 정보 수정</h1>
 			<div class="split--div"></div>
@@ -62,7 +62,7 @@
 							</tr>
 							<tr>
 								<td><label for="password">비밀번호 확인</label></td>
-								<td><input type="password" name="password" id="password" class="input--box" value=""></td>
+								<td><input type="password" name="password" id="password" class="input--box"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -87,7 +87,7 @@
 							</tr>
 							<tr>
 								<td><label for="password">비밀번호 확인</label></td>
-								<td><input type="password" name="password" id="password" class="input--box" value=""></td>
+								<td><input type="password" name="password" id="password" class="input--box"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -112,7 +112,7 @@
 							</tr>
 							<tr>
 								<td><label for="password">비밀번호 확인</label></td>
-								<td><input type="password" name="password" id="password" class="input--box" value=""></td>
+								<td><input type="password" name="password" id="password" class="input--box"></td>
 							</tr>
 						</tbody>
 					</table>

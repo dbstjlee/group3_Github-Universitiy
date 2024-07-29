@@ -15,6 +15,12 @@ public interface UserRepository {
 	
 	User getStaffByNameAndEmail(String username, String email); // 이름과 이메일로 직원 id 조회
 	
+	User getStudentByNameAndEmailAndId(String username, String email, int id); // 이름과 이메일, id로 학생 조회
+	
+	User getProfessorByNameAndEmailAndId(String username, String email, int id); // 이름과 이메일, id로 교수 조회
+	
+	User getStaffByNameAndEmailAndId(String username, String email, int id); // 이름과 이메일, id로 직원 조회
+	
 	Student getStudentInfo(int id); // 학생 정보 조회
 	
 	Professor getProfessorInfo(int id); // 교수 정보 조회
