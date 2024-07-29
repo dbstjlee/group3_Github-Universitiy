@@ -1,13 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/notice.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/notice.css">
 
-<div class="d-flex justify-content-center align-items-start"
-	style="min-width: 100em;">
+<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
 			<h2>학사정보</h2>
@@ -56,9 +53,7 @@
 			<select class="input--box" name="type">
 				<option value="title">제목</option>
 				<option value="keyword">제목+내용</option>
-			</select> 
-			<input type="text" name="keyword" class="input--box" placeholder="검색어를 입력하세요"> 
-			<input type="submit" class="button" value="검색">
+			</select> <input type="text" name="keyword" class="input--box" placeholder="검색어를 입력하세요"> <input type="submit" class="button" value="검색">
 		</form>
 		<table class="table">
 			<thead>
@@ -72,13 +67,11 @@
 			</thead>
 			<tbody>
 				<c:forEach var="noticeList" items="${noticeList}">
-					<tr class="second--tr"
-						onclick="location.href='/notice/read?id=${noticeList.id}'">
+					<tr class="second--tr" onclick="location.href='/notice/read?id=${noticeList.id}'">
 						<td>${noticeList.id}</td>
 						<td>${noticeList.category}</td>
 						<td>${noticeList.title}</td>
-						<td><fmt:formatDate value="${noticeList.createdTime}"
-								pattern="yyyy-MM-dd HH:mm:ss" /></td>
+						<td><fmt:formatDate value="${noticeList.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 						<td>${noticeList.views}</td>
 					</tr>
 				</c:forEach>
@@ -90,14 +83,24 @@
 				<c:choose>
 					<c:when test="${ i == currentPage }">
 						<c:choose>
-							<c:when test="">
-							
+							<c:when test="${type != null || keyword != null}">
+								<li><a href="/notice/search?type=${type}&keyword=${keyword}" class="selected--page">${i}</a></li>
 							</c:when>
+							<c:otherwise>
+								<li><a href="/notice/search?page=${i}" class="selected--page">${i}</a></li>
+							</c:otherwise>
 						</c:choose>
-						<span class="current-page">${i}&nbsp;&nbsp;</span>
 					</c:when>
+
 					<c:otherwise>
-						<span><a href="/notice/list?page=${i}">${i}</a>&nbsp;&nbsp;</span>
+						<c:choose>
+							<c:when test="${type != null || keyword != null}">
+								<li><a href="/notice/search?type=${type}&keyword=${keyword}">${i}</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="/notice/search?page=${i}">${i}</a></li>
+							</c:otherwise>
+						</c:choose>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

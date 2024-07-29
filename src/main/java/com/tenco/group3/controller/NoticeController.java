@@ -73,17 +73,17 @@ public class NoticeController extends HttpServlet {
 	private void handleSearchNotice(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String searchType = request.getParameter("type");
+		String type = request.getParameter("type");
 	    String keyword = request.getParameter("keyword");
 	    int page = 1; // 기본 페이지 번호
 	    int pageSize = 6; // 페이지 당 공지사항 개수
 
 		List<Notice> noticeList = new ArrayList<>();
 	    
-	    if (searchType.equals("title")) {
+	    if (type.equals("title")) {
 	        // 제목으로 검색
 	        noticeList = noticeRepository.searchTitle(keyword, pageSize, 0);
-	    } else if (searchType.equals("keyword")) {
+	    } else if (type.equals("keyword")) {
 	        // 제목 + 내용으로 검색
 	        noticeList = noticeRepository.searchTitleAndContent(keyword, pageSize, 0);
 	    }
@@ -107,6 +107,8 @@ public class NoticeController extends HttpServlet {
 		request.setAttribute("totalPages", totalpages);
 		request.setAttribute("currentPage", noticeList.size());
 	    request.setAttribute("noticeList", noticeList);
+	    request.setAttribute("keyword", keyword);
+	    request.setAttribute("type", type);
 		request.getRequestDispatcher("/WEB-INF/views/notice/searchResult.jsp").forward(request, response);
 	}
 
