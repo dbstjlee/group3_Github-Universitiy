@@ -13,4 +13,7 @@ public interface TuitionRepository {
 	
 	// 등록금 발송 (tuition 테이블에 insert)
 	int addAllTuitions(List<Tuition> tuitionList);
+	
+	// 등록금 미납 학생 모두 조회
+	List<Integer> getAllStudentsNon();
 }

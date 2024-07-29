@@ -247,7 +247,9 @@ public class ManagementController extends HttpServlet {
 		getServletContext().setAttribute("tuition", ScheduleState.END);
 		scheduleStateRepository.updateSchedule("tuition", ScheduleState.END);
 		// TODO 등록금을 납부 하지 않은 학생을 제적 (미등록) 으로 학적 변동
-		int rowCount = 0;
+		List<Integer> studentList = tuitionRepository.getAllStudentsNon();
+
+		int rowCount = stuStatRepository.updateStatusById(studentList, "제적", "미등록");
 		String msg = rowCount + "명 제적 처리 완료";
 		AlertUtil.hrefAlert(response, msg, "/management/studentList");
 	}

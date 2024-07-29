@@ -34,6 +34,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			+ " JOIN stu_stat_tb ss ON s.id = ss.student_id AND ss.to_date = '9999-01-01' "
 			+ " WHERE ss.status IN ('입학','복학') ";
 	private static final String ADD_ALL_TUITIONS = " INSERT INTO tuition_tb (student_id, tui_year, semester, tui_amount, sch_type, sch_amount) VALUES ";
+	private static final String SELECT_ALL_STUDENTS_NON = " SELECT student_id FROM tuition_tb WHERE status = 0 AND tui_year = ? AND semester = ? ";
 
 	@Override
 	public Tuition getTuitionByStudentId(int studentId) {
@@ -136,6 +137,26 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			e.printStackTrace();
 		}
 		return rowCount;
+	}
+	
+	@Override
+	public List<Integer> getAllStudentsNon() {
+		List<Integer> studentList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_STUDENTS_NON)) {
+			pstmt.setInt(1, SemesterUtil.getCurrentYear());
+			pstmt.setInt(2, SemesterUtil.getCurrentSemester());
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					studentList.add(rs.getInt("student_id"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return studentList;
 	}
 
 }
