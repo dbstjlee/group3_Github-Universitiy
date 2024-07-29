@@ -65,10 +65,9 @@
 						<select name="deptId"
 							id="deptId">
 							
-							
+								<option value="-1">전체</option>
 							<c:forEach var="depart" items="${departList}">
-
-								<option value="depart.id">${depart.name}</option>
+								<option value="${depart.id}">${depart.name}</option>
 							</c:forEach>
 							
 							
@@ -131,10 +130,10 @@
 										<ul class="d-flex justify-content-center sub--plan--view"
 											style="margin: 0;">
 											<li style="height: 24px;"><a
-												href="/subject/syllabus/${subject.id}"
+												href="/subject/syllabus?subjectId=${subject.id}"
 												onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
 											<li style="height: 24px;"><a
-												href="/subject/syllabus/${subject.id}"
+												href="/subject/syllabus?subjectId=${subject.id}"
 												onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
 													class="material-symbols-outlined">content_paste_search</span></a>
 										</ul>
