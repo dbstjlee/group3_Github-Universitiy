@@ -3,6 +3,8 @@ package com.tenco.group3.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.Staff;
@@ -369,15 +371,20 @@ public class UserRepositoryImpl implements UserRepository {
 	 * 학생 학적 변동 조회
 	 */
 	@Override
-	public Student getStudentStat(int id) {
-		Student student = null;
+	public List<Student> getStudentStat(int id) {
+		List<Student> studentInfo = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection()) {
 			try (PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_STAT)) {
 				pstmt.setInt(1, id);
 				ResultSet rs = pstmt.executeQuery();
-				if (rs.next()) {
-					student = Student.builder().id(rs.getInt("student_id")).status(rs.getString("status"))
-							.fromDate(rs.getDate("from_date")).description(rs.getString("description")).build();
+				while (rs.next()) {
+					studentInfo.add(
+							Student.builder()
+							.id(rs.getInt("student_id"))
+							.status(rs.getString("status"))
+							.fromDate(rs.getDate("from_date"))
+							.description(rs.getString("description"))
+							.build());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -385,7 +392,7 @@ public class UserRepositoryImpl implements UserRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return student;
+		return studentInfo;
 	}
 
 	/**

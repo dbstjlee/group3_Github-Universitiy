@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.Staff;
@@ -143,7 +144,7 @@ public class InfoController extends HttpServlet {
 
 			// 3. 세션 아이디로 DB 정보 조회
 			Student studentInfo = userRepository.getStudentInfo(principal.getId());
-			Student studentStat = userRepository.getStudentStat(principal.getId());
+			List<Student> studentStat = userRepository.getStudentStat(principal.getId());
 
 			if (principal.getId() == studentInfo.getId()) {
 				request.setAttribute("studentInfo", studentInfo);

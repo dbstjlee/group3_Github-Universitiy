@@ -1,10 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/myInfo.css">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/resources/css/myInfo.css">
 
 <!-- My 상세 메뉴 -->
-<form action="${pageContext.request.contextPath}/info/student" method="get">
-	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
+<form action="${pageContext.request.contextPath}/info/student"
+	method="get">
+	<div class="d-flex justify-content-center align-items-start"
+		style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
 				<h2>MY</h2>
@@ -15,22 +20,33 @@
 				<table class="sub--menu--table" border="1">
 					<tbody>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/info/student"
+								class="selected--menu">내 정보 조회</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/user/password">비밀번호 변경</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/user/password">비밀번호
+									변경</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/break/application">휴학 신청</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/break/application">휴학
+									신청</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/break/list">휴학 내역 조회</a></td>
+							<td><a href="${pageContext.request.contextPath}/break/list">휴학
+									내역 조회</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/tuition/check">등록금 내역 조회</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/tuition/check">등록금
+									내역 조회</a></td>
 						</tr>
 						<tr>
-							<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/tuition/payment">등록금
+									납부 고지서</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -99,27 +115,30 @@
 				</tbody>
 			</table>
 
-			<button type="button" onclick="location.href='/info/update'" class="btn btn-dark update--button">수정하기</button>
+			<button type="button" onclick="location.href='/info/update'"
+				class="btn btn-dark update--button">수정하기</button>
 			<hr>
 			<h4>
 				<span style="font-weight: 600;">학적 변동 내역</span>
 			</h4>
-			<table border="1" class="stat--table">
-				<thead>
-					<tr>
-						<th>변동 일자</th>
-						<th>변동 구분</th>
-						<th>세부</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>${studentStat.fromDate}</td>
-						<td>${studentStat.status}</td>
-						<td>${studentStat.description}</td>
-					</tr>
-				</tbody>
-			</table>
+				<table border="1" class="stat--table">
+					<thead>
+						<tr>
+							<th>변동 일자</th>
+							<th>변동 구분</th>
+							<th>세부</th>
+						</tr>
+					</thead>
+			<c:forEach var="studentStat" items="${studentStat}">
+					<tbody>
+						<tr>
+							<td>${studentStat.fromDate}</td>
+							<td>${studentStat.status}</td>
+							<td>${studentStat.description}</td>
+						</tr>
+					</tbody>
+			</c:forEach>
+				</table>
 		</main>
 	</div>
 </form>

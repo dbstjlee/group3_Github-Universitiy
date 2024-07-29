@@ -1,5 +1,7 @@
 package com.tenco.group3.repository.interfaces;
 
+import java.util.List;
+
 import com.tenco.group3.model.Professor;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
@@ -35,7 +37,7 @@ public interface UserRepository {
 	
 	Student getStudentInfoMain(int id); // 학생 프로필 정보 조회
 	
-	Student getStudentStat(int id); // 학생 학적 변동 조회
+	List<Student> getStudentStat(int id); // 학생 학적 변동 조회
 	
 	void getUpdatePassword(User user); // 사용자 비밀번호 변경
 	
