@@ -17,4 +17,5 @@ public class CollegeTuition {
 	private String college_name;
 	private int amount;
 	
+	
 }

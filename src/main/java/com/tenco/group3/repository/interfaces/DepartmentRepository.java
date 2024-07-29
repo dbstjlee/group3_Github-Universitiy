@@ -12,4 +12,5 @@ public interface DepartmentRepository {
 	int updateDepartment(Department department); // 학과 수정
 	int deleteDepartment(int id); // 학과 삭제
 	Department getDepartmentById(int id);
+	List<College> getAllColleges();
 }

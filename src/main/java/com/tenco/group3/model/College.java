@@ -15,5 +15,4 @@ public class College {
 
 	private int id;
 	private String name;
-	
 }

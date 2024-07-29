@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.CollegeTuition;
-import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.interfaces.CollTuitRepository;
-import com.tenco.group3.repository.interfaces.CollegeRepository;
 import com.tenco.group3.util.DBUtil;
 
 public class CollTuitRepositoryImpl implements CollTuitRepository{
@@ -20,6 +18,7 @@ public class CollTuitRepositoryImpl implements CollTuitRepository{
 	private static final String ADD_COLLEGE_TUITION = " INSERT INTO coll_tuit_tb (college_id, amount) VALUES (?, ?) ";
 	private static final String UPDATE_COLLEGE_TUITION = " update coll_tuit_tb set amount = ? where college_id = ? ";
 	private static final String DELETE_COLLEGE_TUITION = " delete from coll_tuit_tb where college_id = ? ";
+	private static final String SELECT_COLLTUIT_BY_ID = " select * from coll_tuit_tb where college_id ";
 	
 	@Override
 	public List<CollegeTuition> getAllColTuit() {
@@ -90,8 +89,25 @@ public class CollTuitRepositoryImpl implements CollTuitRepository{
 
 	@Override
 	public CollegeTuition getCollegeTutionById(int id) {
-		return null;
-		
+		CollegeTuition collegeTuition = null;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_COLLTUIT_BY_ID)){
+			pstmt.setInt(1, id);
+			try (ResultSet rs = pstmt.executeQuery()){
+				if(rs.next()) {
+					collegeTuition = CollegeTuition.builder()
+										.college_id(rs.getInt("college_id"))
+										.college_name(rs.getString("college_name"))
+										.amount(rs.getInt("amount"))
+										.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return collegeTuition;
 	}
 
 

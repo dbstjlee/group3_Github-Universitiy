@@ -26,4 +26,9 @@ public interface SubjectRepository {
 	
 	Syllabus getSyllabusById(int subjectId);
 	
+	List<Subject> getAllSubject(); // 강의 전체 조회
+	int addSubject(Subject subject); // 강의 등록
+	int updateSubject(Subject subject); // 강의 수정
+	int deleteSubject(int id); // 강의 삭제
+	Subject getAndminSubjectById(int id);
 }

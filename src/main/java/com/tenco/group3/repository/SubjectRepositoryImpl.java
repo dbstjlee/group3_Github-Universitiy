@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Syllabus;
 import com.tenco.group3.repository.interfaces.SubjectRepository;
@@ -49,6 +50,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 	
 	private static final String SELECT_SYLLABUS_BY_ID = " SELECT sy.subject_id, s.name, s.sub_year, s.semester, s.grades, s.type, s.sub_day, s.start_time, s.end_time, s.room_id, c.name college_name, p.name as professor_name, d.name as dept_name, p.tel, p.email, sy.overview, sy.objective, sy.textbook, sy.program FROM subject_tb s JOIN professor_tb p ON s.professor_id = p.id JOIN department_tb d ON p.dept_id = d.id JOIN syllabus_tb sy ON s.id = sy.subject_id JOIN room_tb r ON s.room_id = r.id JOIN college_tb c ON r.college_id = c.id WHERE subject_id = ? ";
 
+	private static final String SELECT_ALL_ADMIN_SUBJECT = " select * from subject_tb ";
+	private static final String ADD_ADMIN_SUBJECT = " INSERT INTO subject_tb (name, professor_id, room_id, dept_id, type, sub_year, semester, sub_day, start_time, end_time, grades, capacity, num_of_student) "
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+	private static final String UPDATE_ADMIN_SUBJECT = " UPDATE subject_tb SET name = ?, room_id = ?, sub_day = ?, start_time = ?, end_time = ?, capacity = ? WHERE id = ? ";
+	private static final String DELETE_ADMIN_SUBJECT = " DELETE FROM subject_tb WHERE id = ? ";
+	private static final String SELECT_ADMIN_SUBJECT_BY_ID = " SELECT * FROM subject_tb WHERE id = ? ";
 	
 	@Override
 	public List<Subject> getSubjectAll(int limit, int offset) {
@@ -295,9 +302,173 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
 
 
+	/**
+	 * 강의 조회
+	 */
+	@Override
+	public List<Subject> getAllSubject() {
+		List<Subject> subjects = new ArrayList<>();
+		
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ADMIN_SUBJECT)){
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				subjects.add(Subject.builder()
+								.id(rs.getInt("id"))
+								.name(rs.getString("name"))
+								.professorId(rs.getInt("professor_id"))
+								.roomId(rs.getString("room_id"))
+								.deptId(rs.getInt("dept_id"))
+								.type(rs.getString("type"))
+								.subYear(rs.getInt("sub_year"))
+								.semester(rs.getInt("semester"))
+								.subDay(rs.getString("sub_day"))
+								.startTime(rs.getInt("start_time"))
+								.endTime(rs.getInt("end_time"))
+								.grades(rs.getInt("grades"))
+								.capacity(rs.getInt("capacity"))
+								.numOfStudent(rs.getInt("num_of_student"))
+								.build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subjects;
+	}
 
-	
 
-	
+	/**
+	 * 강의 등록
+	 */
+	@Override
+	public int addSubject(Subject subject) {
+		int resultCount = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(ADD_ADMIN_SUBJECT)){
+				pstmt.setString(1, subject.getName());
+		        pstmt.setInt(2, subject.getProfessorId());
+		        pstmt.setString(3, subject.getRoomId());
+		        pstmt.setInt(4, subject.getDeptId());
+		        pstmt.setString(5, subject.getType());
+		        pstmt.setInt(6, subject.getSubYear());
+		        pstmt.setInt(7, subject.getSemester());
+		        pstmt.setString(8, subject.getSubDay());
+		        pstmt.setInt(9, subject.getStartTime());
+		        pstmt.setInt(10, subject.getEndTime());
+		        pstmt.setInt(11, subject.getGrades());
+		        pstmt.setInt(12, subject.getCapacity());
+		        pstmt.setInt(13, subject.getNumOfStudent());
+		        resultCount = pstmt.executeUpdate();
+		        conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultCount;
+	}
 
+
+	/**
+	 * 강의 수정
+	 */
+	@Override
+	public int updateSubject(Subject subject) {
+		int resultCount = 0;
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_ADMIN_SUBJECT)) {
+				pstmt.setString(1, subject.getName());
+				pstmt.setString(2, subject.getRoomId());
+				pstmt.setString(3, subject.getSubDay());
+				pstmt.setInt(4, subject.getStartTime());
+				pstmt.setInt(5, subject.getEndTime());
+				pstmt.setInt(6, subject.getCapacity());
+				pstmt.setInt(7, subject.getId());
+				resultCount = pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultCount;
+	}
+
+
+
+	@Override
+	public int deleteSubject(int id) {
+		int resultCount = 0;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(DELETE_ADMIN_SUBJECT)){
+				conn.setAutoCommit(false);
+				pstmt.setInt(1, id);
+				resultCount = pstmt.executeUpdate();
+				
+				if (resultCount > 0) {
+		            conn.commit(); 
+		        } else {
+		            conn.rollback(); 
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace(); 
+		        try (Connection conn = DBUtil.getConnection()) {
+		            conn.rollback();
+		        } catch (SQLException ex) {
+		            ex.printStackTrace();
+		        }
+		    }
+		return resultCount;
+	}
+
+
+
+	@Override
+	public Subject getAndminSubjectById(int id) {
+		Subject subject = null;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ADMIN_SUBJECT_BY_ID)){
+			pstmt.setInt(1, id);
+			try (ResultSet rs = pstmt.executeQuery()){
+				if(rs.next()) {
+					subject = Subject.builder()
+							.id(rs.getInt("id"))
+							.name(rs.getString("name"))
+							.professorId(rs.getInt("professor_id"))
+							.roomId(rs.getString("room_id"))
+							.deptId(rs.getInt("dept_id"))
+							.type(rs.getString("type"))
+							.subYear(rs.getInt("sub_year"))
+							.semester(rs.getInt("semester"))
+							.subDay(rs.getString("sub_day"))
+							.startTime(rs.getInt("start_time"))
+							.endTime(rs.getInt("end_time"))
+							.grades(rs.getInt("grades"))
+							.capacity(rs.getInt("capacity"))
+							.numOfStudent(rs.getInt("num_of_student"))
+							.build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subject;
+	}
 }
+
+
+
+	
+
+	
+
+

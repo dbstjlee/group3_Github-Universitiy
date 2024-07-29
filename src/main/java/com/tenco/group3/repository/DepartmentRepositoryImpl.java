@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+import com.tenco.group3.model.College;
 import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;
 import com.tenco.group3.util.DBUtil;
@@ -19,7 +20,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository{
 	private static final String UPDATE_DEPARTMENT = " update department_tb set name = ? where id = ? ";
 	private static final String DELETE_DEPARTMENT = " delete from department_tb where id = ? ";
 	private static final String SELECT_DEPARTMENT_BY_ID = " SELECT * FROM department_tb WHERE id = ? ";
-	
+	private static final String SELECT_ALL_COLLEGES = " select * from college_tb order by id ASC ";
 	// 학과 전체 조회 
 	@Override
 	public List<Department> getAllDepartment() {
@@ -131,9 +132,31 @@ public class DepartmentRepositoryImpl implements DepartmentRepository{
 		}
 		return department;
 	}
-	
+
+	@Override
+	public List<College> getAllColleges() {
+		List<College> colleges = new ArrayList<>();
+
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_COLLEGES)) {
+			ResultSet rs = pstmt.executeQuery(); 
+			while (rs.next()) {
+				colleges.add(College.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return colleges;
+	}
+
+
 
 	
-	
 
+
+	
 }
+ 
+	
+	
+
