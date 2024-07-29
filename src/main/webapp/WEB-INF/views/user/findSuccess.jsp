@@ -51,7 +51,7 @@
 </style>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/user/findSuccess" method="get">
+	<form action="/user/findId" method="post">
 		<header>
 			<div class="header--top"></div>
 		</header>

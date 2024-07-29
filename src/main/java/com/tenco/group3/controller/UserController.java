@@ -8,7 +8,9 @@ import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
+import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
+import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -83,6 +85,7 @@ public class UserController extends HttpServlet {
 			break;
 		case "/findId":
 			handleFindId(request, response);
+			break;
 		case "/findPwd":
 			handleFindPwd(request, response);
 			break;
@@ -102,15 +105,38 @@ public class UserController extends HttpServlet {
 	 * @param response
 	 * @throws IOException
 	 * @throws ServletException
+	 * @throws NumberFormatException
+	 * @throws NullPointerException
 	 */
 	private void handleFindPwd(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		int userId = Integer.parseInt(request.getParameter("userId"));
+			throws IOException, ServletException, NumberFormatException, NullPointerException {
+
+		String userIdStrPwd = request.getParameter("userId");
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String userRole = request.getParameter("userRole");
 		User user = null;
 
+		// 유효성 검사
+
+		if (!ValidationUtil.isValidateName(name)) {
+			AlertUtil.backAlert(response, "이름을 다시 입력해주세요.");
+			return;
+		}
+
+		if (!ValidationUtil.isEmail(email)) {
+			AlertUtil.backAlert(response, "이메일을 다시 입력해주세요.");
+			return;
+		}
+
+		if (!ValidationUtil.isValidateId(userIdStrPwd)) {
+			AlertUtil.backAlert(response, "유효한 숫자 아이디를 다시 입력해주세요.");
+			return;
+		}
+
+		int userId = Integer.parseInt(userIdStrPwd);
+
+		// 학생일 때
 		if (userRole.equals("student")) {
 			user = userRepository.getStudentByNameAndEmailAndId(name, email, userId);
 
@@ -122,41 +148,19 @@ public class UserController extends HttpServlet {
 		} else if (userRole.equals("staff")) {
 			user = userRepository.getStaffByNameAndEmailAndId(name, email, userId);
 		}
-		
-		// TODO - 유효성 검사
 
-			if(user == null) {
-				sendMessage(response, "아이디를 찾을 수 없습니다.");
-			}
-			
-			String tempPwd = Define.TEMP_PWD;
+		if (user == null) {
+			AlertUtil.backAlert(response, "비밀번호를 찾을 수 없습니다.");
+		}
 
-			User updatedPwd = User.builder()
-	                .id(user.getId())
-	                .username(user.getUsername())
-	                .userRole(user.getUserRole())
-	                .email(user.getEmail())
-	                .password(tempPwd)
-	                .build();
+		String tempPwd = Define.TEMP_PWD;
 
-	        userRepository.getUpdatePassword(updatedPwd);
-	        request.setAttribute("updatedPwd", updatedPwd);
-	        request.getRequestDispatcher("/WEB-INF/views/user/temporaryPassword.jsp").forward(request, response);
-	}
+		User updatedPwd = User.builder().id(user.getId()).username(user.getUsername()).userRole(user.getUserRole())
+				.email(user.getEmail()).password(tempPwd).build();
 
-	/**
-	 * 알림 메시지
-	 * 
-	 * @param response
-	 * @param message
-	 * @throws IOException
-	 */
-	private void sendMessage(HttpServletResponse response, String message) throws IOException {
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html; charset=UTF-8");
-		out.println("<script>alert('" + message + "');");
-		out.println("history.go(-1);</script>");
-		out.close();
+		userRepository.getUpdatePassword(updatedPwd);
+		request.setAttribute("updatedPwd", updatedPwd);
+		request.getRequestDispatcher("/WEB-INF/views/user/temporaryPassword.jsp").forward(request, response);
 	}
 
 	/**
@@ -172,20 +176,34 @@ public class UserController extends HttpServlet {
 		String newPassword = request.getParameter("newPassword");
 		String confirmPassword = request.getParameter("confirmPassword");
 
+		// 로그인 안 한 경우
 		if (principal == null) {
 			response.sendRedirect(request.getContextPath() + "/user/logIn");
 			return;
 		}
 
-		if (!principal.getPassword().equals(currentPassword)) {
-			// 현재 비밀번호가 일치하지 않는 경우
-			sendMessage(response, "현재 비밀번호가 일치하지 않습니다.");
+		// 유효성 검사
+		if (!ValidationUtil.isValidatePwd(currentPassword) || !ValidationUtil.isValidatePwd(newPassword)
+				|| !ValidationUtil.isValidatePwd(confirmPassword)) {
+			AlertUtil.backAlert(response, "비밀번호는 6자 이상 20자 사이로 설정해주세요.");
 			return;
 		}
 
+		// 현재 비밀번호가 일치하지 않는 경우
+		if (!principal.getPassword().equals(currentPassword)) {
+			AlertUtil.backAlert(response, "현재 비밀번호가 일치하지 않습니다.");
+			return;
+		}
+
+		// 현재 비밀번호와 변경할 비밀번호가 동일할 경우
+		if (currentPassword.equals(newPassword)) {
+			AlertUtil.backAlert(response, "현재 비밀번호와 변경할 비밀번호가 동일합니다.");
+			return;
+		}
+
+		// 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
 		if (!newPassword.equals(confirmPassword)) {
-			// 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
-			sendMessage(response, "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+			AlertUtil.backAlert(response, "변경할 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
 			return;
 		}
 
@@ -193,7 +211,7 @@ public class UserController extends HttpServlet {
 		User updatedUser = User.builder().id(principal.getId()).password(newPassword).build();
 
 		userRepository.getUpdatePassword(updatedUser);
-		sendMessage(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 사용해주세요.");
+		AlertUtil.backAlert(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 변경해주세요.");
 	}
 
 	/**
@@ -210,25 +228,37 @@ public class UserController extends HttpServlet {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String userRole = request.getParameter("userRole");
+		System.out.println("userRole:" + userRole); // TODO 삭제
 		User user = null;
 
-		// TODO - 유효성 검사
+		// 유효성 검사
+
+		if (!ValidationUtil.isValidateName(name)) {
+			AlertUtil.backAlert(response, "이름을 다시 입력해주세요.");
+			return;
+		}
+
+		if (!ValidationUtil.isEmail(email)) {
+			AlertUtil.backAlert(response, "이메일을 다시 입력해주세요.");
+			return;
+		}
 
 		// 학생일 때
 		if (userRole.equals("student")) {
 			user = userRepository.getStudentByNameAndEmail(name, email);
-
 			// 교수일 때
 		} else if (userRole.equals("professor")) {
 			user = userRepository.getProfessorByNameAndEmail(name, email);
-
 			// 직원일 때
 		} else if (userRole.equals("staff")) {
 			user = userRepository.getStaffByNameAndEmail(name, email);
 		}
+
 		if (user == null) {
-			sendMessage(response, "아이디를 찾을 수 없습니다.");
+			AlertUtil.backAlert(response, "아이디를 찾을 수 없습니다.");
+			return;
 		}
+
 		request.setAttribute("user", user);
 		request.setAttribute("userRole", userRole);
 		request.getRequestDispatcher("/WEB-INF/views/user/findSuccess.jsp").forward(request, response);
@@ -245,15 +275,44 @@ public class UserController extends HttpServlet {
 	private void handleLogin(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		int id = Integer.parseInt(request.getParameter("id"));
+		String idStr = request.getParameter("id");
 		String password = request.getParameter("password");
 		String rememberId = request.getParameter("rememberId");
-		User principal = userRepository.getUserById(id);
 
+		// 유효성 검사(양식 확인)
+		// 아이디가 문자형일 때
+		if (!ValidationUtil.isValidateId(idStr)) {
+			AlertUtil.backAlert(response, "아이디를 다시 입력해주세요.");
+			return;
+		}
+
+		int id = Integer.parseInt(idStr);
+
+		if (!ValidationUtil.isValidatePwd(password)) {
+			AlertUtil.backAlert(response, "비밀번호는 6자 이상 20자 이하로 설정해주세요.");
+			return;
+		}
+
+		User principal = userRepository.getUserById(id);
+		System.out.println("principal:" + principal); // TODO 삭제
+
+		// 현재 아이디가 일치하지 않은 경우
+		if (principal == null || principal.getId() != id) {
+			AlertUtil.backAlert(response, "현재 아이디가 일치하지 않습니다.");
+			return;
+		}
+
+		// 현재 비밀번호가 일치하지 않거나 공백인 경우
+		if (!principal.getPassword().equals(password)) {
+			AlertUtil.backAlert(response, "현재 비밀번호가 일치하지 않습니다.");
+			return;
+		}
+
+		// 로그인 성공 시 세션 생성
 		if (principal != null && principal.getPassword().equals(password)) {
 			HttpSession session = request.getSession();
 
-			// 체크박스 - 체크 상태일 때
+			// 체크박스 - 체크 상태일 때(쿠키 생성)
 			if ("on".equals(rememberId)) {
 				Cookie cookie = new Cookie("id", String.valueOf(id));
 				cookie.setMaxAge(60 * 60 * 24);
@@ -271,9 +330,7 @@ public class UserController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
 		} else {
 			// 에러 메시지 (로그인 실패)
-			sendMessage(response, "아이디 또는 비밀번호가 틀립니다.");
-
-			request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
+			AlertUtil.backAlert(response, "아이디 또는 비밀번호가 틀립니다.");
 		}
 	}
 }

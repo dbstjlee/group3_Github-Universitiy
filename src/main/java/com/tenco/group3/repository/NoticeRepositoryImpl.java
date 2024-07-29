@@ -25,9 +25,9 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	
 	private static final String COUNT_ALL_NOTICES = " SELECT count(*) AS count FROM notice_tb; ";
 	
-	private static final String SEARCH_TITLE = " SELECT * FROM notice_tb WHERE title LIKE ?; ";
+	private static final String SEARCH_TITLE = " SELECT * FROM notice_tb WHERE title LIKE ? ORDER BY id DESC limit ? offset ? ; ";
 	
-	private static final String SEARCH_TITLE_AND_CONTENT = " SELECT * FROM notice_tb WHERE title AND content LIKE ? ";
+	private static final String SEARCH_TITLE_AND_CONTENT = " SELECT * FROM notice_tb WHERE title AND content LIKE ?  ORDER BY id DESC limit ? offset ? ";
 	
 	 private static final String UPDATE_VIEWS_COUNT = " UPDATE notice_tb SET views = views + 1 WHERE id = ? ";
 	
@@ -180,11 +180,13 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	 * 제목 검색
 	 */
 	@Override
-	public List<Notice> searchTitle(String title) {
+	public List<Notice> searchTitle(String title, int limit, int offset) {
 		List<Notice> noticeList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection()){
 			try (PreparedStatement pstmt = conn.prepareStatement(SEARCH_TITLE)){
 				pstmt.setString(1, "%" + title + "%");
+				pstmt.setInt(2, limit);
+				pstmt.setInt(3, offset);
 				ResultSet rs = pstmt.executeQuery();
 				while(rs.next()) {
 					noticeList.add(
@@ -210,11 +212,13 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	 * 제목 + 내용 검색
 	 */
 	@Override
-	public List<Notice> searchTitleAndContent(String titleAndcontent) {
+	public List<Notice> searchTitleAndContent(String titleAndcontent, int limit, int offset) {
 		List<Notice> noticeList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection()){
 			try (PreparedStatement pstmt = conn.prepareStatement(SEARCH_TITLE_AND_CONTENT)){
 				pstmt.setString(1, "%" + titleAndcontent + "%");
+				pstmt.setInt(2, limit);
+				pstmt.setInt(3, offset);
 				ResultSet rs = pstmt.executeQuery();
 				while(rs.next()) {
 					noticeList.add(
@@ -255,4 +259,5 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			e.printStackTrace();
 		}
 	}
+
 }

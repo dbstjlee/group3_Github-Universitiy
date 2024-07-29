@@ -13,6 +13,21 @@ public class ValidationUtil {
 				isLessThanOrEqual(str, 10) &&
 				containsWhitespace(str);
 	}
+	
+	// 유효한 아이디인지 확인
+	public static boolean isValidateId(String str) {
+		return isOnlyNumber(str) &&
+			   isNotOnlyWhitespace(str) &&
+			   containsWhitespace(str);
+	}
+	
+	// 유효한 비밀번호인지 확인
+	public static boolean isValidatePwd(String str) {
+		return isNotOnlyWhitespace(str) &&
+			   containsWhitespace(str) &&
+			   isLessThanOrEqual(str, 20) &&
+			   isMoreThanOrEqual(str, 6);
+	}
 
 	// 입력된 날짜가 오늘 이전인지 확인
 	public static boolean isDateBeforeToday(String dateStr) {
@@ -40,6 +55,16 @@ public class ValidationUtil {
 	public static boolean isOnlyKorean(String str) {
 		return str != null && Pattern.matches("^[가-힣]+$", str);
 	}
+	
+	// 숫자로만 이루어져 있는지 검사
+	public static boolean isOnlyNumber(String str) {
+		return str != null && Pattern.matches("^[0-9]+$", str);
+	}
+	
+	// 문자열이 이메일 형식으로 이루어져 있는지 검사
+	public static boolean isEmail(String str) {
+		return str != null && Pattern.matches("^[a-zA-Z0-9_+&*-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,10}$", str);
+	}
 
 	// 문자열 길이가 주어진 정수 이하 인지 검사
 	public static boolean isLessThanOrEqual(String str, int length) {
@@ -48,12 +73,12 @@ public class ValidationUtil {
 
 	// 문자열 길이가 주어진 정수 이상 인지 검사
 	public static boolean isMoreThanOrEqual(String str, int length) {
-		return str != null && str.length() <= length;
+		return str != null && str.length() >= length;
 	}
 
 	// 문자열에 공백이 포함되어 있는지 검사
 	public static boolean containsWhitespace(String str) {
-		return str != null && str.contains(" ");
+		return str != null && !str.contains(" ");
 	}
 
 	// 대한민국 주소 형식 정규 표현식

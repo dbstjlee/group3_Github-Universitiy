@@ -89,6 +89,11 @@
 			<c:forEach begin="1" end="${totalPages}" var="i">
 				<c:choose>
 					<c:when test="${ i == currentPage }">
+						<c:choose>
+							<c:when test="">
+							
+							</c:when>
+						</c:choose>
 						<span class="current-page">${i}&nbsp;&nbsp;</span>
 					</c:when>
 					<c:otherwise>
@@ -96,9 +101,6 @@
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
-			<div class="select--button">
-				<a href="/notice/list" class="button">목록</a>
-			</div>
 		</div>
 	</main>
 </div>

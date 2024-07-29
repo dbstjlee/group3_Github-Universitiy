@@ -75,17 +75,37 @@ public class NoticeController extends HttpServlet {
 
 		String searchType = request.getParameter("type");
 	    String keyword = request.getParameter("keyword");
+	    int page = 1; // 기본 페이지 번호
+	    int pageSize = 6; // 페이지 당 공지사항 개수
 
 		List<Notice> noticeList = new ArrayList<>();
 	    
 	    if (searchType.equals("title")) {
 	        // 제목으로 검색
-	        noticeList = noticeRepository.searchTitle(keyword);
+	        noticeList = noticeRepository.searchTitle(keyword, pageSize, 0);
 	    } else if (searchType.equals("keyword")) {
 	        // 제목 + 내용으로 검색
-	        noticeList = noticeRepository.searchTitleAndContent(keyword);
+	        noticeList = noticeRepository.searchTitleAndContent(keyword, pageSize, 0);
 	    }
+	    
 
+		try {
+			String pageStr = request.getParameter("page");
+
+			if (pageStr != null) {
+				page = Integer.parseInt(pageStr);
+			}
+		} catch (Exception e) {
+			page = 1;
+		}
+
+		int offset = (page - 1) * pageSize;
+
+		// 총 페이지 수 계산
+		int totalpages = (int) Math.ceil((double) noticeList.size() / pageSize);
+
+		request.setAttribute("totalPages", totalpages);
+		request.setAttribute("currentPage", noticeList.size());
 	    request.setAttribute("noticeList", noticeList);
 		request.getRequestDispatcher("/WEB-INF/views/notice/searchResult.jsp").forward(request, response);
 	}

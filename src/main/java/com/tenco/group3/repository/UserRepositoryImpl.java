@@ -135,7 +135,10 @@ public class UserRepositoryImpl implements UserRepository {
 				pstmt.setString(2, email);
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
-					student = User.builder().username(rs.getString("name")).id(rs.getInt("id")).build();
+					student = User.builder()
+							.username(rs.getString("name"))
+							.id(rs.getInt("id"))
+							.build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
