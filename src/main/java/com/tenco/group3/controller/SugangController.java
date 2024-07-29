@@ -28,6 +28,8 @@ public class SugangController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// 0 - 수강 신청 이전 기간 , 1 - 수강 신청 기간, 2 - 수강 신청 마감 이후 기간, 3 - 예비 수강 신청 기간
+//		int sugangDay = (int) getServletContext().getAttribute("Sugang");
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
 		// TODO - 수강 신청 기간이 아닐 때 접근 막고, 수강 신청 기간으로 변경시 신청 값이 강의 인원수 제한을
@@ -41,18 +43,20 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/pre":
 			// TODO - 예비 수강 신청 기간 처리
+//			if (sugangDay == 3) {
 			if (true) {
 				showPreliminaryList(request, response, session);
 			} else {
-				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
 			}
 			break;
 		case "/pre/search":
 			// TODO - 예비 수강 신청 기간 처리
+//			if (sugangDay == 3) {
 			if (true) {
 				showSearchPreliminary(request, response, session);
 			} else {
-				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
 			}
 			break;
 		case "/preAppList":
@@ -61,6 +65,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/application":
 			// TODO - 수강신청 기간 설정
+//			if (sugangDay == 1) {
 			if (true) {
 				showApplicationList(request, response, session);
 			} else {
@@ -69,6 +74,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/application/search":
 			// TODO - 수강신청 기간 설정
+//			if (sugangDay == 1) {
 			if (true) {
 				showSearchApplication(request, response, session);
 			} else {
@@ -77,6 +83,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/list":
 			// TODO - 수강신청 기간 설정
+//			if (sugangDay != 1 && sugangDay != 3) {
 			if (true) {
 				showListAppSubject(request, response, session);
 			} else {
@@ -190,25 +197,26 @@ public class SugangController extends HttpServlet {
 	private void showPreliminaryAppList(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
-		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
-		List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
-		List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
-		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 		int listType = 0;
-		
-		System.out.println(resetList);
+//		int sugangDay = (int) getServletContext().getAttribute("Sugang");
 		// TODO - 수강신청 기간
+//		if (sugangDay == 1) {
 		if (true) {
 			listType = 1;
 		} else {
 			listType = 0;
 		}
 		if (listType == 0) {
+			List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
+			int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 			request.setAttribute("sugangPreList", sugangPreList);
 			request.setAttribute("totalGrade", totalGrade);
 			request.setAttribute("listType", listType);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
 		} else if (listType == 1) {
+			List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
+			List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
+			int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 			request.setAttribute("sugangList", sugangList);
 			request.setAttribute("resetList", resetList);
 			request.setAttribute("totalGrade", totalGrade);
@@ -308,9 +316,10 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
+
 		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang);
 		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
-//		System.out.println(totalCount);
+
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.getRequestDispatcher("/WEB-INF/views/sugang/subjectList.jsp").forward(request, response);

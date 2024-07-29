@@ -6,7 +6,7 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/student.css">
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
 				<h2>My</h2>
@@ -56,36 +56,38 @@
 						<th>종류</th>
 						<th>제출 일</th>
 						<th>상태</th>
+						<th>신청서 확인</th>
 					</tr>
 					<c:forEach var="breakList" items="${breakList}">
 						<tr>
+							<td>${breakList.departmentName}</td>
 							<td>${breakList.studentId}</td>
 							<td>${breakList.studentName}</td>
 							<td>${breakList.studentGrade}</td>
 							<td>${breakList.fromYear}년도${breakList.fromSemester}학기부터${breakList.toYear}년도${breakList.toSemester}학기까지</td>
 							<c:choose>
-								<c:when test="${breakList.type eq 'nom'}">
+								<c:when test="${breakList.type == '일반'}">
 									<td>일반 휴학</td>
 								</c:when>
-								<c:when test="${breakList.type eq 'fam'}">
+								<c:when test="${breakList.type == '임신·출산·육아'}">
 									<td>임신·출산·육아휴학</td>
 								</c:when>
-								<c:when test="${breakList.type eq 'med'}">
+								<c:when test="${breakList.type == '질병'}">
 									<td>질병 휴학</td>
 								</c:when>
-								<c:when test="${breakList.type eq 'bus'}">
+								<c:when test="${breakList.type == '창업'}">
 									<td>창업 휴학</td>
 								</c:when>
-								<c:when test="${breakList.type eq 'mil'}">
+								<c:when test="${breakList.type == '군입대'}">
 									<td>군입대 휴학</td>
 								</c:when>
 							</c:choose>
 							<td>${breakList.appDate}</td>
-							<td><form action="${pageContext.request.contextPath}/break/detail" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=600,height=600,scrollbars=no');">
+							<td><span style="color: #767676; font-weight: 600"> ${breakList.status}</span></td>
+							<td><form action="${pageContext.request.contextPath}/break/detail" target="popupWindow" onsubmit="window.open('', 'popupWindow', 'width=500,height=600,scrollbars=no');">
 									<input type="hidden" name="breakId" value="${breakList.id}">
 									<button type="submit">조회</button>
 								</form></td>
-							<td><span style="color: #767676; font-weight: 600"> ${breakList.status}</span></td>
 						</tr>
 					</c:forEach>
 				</table>

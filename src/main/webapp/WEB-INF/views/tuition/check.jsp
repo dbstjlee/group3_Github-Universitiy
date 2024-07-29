@@ -6,7 +6,7 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/student.css">
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
 				<h2>My</h2>

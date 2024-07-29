@@ -49,8 +49,8 @@
 												<th>수강신청</th>
 											</tr>
 										</thead>
-										<c:forEach var="preSugang" items="${sugangPreList}">
-											<tbody>
+										<tbody>
+											<c:forEach var="preSugang" items="${sugangPreList}">
 												<tr>
 													<td>${preSugang.subjectId}</td>
 													<td>${preSugang.subjectName}</td>
@@ -58,11 +58,11 @@
 													<td>${preSugang.grades}</td>
 													<td><c:choose>
 															<c:when test="${preSugang.startTime < 10}">
-							${preSugang.subjectDay} 0${preSugang.startTime}:00~${preSugang.endTime}:00&nbsp;(${preSugang.roomId})								
-							</c:when>
+																${preSugang.subjectDay} 0${preSugang.startTime}:00~${preSugang.endTime}:00&nbsp;(${preSugang.roomId})								
+															</c:when>
 															<c:otherwise>
-							${preSugang.subjectDay} ${preSugang.startTime}:00~${preSugang.endTime}:00&nbsp;(${preSugang.roomId})							
-							</c:otherwise>
+																${preSugang.subjectDay} ${preSugang.startTime}:00~${preSugang.endTime}:00&nbsp;(${preSugang.roomId})							
+															</c:otherwise>
 														</c:choose></td>
 													<td>${preSugang.numOfStudent}</td>
 													<td>${preSugang.capacity}</td>
@@ -73,10 +73,9 @@
 														</form>
 													</td>
 												</tr>
-											</tbody>
-										</c:forEach>
+											</c:forEach>
+										</tbody>
 									</table>
-									<br> <br>
 								</div>
 							</c:when>
 							<c:otherwise>
@@ -93,8 +92,8 @@
 					<h1>수강 신청</h1>
 					<div class="split--div"></div>
 					<div class="d-flex justify-content-between align-items-start" style="width: 100%">
-						<c:choose>
-							<c:when test="${not empty resetList}">
+						<div>
+							<c:if test="${not empty resetList}">
 								<div>
 									<h4>
 										<span style="font-weight: 600;"> 정원 초과된 신청 내역&nbsp; </span>
@@ -112,8 +111,8 @@
 												<th>수강신청</th>
 											</tr>
 										</thead>
-										<c:forEach var="resetSugang" items="${resetList}">
-											<tbody>
+										<tbody>
+											<c:forEach var="resetSugang" items="${resetList}">
 												<tr>
 													<td>${resetSugang.subjectId}</td>
 													<td class="sub--list--name">${resetSugang.subjectName}</td>
@@ -121,11 +120,11 @@
 													<td>${resetSugang.grades}</td>
 													<td><c:choose>
 															<c:when test="${resetSugang.startTime < 10}">
-							${sugaresetSugangngItem.subjectDay} 0${resetSugang.startTime}:00~${resetSugang.endTime}:00&nbsp;(${resetSugang.roomId})								
-							</c:when>
+															${resetSugang.subjectDay} 0${resetSugang.startTime}:00~${resetSugang.endTime}:00&nbsp;(${resetSugang.roomId})								
+														</c:when>
 															<c:otherwise>
-							${resetSugang.subjectDay} ${resetSugang.startTime}:00~${resetSugang.endTime}:00&nbsp;(${resetSugang.roomId})							
-							</c:otherwise>
+															${resetSugang.subjectDay} ${resetSugang.startTime}:00~${resetSugang.endTime}:00&nbsp;(${resetSugang.roomId})							
+														</c:otherwise>
 														</c:choose></td>
 													<td>${resetSugang.numOfStudent}</td>
 													<td>${resetSugang.capacity}</td>
@@ -144,13 +143,14 @@
 															</c:otherwise>
 														</c:choose></td>
 												</tr>
-											</tbody>
-										</c:forEach>
+											</c:forEach>
+										</tbody>
 									</table>
-									<br> <br>
 								</div>
-							</c:when>
-							<c:when test="${not empty sugangList}">
+								<br>
+								<hr>
+							</c:if>
+							<c:if test="${not empty sugangList}">
 								<div>
 									<h4>
 										<span style="font-weight: 600;"> 신청 내역&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalGrade}학점]</span>
@@ -169,8 +169,8 @@
 												<th>수강신청</th>
 											</tr>
 										</thead>
-										<c:forEach var="sugang" items="${sugangList}">
-											<tbody>
+										<tbody>
+											<c:forEach var="sugang" items="${sugangList}">
 												<tr>
 													<td>${sugang.subjectId}</td>
 													<td class="sub--list--name">${sugang.subjectName}</td>
@@ -178,34 +178,36 @@
 													<td>${sugang.grades}</td>
 													<td><c:choose>
 															<c:when test="${sugang.startTime < 10}">
-							${sugang.subjectDay} 0${sugangItem.startTime}:00~${sugang.endTime}:00&nbsp;(${sugang.roomId})								
-							</c:when>
+															${sugang.subjectDay} 0${sugang.startTime}:00~${sugang.endTime}:00&nbsp;(${sugang.roomId})								
+														</c:when>
 															<c:otherwise>
-							${sugang.subjectDay} ${sugang.startTime}:00~${sugang.endTime}:00&nbsp;(${sugang.roomId})							
-							</c:otherwise>
+															${sugang.subjectDay} ${sugang.startTime}:00~${sugang.endTime}:00&nbsp;(${sugang.roomId})							
+														</c:otherwise>
 														</c:choose></td>
 													<td>${sugang.numOfStudent}</td>
 													<td>${sugang.capacity}</td>
 													<td class="sub--list--button--row">
 														<form action="${pageContext.request.contextPath}/sugang/application" method="post">
 															<input type="hidden" name="subjectId" value="${sugang.subjectId}"> <input type="hidden" name="type" value="1">
-															<button type="submit" onclick="return confirm('수강신청을 취소하시겠습니까?');" style="background-color: #a7a7a7;">취소</button>
+															<button type="submit" onclick="return confirm('수강신청을 취소하시겠습니까?');" style="background-color: #a7a7a7;">수강 취소</button>
 														</form>
 													</td>
 												</tr>
-											</tbody>
-										</c:forEach>
+											</c:forEach>
+										</tbody>
 									</table>
-									<br> <br>
 								</div>
-							</c:when>
-							<c:otherwise>
+							</c:if>
+							<br>
+							<hr>
+							<c:if test="${empty sugangList}">
 								<div>
 									<p>수강 신청 내역이 없습니다.</p>
 								</div>
-							</c:otherwise>
-						</c:choose>
+							</c:if>
+						</div>
 						<a href="${pageContext.request.contextPath}/sugang/application"><button class="preStuSubList--button">강의 검색</button></a>
+					</div>
 				</c:otherwise>
 			</c:choose>
 		</main>

@@ -6,7 +6,7 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/document.css">
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
 				<h2>My</h2>
@@ -89,7 +89,7 @@
 									<th>휴학 구분</th>
 									<td colspan="3"><input type="radio" name="breakType" id="일반" value="일반" checked="checked"> <label for="일반">일반 휴학</label> <input type="radio"
 										name="breakType" id="임신·출산·육아" value="임신·출산·육아"> <label for="임신·출산·육아">임신·출산·육아 휴학</label> <input type="radio" name="breakType" id="질병" value="질병"> <label
-										for="질병">질병 휴학</label> <input type="radio" name="breakType" id="bus" value="bus"> <label for="businessBreak">창업 휴학</label> <input type="radio"
+										for="질병">질병 휴학</label> <input type="radio" name="breakType" id="창업" value="창업"> <label for="businessBreak">창업 휴학</label> <input type="radio"
 										name="breakType" id="군입대" value="군입대"> <label for="군입대">군입대 휴학</label></td>
 								</tr>
 								<tr>

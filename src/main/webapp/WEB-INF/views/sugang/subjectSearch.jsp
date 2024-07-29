@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<!-- 좌측 메뉴 -->
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
@@ -164,12 +163,12 @@
 					</div>
 				</form>
 			</div>
-			<main>
-				<c:choose>
-					<c:when test="${not empty sugangList}">
-						<h4>
-							<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
-						</h4>
+			<c:choose>
+				<c:when test="${not empty sugangList}">
+					<h4>
+						<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
+					</h4>
+					<div>
 						<table border="1" class="sub--list--table">
 							<thead>
 								<tr>
@@ -186,8 +185,8 @@
 									<th>강의계획서</th>
 								</tr>
 							</thead>
-							<c:forEach var="sugangItem" items="${sugangList}">
-								<tbody>
+							<tbody>
+								<c:forEach var="sugangItem" items="${sugangList}">
 									<tr>
 										<td>${sugangItem.collegeName}</td>
 										<td>${sugangItem.departName}</td>
@@ -198,26 +197,28 @@
 										<td>${sugangItem.grades}</td>
 										<td><c:choose>
 												<c:when test="${sugangItem.startTime < 10}">
-							${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})								
-							</c:when>
+                                            ${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${searchItem.roomId})
+                                        </c:when>
 												<c:otherwise>
-							${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})							
-							</c:otherwise>
+                                            ${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${searchItem.roomId})
+                                        </c:otherwise>
 											</c:choose></td>
 										<td>${sugangItem.numOfStudent}</td>
 										<td>${sugangItem.capacity}</td>
-										<%-- 강의 계획서로 이동 --%>
 										<td><a href="">조회</a></td>
 									</tr>
-								</tbody>
-							</c:forEach>
+								</c:forEach>
+							</tbody>
 						</table>
-					</c:when>
-					<c:otherwise>
-						<p class="no--list--p">검색 결과 없음.</p>
-					</c:otherwise>
-				</c:choose>
-			</main>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div>
+						<p>검색 결과 없음.</p>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</main>
 	</div>
 </body>
 </html>

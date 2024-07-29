@@ -5,7 +5,7 @@
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <body>
-	<div class="d-flex justify-center align-items-start" style="min-width: 100em;">
+	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<!-- 좌측 메뉴 -->
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
@@ -235,7 +235,9 @@
 					</table>
 				</c:when>
 				<c:otherwise>
-					<p class="no--list--p">검색 결과 없음.</p>
+					<div>
+						<p class="no--list--p">검색 결과 없음.</p>
+					</div>
 				</c:otherwise>
 			</c:choose>
 		</main>

@@ -35,37 +35,38 @@
 					</tr>
 					<tr>
 						<th>주소</th>
-						<td>${breakApp.studentAdds}</td>
+						<td colspan="3">${breakApp.studentAdds}</td>
 					</tr>
 					<tr>
 						<th>기간</th>
-						<td>${breakApp.fromYear}년${breakApp.fromSemester}학기부터${breakApp.toYear}년${breakApp.toSemester}학기까지</td>
+						<td colspan="3">${breakApp.fromYear}년${breakApp.fromSemester}학기부터 ${breakApp.toYear}년 ${breakApp.toSemester}학기까지</td>
 					</tr>
 					<tr>
 						<th>휴학 구분</th>
 						<c:choose>
-							<c:when test="${breakApp.type eq 'nom'}">
-								<td>일반 휴학</td>
+							<c:when test="${breakApp.type == '일반'}">
+								<td colspan="3">일반 휴학</td>
 							</c:when>
-							<c:when test="${breakApp.type eq 'fam'}">
-								<td>임신·출산·육아휴학</td>
+							<c:when test="${breakApp.type == '임신·출산·육아'}">
+								<td colspan="3">임신·출산·육아휴학</td>
 							</c:when>
-							<c:when test="${breakApp.type eq 'med'}">
-								<td>질병 휴학</td>
+							<c:when test="${breakApp.type == '질병'}">
+								<td colspan="3">질병 휴학</td>
 							</c:when>
-							<c:when test="${breakApp.type eq 'bus'}">
-								<td>창업 휴학</td>
+							<c:when test="${breakApp.type == '창업'}">
+								<td colspan="3">창업 휴학</td>
 							</c:when>
-							<c:when test="${breakApp.type eq 'mil'}">
-								<td>군입대 휴학</td>
+							<c:when test="${breakApp.type == '군입대'}">
+								<td colspan="3">군입대 휴학</td>
 							</c:when>
 						</c:choose>
 					</tr>
 				</tbody>
 			</table>
-			<button type="submit">신청 취소</button>
+			<c:if test="${breakApp.status == '처리중'}">
+				<button type="submit">신청 취소</button>
+			</c:if>
 		</form>
-	</div>
 	</div>
 </body>
 </html>

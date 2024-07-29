@@ -113,7 +113,7 @@ public class BreakController extends HttpServlet {
 		// TODO - 학생 ID값 추가(세션에서 받음)
 		User user = (User) session.getAttribute("principal");
 		List<BreakApp> breakList = breakAppRepository.getBreakAppList(user.getId());
-//		System.out.println(breakList.toString());
+		System.out.println(breakList.toString());
 		request.setAttribute("breakList", breakList);
 		request.getRequestDispatcher("/WEB-INF/views/break/list.jsp").forward(request, response);
 	}
