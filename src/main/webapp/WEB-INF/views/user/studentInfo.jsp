@@ -121,15 +121,15 @@
 			<h4>
 				<span style="font-weight: 600;">학적 변동 내역</span>
 			</h4>
-				<table border="1" class="stat--table">
-					<thead>
-						<tr>
-							<th>변동 일자</th>
-							<th>변동 구분</th>
-							<th>세부</th>
-						</tr>
-					</thead>
-			<c:forEach var="studentStat" items="${studentStat}">
+			<table border="1" class="stat--table">
+				<thead>
+					<tr>
+						<th>변동 일자</th>
+						<th>변동 구분</th>
+						<th>세부</th>
+					</tr>
+				</thead>
+				<c:forEach var="studentStat" items="${studentStat}">
 					<tbody>
 						<tr>
 							<td>${studentStat.fromDate}</td>
@@ -137,8 +137,8 @@
 							<td>${studentStat.description}</td>
 						</tr>
 					</tbody>
-			</c:forEach>
-				</table>
+				</c:forEach>
+			</table>
 		</main>
 	</div>
 </form>

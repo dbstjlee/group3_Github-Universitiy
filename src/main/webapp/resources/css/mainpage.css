@@ -12,14 +12,14 @@
 }
 
 .main--page--img {
-	width: 1500px;
+	width: 1850px;
 	height: 500px;
 	margin-bottom: 40px;
 }
 
 
 .main--page--notice {
-	margin: 0 120px;
+	margin: 0 50px;
 }
 
 .main--page--notice tr td:first-of-type {
@@ -35,7 +35,7 @@
 	font-size: 19px;
 }
 .main--page--calander{
-	margin: 0 120px;
+	margin: 0 80px;
 }
 .main--page--calander tr td:first-of-type {
 	white-space: nowrap;

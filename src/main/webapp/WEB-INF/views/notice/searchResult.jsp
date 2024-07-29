@@ -84,10 +84,10 @@
 					<c:when test="${ i == currentPage }">
 						<c:choose>
 							<c:when test="${type != null || keyword != null}">
-								<li><a href="/notice/search?type=${type}&keyword=${keyword}" class="selected--page">${i}</a></li>
+								<li><a href="/notice/search?type=${type}&keyword=${keyword}">${i}</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="/notice/search?page=${i}" class="selected--page">${i}</a></li>
+								<li><a href="/notice/search?page=${i}">${i}</a></li>
 							</c:otherwise>
 						</c:choose>
 					</c:when>

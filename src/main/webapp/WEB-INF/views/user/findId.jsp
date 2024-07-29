@@ -15,20 +15,18 @@
 .header--top {
 	width: 100%;
 	height: 40px;
-	background-color: #031734;
+	background-color: rgb(3, 17, 95);
 }
 
 .section--header {
 	text-align: center;
-}
-
-.search--table {
-	width: 400px;
+	margin-top: 20px;
 }
 
 .search--table td {
 	padding: 4px;
 	text-align: left;
+	margin-right: 100px;
 }
 
 .col1 {
@@ -46,7 +44,7 @@
 	border: none;
 	border-radius: 10px;
 	color: white;
-	background-color: #142845;
+	background-color: rgb(3, 17, 95);
 	cursor: pointer; 
 }
 </style>

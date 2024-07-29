@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
 	background-color: #f7f6f6;
 	font-family: 'Noto Sans KR', sans-serif;
 }
@@ -91,6 +88,7 @@ label {
 	background-color: #fff;
 	margin-left: 5px;
 	padding: 1px 3px;
+	width: 180px;
 }
 
 #userId {
@@ -102,7 +100,7 @@ label {
 	width: 400px;
 	border: 1px solid #e8e6e6;
 	margin-top: 40px;
-	background-color: #031734;
+	background-color: rgb(3, 17, 95);
 	color: white;
 }
 

@@ -17,9 +17,6 @@
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -41,16 +38,16 @@ header {
 }
 
 .logo {
-	width: 320px;
-	height: 80px;
-	margin: 5px 50px 5px 10px;
+	width: 230px;
+	height: 100px;
+	margin: 5px 10px;
 	
 }
 
 .header--top {
 	min-width: 100em;
 	height: 40px; 
-	background-color: #031734;
+	background-color: rgb(3, 17, 95);
 	display: flex;
 	justify-content: right;
 } 
@@ -70,7 +67,7 @@ header {
 }
 
 .main--menu {
-	padding: 10px 5px;
+	padding: 5px 5px;
 	min-width: 100em;
 	height: 100px; 
 	background-color: white; /* #031734 */

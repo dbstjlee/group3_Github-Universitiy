@@ -9,7 +9,7 @@
 	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<div class="sub--menu">
 			<div class="sub--menu--top">
-				<h2>My</h2>
+				<h2>MY</h2>
 			</div>
 
 			<!-- 좌측 메뉴 -->
