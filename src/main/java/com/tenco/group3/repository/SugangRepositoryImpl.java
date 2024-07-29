@@ -11,6 +11,7 @@ import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Sugang;
 import com.tenco.group3.repository.interfaces.SugangRepository;
 import com.tenco.group3.util.DBUtil;
+import com.tenco.group3.util.SemesterUtil;
 
 public class SugangRepositoryImpl implements SugangRepository {
 
@@ -138,17 +139,6 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " INNER JOIN college_tb AS co ON co.id = de.college_id " + " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id "
 			+ " WHERE pre.student_id = ? " + " ORDER BY su.id ASC ";
 
-	// 정원이 만족된 과목 조회
-	private static final String SELECT_SUBJECT_SATIFIED = " SELECT * FROM subject_tb WHERE capacity >= num_of_student AND sub_year = 2023 AND semester = 1 ";
-
-	// 과목 id로 예비 수강 신청 내역 조회
-	private static final String SELECT_PRE_BY_SUBJECT = " SELECT * FROM pre_stu_sub_tb WHERE subject_id = ? ";
-
-	// stu_sub_tb에 insert
-	private static final String ADD_SUGANG = " INSERT INTO stu_sub_tb (student_id, subject_id, complete_grade) VALUES (?, ?, ?) ";
-
-	// 정원 초과된 과목 학생 수 0명으로
-	private static final String UPDATE_SUBJECT_OVER = " UPDATE subject_tb SET num_of_student = 0 WHERE capacity < num_of_student ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -754,107 +744,4 @@ public class SugangRepositoryImpl implements SugangRepository {
 		return sugangList;
 	}
 
-	@Override
-	public List<Subject> getAllSubjectSatisfied() {
-		List<Subject> subjectList = new ArrayList<Subject>();
-		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SELECT_SUBJECT_SATIFIED)) {
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-					Subject subject = Subject.builder().id(rs.getInt("id")).grades(rs.getInt("grades")).build();
-					subjectList.add(subject);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return subjectList;
-	}
-
-	@Override
-	public List<Sugang> getAllPreBySubject(List<Subject> subjectList) {
-		List<Sugang> sugangList = new ArrayList<Sugang>();
-		try (Connection conn = DBUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			for (Subject subject : subjectList) {
-
-				try (PreparedStatement pstmt = conn.prepareStatement(SELECT_PRE_BY_SUBJECT)) {
-					pstmt.setInt(1, subject.getId());
-					ResultSet rs = pstmt.executeQuery();
-					while (rs.next()) {
-						Sugang sugang = Sugang.builder()
-							.studentId(rs.getInt("student_id"))
-							.subjectId(rs.getInt("subject_id"))
-							.grades(subject.getGrades())
-							.build();
-						sugangList.add(sugang);
-					}
-				} catch (Exception e) {
-					conn.rollback();
-					e.printStackTrace();
-				}
-			}
-			conn.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return sugangList;
-	}
-
-	@Override
-	public void deletePreConfirmSubject(List<Subject> subjectList) {
-		try (Connection conn = DBUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			for (Subject subject : subjectList) {
-				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PRE_CONFIRM_SUBJECT_SQL)) {
-					pstmt.setInt(1, subject.getId());
-					pstmt.executeUpdate();
-				} catch (Exception e) {
-					conn.rollback();
-					e.printStackTrace();
-				}
-			}
-			conn.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void addSugang(List<Sugang> sugangList) {
-		try (Connection conn = DBUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			for (Sugang sugang : sugangList) {
-				try (PreparedStatement pstmt = conn.prepareStatement(ADD_SUGANG)) {
-					pstmt.setInt(1, sugang.getStudentId());
-					pstmt.setInt(2, sugang.getSubjectId());
-					pstmt.setInt(3, sugang.getGrades());
-					pstmt.executeUpdate();
-				} catch (Exception e) {
-					conn.rollback();
-					e.printStackTrace();
-				}
-			}
-			conn.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void updateSubjectOver() {
-		try (Connection conn = DBUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_SUBJECT_OVER)) {
-				pstmt.executeUpdate();
-				conn.commit();
-			} catch (Exception e) {
-				conn.rollback();
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

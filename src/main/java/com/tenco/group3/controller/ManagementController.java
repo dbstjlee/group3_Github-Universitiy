@@ -20,7 +20,6 @@ import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.StuSchRepositoryImpl;
 import com.tenco.group3.repository.StuStatRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
-import com.tenco.group3.repository.SugangRepositoryImpl;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
@@ -28,7 +27,6 @@ import com.tenco.group3.repository.interfaces.ScheduleStateRepository;
 import com.tenco.group3.repository.interfaces.StuSchRepository;
 import com.tenco.group3.repository.interfaces.StuStatRepository;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
-import com.tenco.group3.repository.interfaces.SugangRepository;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.SemesterUtil;
@@ -48,7 +46,6 @@ public class ManagementController extends HttpServlet {
 	private BreakAppRepository breakAppRepository;
 	private StuStatRepository stuStatRepository;
 	private TuitionRepository tuitionRepository;
-	private SugangRepository sugangRepository;
 	private StuSubRepository stuSubRepository;
 	private StuSchRepository stuSchRepository;
 
@@ -65,7 +62,6 @@ public class ManagementController extends HttpServlet {
 		stuStatRepository = new StuStatRepositoryImpl();
 		stuSubRepository = new StuSubRepositoryImpl();
 		stuSchRepository = new StuSchRepositoryImpl();
-		sugangRepository = new SugangRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -392,24 +388,32 @@ public class ManagementController extends HttpServlet {
 
 		// 수강 신청기간 시작 --> 예비 수강 신청 내역 처리
 		if (sugang == ScheduleState.TRUE) {
-			
+
 			/**
 			 * 예비 수강 신청 내역에서 정원이 초과 되지 않은 신청 처리
 			 */
 			// 정원이 초과되지 않은 과목 리스트 받아옴
-			List<Subject> subjectList = sugangRepository.getAllSubjectSatisfied();
+			List<Subject> subjectList = stuSubRepository.getAllSubjectSatisfied();
 			// 과목 리스트를 이용해서 예비 수강 신청 테이블로 부터 학생id 과목id 학점 받아옴
-			List<Sugang> sugangList = sugangRepository.getAllPreBySubject(subjectList);
+			List<Sugang> sugangList = stuSubRepository.getAllPreBySubject(subjectList);
 			// 예비 수강 신청 내역에서 삭제
-			sugangRepository.deletePreConfirmSubject(subjectList);
+			stuSubRepository.deletePreConfirmSubject(subjectList);
 			// stu_sub_tb에 insert
-			sugangRepository.addSugang(sugangList);
-			
+			stuSubRepository.addSugang(sugangList);
+
 			/**
 			 * 예비 수강 신청 내역에서 정원이 초과된 신청 처리
 			 */
 			// 정원 초과된 과목 학생 수 0명으로
-			sugangRepository.updateSubjectOver();
+			stuSubRepository.updateSubjectOver();
+
+		} else if (sugang == ScheduleState.END) {
+			// 수강 신청 기간 종료
+			// 예비 수강 신청 리스트 비우기
+			stuSubRepository.deleteAllPre();
+			// 강의 디테일 테이블에 insert
+			List<Sugang> sugangList = stuSubRepository.getAllSugang();
+			stuSubRepository.addStuSubDetail(sugangList);
 		}
 		request.setAttribute("sugang", sugang);
 		request.getRequestDispatcher("/WEB-INF/views/management/sugang.jsp").forward(request, response);
