@@ -14,7 +14,7 @@ public class SemesterUtil {
 	private static int afterYear;
 	private static int afterSemester;
 
-	// 2024년 2학기 이전으로 설정된 학기라면 true 반환
+	// 현재학기 이전으로 설정된 학기라면 true 반환
 	public static boolean isBeforeSemester(int year, int semester) {
 		if (year < currentYear) {
 			return true;

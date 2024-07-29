@@ -289,9 +289,8 @@ public class ManagementController extends HttpServlet {
 	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, int state)
 			throws ServletException, IOException {
-		if (state == 1 && !managementRepository.checkBreakAppDone()) {
+		if (state == ScheduleState.END && !managementRepository.checkBreakAppDone()) {
 			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
-			return;
 		} else {
 			scheduleStateRepository.updateSchedule("break_app", state);
 			getServletContext().setAttribute("breakApp", state);
@@ -341,10 +340,6 @@ public class ManagementController extends HttpServlet {
 			// 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 			List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 			stuSchRepository.insertStuSch(rankedStudentList);
-			// 휴학이 끝난 사람을 복학 상태로 변경
-			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
-			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
-			stuStatRepository.updateStatusById(studentIdList, "복학");
 			// 학사일정 상태 테이블에 다음 학기 추가
 			scheduleStateRepository.addSchedule();
 			// 변수 업데이트
@@ -357,6 +352,13 @@ public class ManagementController extends HttpServlet {
 			SemesterUtil.setCurrentSemester(SemesterUtil.getAfterSemester());
 			SemesterUtil.setAfterYear(0);
 			SemesterUtil.setAfterSemester(0);
+			
+			// 휴학이 끝난 사람을 복학 상태로 변경
+			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
+			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
+			stuStatRepository.updateStatusById(studentIdList, "복학");
+			
+			// 학년 업데이트
 			List<Student> studentList = stuStatRepository.getCurrentGrade();
 			List<Student> updatedList = new ArrayList<>();
 			List<Integer> graduatedList = new ArrayList<>();

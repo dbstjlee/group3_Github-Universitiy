@@ -140,12 +140,11 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 				PreparedStatement pstmt = conn.prepareStatement(GET_BREAK_APP_BY_APPROVAL)) {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					BreakApp app = BreakApp.builder().type(rs.getString("type")).id(rs.getInt("id"))
-							.departmentName(rs.getString("departmentname")).studentId(rs.getInt("student_id"))
-							.studentGrade(rs.getInt("student_grade")).studentName(rs.getString("studentName"))
+					BreakApp app = BreakApp.builder().type(rs.getString("type")).id(rs.getInt("id")).studentId(rs.getInt("student_id"))
+							.studentGrade(rs.getInt("student_grade"))
 							.fromYear(rs.getInt("from_year")).fromSemester(rs.getInt("from_semester"))
 							.toYear(rs.getInt("to_year")).toSemester(rs.getInt("to_semester"))
-							.appDate(rs.getDate("app_date")).type(rs.getString("type")).status(rs.getString("status")).build();
+							.appDate(rs.getDate("app_date")).status(rs.getString("status")).build();
 					breakAppList.add(app);
 				}
 			} catch (Exception e) {

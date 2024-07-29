@@ -42,10 +42,10 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 	private static final String DELETE_ALL_PRE = " DELETE FROM pre_stu_sub_tb ";
 
 	// stu_sub_tb에서 현재 학기에 해당하는 과목과 학생 id 받아옴
-	private static final String SELECT_ALL_SUGANG = " SELECT ss.student_id, ss.subject_id FROM stu_sub_tb ss JOIN subject_tb s ON ss.subject_id = s.id WHERE s.sub_year = ? AND s.semester = ? ";
+	private static final String SELECT_ALL_SUGANG = " SELECT ss.id, ss.student_id, ss.subject_id FROM stu_sub_tb ss JOIN subject_tb s ON ss.subject_id = s.id WHERE s.sub_year = ? AND s.semester = ? ";
 
 	// stu_sub_detail_tb에 insert
-	private static final String ADD_SUBJECT_DETAIL = " INSERT INTO stu_sub_detail_tb (student_id, subject_id) VALUES (?,?) ";
+	private static final String ADD_SUBJECT_DETAIL = " INSERT INTO stu_sub_detail_tb (id, student_id, subject_id) VALUES (?,?,?) ";
 
 	@Override
 	public List<RankedStudent> selectRankedStudent() {
@@ -202,7 +202,7 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 				pstmt.setInt(2, SemesterUtil.getCurrentSemester());
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					Sugang sugang = Sugang.builder().studentId(rs.getInt("student_id")).subjectId(rs.getInt("subject_id")).build();
+					Sugang sugang = Sugang.builder().sugangId(rs.getInt("id")).studentId(rs.getInt("student_id")).subjectId(rs.getInt("subject_id")).build();
 					sugangList.add(sugang);
 				}
 			} catch (Exception e) {
@@ -222,8 +222,9 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 			conn.setAutoCommit(false);
 			for (Sugang sugang : sugangList) {
 				try (PreparedStatement pstmt = conn.prepareStatement(ADD_SUBJECT_DETAIL)) {
-					pstmt.setInt(1, sugang.getStudentId());
-					pstmt.setInt(2, sugang.getSubjectId());
+					pstmt.setInt(1, sugang.getSugangId());
+					pstmt.setInt(2, sugang.getStudentId());
+					pstmt.setInt(3, sugang.getSubjectId());
 					pstmt.executeUpdate();
 				} catch (Exception e) {
 					conn.rollback();
