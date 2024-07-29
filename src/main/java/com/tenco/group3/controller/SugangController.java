@@ -191,27 +191,28 @@ public class SugangController extends HttpServlet {
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
+		List<Sugang> sugangPreList = sugangRepository.getApplicatedSubjectList(user.getId());
 		List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
 		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 		int listType = 0;
 		// TODO - 수강신청 기간
 		if (true) {
-			listType = 0;
-		} else {
 			listType = 1;
+		} else {
+			listType = 0;
 		}
+		System.out.println(listType);
 		if (listType == 0) {
-			request.setAttribute("sugangList", sugangList);
+			request.setAttribute("sugangPreList", sugangPreList);
 			request.setAttribute("totalGrade", totalGrade);
 			request.setAttribute("listType", listType);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
-		} else {
+		} else if (listType == 1) {
 			request.setAttribute("sugangList", sugangList);
 			request.setAttribute("resetList", resetList);
 			request.setAttribute("totalGrade", totalGrade);
 			request.setAttribute("listType", listType);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
-
 		}
 	}
 

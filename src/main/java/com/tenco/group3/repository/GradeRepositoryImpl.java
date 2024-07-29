@@ -13,6 +13,7 @@ import com.tenco.group3.util.DBUtil;
 
 public class GradeRepositoryImpl implements GradeRepository {
 
+	// 이번학기 성적
 	private static final String GET_THIS_SEMESTER_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type,gr.grade, su.grades, RANK() OVER(ORDER BY gr.grade_value DESC) 석차, ev.evaluation_id "
 			+ " FROM stu_sub_tb AS st " + " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id "
 			+ " INNER JOIN professor_tb AS pr " + " ON su.professor_id = pr.id " + " INNER JOIN grade_tb AS gr "
@@ -20,6 +21,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " LEFT JOIN evaluation_tb AS ev " + " ON st.subject_id = ev.subject_id "
 			+ " WHERE st.student_id = ? AND su.semester = ? AND su.sub_year = ? " + " ORDER BY st.subject_id ";
 
+	// 학기별 성적
 	private static final String GET_SEMESTER_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type, gr.grade,su.grades "
 			+ " FROM stu_sub_tb AS st " + " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id "
 			+ " INNER JOIN professor_tb AS pr " + " ON su.professor_id = pr.id " + " INNER JOIN grade_tb AS gr "
@@ -32,6 +34,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 			+ " ON st.grade = gr.grade " + " INNER JOIN student_tb AS stud " + " on st.student_id = stud.id "
 			+ " WHERE st.student_id = ? AND su.sub_year = ? AND su.semester = ? AND su.type = ? ";
 
+	// 이번 학기 총 성적 조회
 	private static final String GET_THIS_SEMESTER_GRADE = " SELECT su.sub_year, su.semester, SUM(su.grades) AS sum_grades,SUM(st.complete_grade) AS my_grades, AVG(gr.grade_value) AS average "
 			+ " FROM stu_sub_tb AS st " + "LEFT JOIN subject_tb AS su " + "ON st.subject_id = su.id "
 			+ " LEFT JOIN grade_tb AS gr " + "ON st.grade = gr.grade "
@@ -147,50 +150,6 @@ public class GradeRepositoryImpl implements GradeRepository {
 	}
 
 	@Override
-	public Grade getSemester(int studentId) {
-		Grade grade = null;
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(GET_TOTAL_GRADE)) {
-			pstmt.setInt(1, studentId);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					grade = Grade.builder().semester(rs.getInt("semester")).build();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return grade;
-	}
-
-	@Override
-	public Grade getSubYear(int studentId) {
-		Grade grade = null;
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(GET_TOTAL_GRADE)) {
-			pstmt.setInt(1, studentId);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					grade = Grade.builder().subYear(rs.getInt("sub_year")).build();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return grade;
-	}
-
-	@Override
-	public Student getStudentInfo(int studentId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Grade getThisSemesterGrade(int studentId, int semester, int sub_year) {
 		Grade grade = null;
 		try (Connection conn = DBUtil.getConnection();
@@ -212,5 +171,43 @@ public class GradeRepositoryImpl implements GradeRepository {
 		}
 		return grade;
 	}
+
+	@Override
+	public int getCurrentSemesterBySubject(int studentId) {
+		int semester = 0;
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(GET_SEMESTER)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					semester = rs.getInt("semester");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return semester;
+	}
+
+	@Override
+	public int getCurrentYearBySubject(int studentId) {
+		int semester = 0;
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(GET_SUBYEAR)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					semester = rs.getInt("sub_year");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return semester;
+	}
+
 
 }

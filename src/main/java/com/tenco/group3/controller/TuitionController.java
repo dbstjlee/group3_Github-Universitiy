@@ -6,6 +6,7 @@ import com.tenco.group3.model.Tuition;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
+import com.tenco.group3.util.AlertUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,8 +32,12 @@ public class TuitionController extends HttpServlet {
 		switch (action) {
 		case "/payment":
 			// TODO - 납부 기간아니면 alert 으로 접근 막기
-			showPaymentTuition(request, response, session);
-			break;
+			if(true) {
+				showPaymentTuition(request, response, session);
+				break;
+			} else {
+				AlertUtil.backAlert(response, "등록금 납부 기간이 아닙니다.");
+			}
 		case "/check":
 			showListTuition(request, response, session);
 			break;
