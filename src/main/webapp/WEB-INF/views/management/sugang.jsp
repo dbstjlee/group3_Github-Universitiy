@@ -52,12 +52,12 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/sugang">수강 신청 기간 설정</a>
+							<a href="/management/sugang" class="selected--menu">수강 신청 기간 설정</a>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<a href="/management/tuition" class="selected--menu">등록금 고지서 발송</a>
+							<a href="/management/tuition">등록금 고지서 발송</a>
 						</td>
 					</tr>
 				</tbody>
@@ -65,19 +65,21 @@
 		</div>
 	</div>
 	<main>
-		<h1>등록금 고지서 발송</h1>
+		<h1>수강 신청 기간 설정</h1>
 		<div class="split--div"></div>
 		<c:choose>
-			<c:when test="${tuition == 1}">
-				<a href="/management/billEnd"><button type="submit" class="btn btn-primary" id="btn--danger">등록금 납부 기한 종료</button></a>
-				<p class="no--list--p">등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
-				<p class="no--list--p">등록금을 납부하지 않은 학생은 자동으로 제적 처리됩니다. 신중히 눌러주세요!!</p>
+			<c:when test="${sugang == 1}">
+				<a href="/management/sugang?state=2"><button type="submit" class="btn btn-primary" id="btn--danger">수강 신청 기간 종료</button></a>
+				<p class="no--list--p">수강 신청 기간이 지나면 수강 신청이 불가능합니다. 신중히 눌러주세요!!</p>
 			</c:when>
-			<c:when test="${tuition == 2}">
-				<p class="no--list--p">이번 학기 등록금 납부 기간이 종료되었습니다.</p>
+			<c:when test="${sugang == 2}">
+				<p class="no--list--p">이번 학기 수강 신청 기간이 종료되었습니다.</p>
+			</c:when>
+			<c:when test="${sugang == 3}">
+				<a href="/management/sugang?state=1"><button type="submit" class="btn btn-primary">수강 신청 기간 시작</button></a>
 			</c:when>
 			<c:otherwise>
-				<a href="/management/bill"><button type="submit" class="btn btn-primary">등록금 고지서 발송</button></a>
+				<a href="/management/sugang?state=3"><button type="submit" class="btn btn-primary">예비 수강 신청 기간 시작</button></a>
 			</c:otherwise>
 		</c:choose>
 	</main>

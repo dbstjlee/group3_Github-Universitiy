@@ -11,6 +11,8 @@ import com.tenco.group3.model.RankedStudent;
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Staff;
 import com.tenco.group3.model.Student;
+import com.tenco.group3.model.Subject;
+import com.tenco.group3.model.Sugang;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
@@ -18,6 +20,7 @@ import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.StuSchRepositoryImpl;
 import com.tenco.group3.repository.StuStatRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
+import com.tenco.group3.repository.SugangRepositoryImpl;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
@@ -25,6 +28,7 @@ import com.tenco.group3.repository.interfaces.ScheduleStateRepository;
 import com.tenco.group3.repository.interfaces.StuSchRepository;
 import com.tenco.group3.repository.interfaces.StuStatRepository;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
+import com.tenco.group3.repository.interfaces.SugangRepository;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.SemesterUtil;
@@ -39,13 +43,14 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ManagementController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private ScheduleStateRepository scheduleStateRepository;
 	private ManagementRepository managementRepository;
 	private BreakAppRepository breakAppRepository;
 	private StuStatRepository stuStatRepository;
+	private TuitionRepository tuitionRepository;
+	private SugangRepository sugangRepository;
 	private StuSubRepository stuSubRepository;
 	private StuSchRepository stuSchRepository;
-	private TuitionRepository tuitionRepository;
-	private ScheduleStateRepository scheduleStateRepository;
 
 	public ManagementController() {
 		super();
@@ -53,13 +58,14 @@ public class ManagementController extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
+		scheduleStateRepository = new ScheduleStateRepositoryImpl();
 		managementRepository = new ManagementRepositoryImpl();
 		breakAppRepository = new BreakAppRepositoryImpl();
+		tuitionRepository = new TuitionRepositoryImpl();
 		stuStatRepository = new StuStatRepositoryImpl();
 		stuSubRepository = new StuSubRepositoryImpl();
 		stuSchRepository = new StuSchRepositoryImpl();
-		tuitionRepository = new TuitionRepositoryImpl();
-		scheduleStateRepository = new ScheduleStateRepositoryImpl();
+		sugangRepository = new SugangRepositoryImpl();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -100,6 +106,7 @@ public class ManagementController extends HttpServlet {
 			handleBreakState(request, response, Integer.parseInt(request.getParameter("state")));
 			break;
 		case "/sugang":
+			handleSugangState(request, response);
 			break;
 		case "/new-semester":
 			checkNewSemester(request, response);
@@ -224,11 +231,6 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void handleCreateTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// 1. 휴학이 끝난 사람을 복학 상태로 변경 (2024 2학기 기준)
-		List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
-		List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
-		stuStatRepository.updateStatusById(studentIdList, "복학");
-
 		// 3. 재학 중인 사람(최근 학적변동이 입학, 복학인 상태) 에게 등록금 고지서 발송
 		List<Tuition> tuitionList = tuitionRepository.getTuitions();
 		int rowCount = tuitionRepository.addAllTuitions(tuitionList);
@@ -290,13 +292,14 @@ public class ManagementController extends HttpServlet {
 			showBreakPage(request, response);
 		}
 	}
-	
+
 	/**
 	 * 휴학 상세 보기 페이지
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void showBreakDetailPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BreakApp breakApp = breakAppRepository.getBreakAppDetail(Integer.parseInt(request.getParameter("id")));
@@ -330,6 +333,10 @@ public class ManagementController extends HttpServlet {
 			// 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 			List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 			stuSchRepository.insertStuSch(rankedStudentList);
+			// 휴학이 끝난 사람을 복학 상태로 변경
+			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
+			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
+			stuStatRepository.updateStatusById(studentIdList, "복학");
 			// 학사일정 상태 테이블에 다음 학기 추가
 			scheduleStateRepository.addSchedule();
 			// 변수 업데이트
@@ -342,7 +349,6 @@ public class ManagementController extends HttpServlet {
 			SemesterUtil.setCurrentSemester(SemesterUtil.getAfterSemester());
 			SemesterUtil.setAfterYear(0);
 			SemesterUtil.setAfterSemester(0);
-			// TODO 입학, 복학 상태인 모든 학생 학년, 학기 상승 (4학년 2학기 학생은 졸업)
 			List<Student> studentList = stuStatRepository.getCurrentGrade();
 			List<Student> updatedList = new ArrayList<>();
 			List<Integer> graduatedList = new ArrayList<>();
@@ -361,6 +367,53 @@ public class ManagementController extends HttpServlet {
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
 		}
+	}
+
+	/**
+	 * 수강 신청 상태 변경과 동시에 데이터 처리
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void handleSugangState(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if ((int) getServletContext().getAttribute("breakApp") != ScheduleState.END) {
+			AlertUtil.backAlert(response, "휴학 신청 기간이 끝나야 수강 신청기간을 진행할 수 있습니다.");
+			return;
+		}
+		String stateStr = request.getParameter("state");
+		int sugang = (int) getServletContext().getAttribute("sugang");
+		// 받아온 수강 신청기간에 대한 상태를 반영
+		if (stateStr != null) {
+			sugang = Integer.parseInt(stateStr);
+			getServletContext().setAttribute("sugang", sugang);
+		}
+
+		// 수강 신청기간 시작 --> 예비 수강 신청 내역 처리
+		if (sugang == ScheduleState.TRUE) {
+			
+			/**
+			 * 예비 수강 신청 내역에서 정원이 초과 되지 않은 신청 처리
+			 */
+			// 정원이 초과되지 않은 과목 리스트 받아옴
+			List<Subject> subjectList = sugangRepository.getAllSubjectSatisfied();
+			// 과목 리스트를 이용해서 예비 수강 신청 테이블로 부터 학생id 과목id 학점 받아옴
+			List<Sugang> sugangList = sugangRepository.getAllPreBySubject(subjectList);
+			// 예비 수강 신청 내역에서 삭제
+			sugangRepository.deletePreConfirmSubject(subjectList);
+			// stu_sub_tb에 insert
+			sugangRepository.addSugang(sugangList);
+			
+			/**
+			 * 예비 수강 신청 내역에서 정원이 초과된 신청 처리
+			 */
+			// 정원 초과된 과목 학생 수 0명으로
+			sugangRepository.updateSubjectOver();
+		}
+		request.setAttribute("sugang", sugang);
+		request.getRequestDispatcher("/WEB-INF/views/management/sugang.jsp").forward(request, response);
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -458,13 +511,11 @@ public class ManagementController extends HttpServlet {
 			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
-	
+
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int breakId = Integer.parseInt(request.getParameter("id"));
 		String status = request.getParameter("status");
 		String type = request.getParameter("type");
-		System.out.println("status : " + status); // TODO 삭제
-		System.out.println("id : " + breakId); // TODO 삭제
 		breakAppRepository.updateBreakAppStatus(breakId, status);
 		if ("승인".equals(status)) {
 			List<Integer> studentList = new ArrayList<>();
