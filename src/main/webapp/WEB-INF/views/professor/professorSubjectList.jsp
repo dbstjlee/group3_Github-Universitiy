@@ -41,24 +41,27 @@
 		<h1>내 강의 조회</h1>
 		<div class="split--div"></div>
 		<div class="sub--filter">
-		<form action="/professor/mySubjectBySemester" method="post">
-			<div>
-			<select name="period">
-				<c:forEach items="${subjectList}" var="yearSemester">
-					<option value="${yearSemester.subYear}year${yearSemester.semester}">${yearSemester.subYear}년도&nbsp;${yearSemester.semester}학기</option>
-		</c:forEach>
-			</select>
-			<!-- 검색 버튼 -->
-			<button type="submit">
-				<ul class="d-flex justify-content-center" style="margin: 0;">
-					<li style="height: 24px; margin-right: 2px;">조회
-					<li style="height: 24px;"><span
-						class="material-symbols-outlined"
-						style="font-size: 18px; padding-top: 4px;">search</span>
-				</ul>
-			</button>
-			</div>
-		</form>
+			<form action="${pageContext.request.contextPath}/professor/mySubjectBySemester" method="post">
+				<div>
+					<select name="subYear">
+						<c:forEach items="${subjectList}" var="subjectYear">
+							<option value="${subjectYear.subYear}">${subjectYear.subYear}년도</option>
+						</c:forEach>
+					</select> 
+					<select name="subSemester">
+						<c:forEach items="${subjectList}" var="subjectSemester">
+							<option value="${subjectSemester.semester}">${subjectSemester.semester}학기</option>
+						</c:forEach>
+					</select>
+					<!-- 검색 버튼 -->
+					<button type="submit">
+						<ul class="d-flex justify-content-center" style="margin: 0;">
+							<li style="height: 24px; margin-right: 2px;">조회
+							<li style="height: 24px;"><span class="material-symbols-outlined" style="font-size: 18px; padding-top: 4px;">search</span>
+						</ul>
+					</button>
+				</div>
+			</form>
 		</div>
 		<h4>
 			<span style="font-weight: 600;">강의 목록</span>
@@ -78,20 +81,19 @@
 					<tr>
 						<td>${subject.id}</td>
 						<td>${subject.name}</td>
-						<td>
-							<c:choose>
+						<td><c:choose>
 								<c:when test="${subject.startTime < 10}">
 									${subject.subDay} 0${subject.startTime}:00-${subject.endTime}:00&nbsp;(${subject.roomId})								
 								</c:when>
 								<c:otherwise>
 									${subject.subDay} ${subject.startTime}:00-${subject.endTime}:00&nbsp;(${subject.roomId})							
 								</c:otherwise>
-							</c:choose>
-						</td>
-						<td>									
+							</c:choose></td>
+						<td>
 							<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
-								<li style="height: 24px;"><a href="/subject/syllabus/${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
-								<li style="height: 24px;"><a href="/subject/syllabus/${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span class="material-symbols-outlined">content_paste_search</span></a>
+								<li style="height: 24px;"><a href="/subject/syllabus?subjectId=${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
+								<li style="height: 24px;"><a href="/subject/syllabus?subjectId=${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
+										class="material-symbols-outlined">content_paste_search</span></a>
 							</ul>
 						</td>
 						<td>

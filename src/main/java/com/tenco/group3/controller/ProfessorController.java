@@ -55,7 +55,7 @@ public class ProfessorController extends HttpServlet {
 			break;
 		case "/mySubject":
 			viewMyAllSubject(request, response, session);
-			break;
+			;
 		default:
 
 			break;
@@ -78,14 +78,18 @@ public class ProfessorController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String action = request.getPathInfo();
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("principal") == null) {
+			response.sendRedirect(request.getContextPath() + "");
+			return;
+		}
 		switch (action) {
 		case "/update":
 			HandleSyllabusUpdate(request, response);
 			break;
 		case "/mySubjectBySemester":
-
+			searchPorfessorSubjectBySeemester(request, response, session);
 			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -151,12 +155,38 @@ public class ProfessorController extends HttpServlet {
 			request.setAttribute("errorMessage", "잘못된 접근");
 		}
 	}
-
+	
+	private void searchPorfessorSubjectBySeemester(HttpServletRequest request, HttpServletResponse response ,HttpSession session)throws SecurityException, IOException  {
+		User user = (User) session.getAttribute("principal");
+		if (user == null) {
+			response.sendRedirect(request.getContextPath() + "/login"); // 사용자 정보가 없으면 로그인 페이지로 리다이렉트
+			return;
+		}
+		String subYear=request.getParameter("subYear");
+		String subSemester=request.getParameter("subSemester");
+		
+		
+		int year = Integer.parseInt(subYear);
+		int semester = Integer.parseInt(subSemester);
+		List<Subject> subjectlist =  professorRepository.veiwProfessorsubjectBySemesterAndYear(user.getId(), year, semester);
+		
+		request.setAttribute("subjectList", subjectlist);
+		
+		try {
+			request.getRequestDispatcher("/WEB-INF/views/professor/professorSubjectList.jsp").forward(request, response);
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
 	private void HandleSyllabusUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		User principal = (User) request.getSession().getAttribute("principal");
-
 		String overview = request.getParameter("overview");
 		String objective = request.getParameter("objective");
 		String textbook = request.getParameter("textbook");

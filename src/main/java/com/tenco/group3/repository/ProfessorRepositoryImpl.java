@@ -140,12 +140,12 @@ public class ProfessorRepositoryImpl implements ProfessorRepository {
 	 * 
 	 * */
 	@Override
-	public List<Subject> veiwProfessorsubjectBySemesterAndYear(int id, int year, int semester) {
+	public List<Subject> veiwProfessorsubjectBySemesterAndYear(int professorId, int subYear, int semester) {
 		List<Subject> subjectList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(VEIW_PROFESSOR_SUBJECT)) {
-			pstmt.setInt(1, id);
-			pstmt.setInt(2, year);
+			pstmt.setInt(1, professorId);
+			pstmt.setInt(2, subYear);
 			pstmt.setInt(3, semester);
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -159,7 +159,7 @@ public class ProfessorRepositoryImpl implements ProfessorRepository {
 						.type(rs.getString("type"))
 						.subYear(rs.getInt("sub_year"))
 						.startTime(rs.getInt("start_time"))
-						.endTime(rs.getInt("endTime"))
+						.endTime(rs.getInt("end_time"))
 						.build());
 			}
 		} catch (Exception e) {

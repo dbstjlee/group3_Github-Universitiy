@@ -26,7 +26,7 @@ public interface ProfessorRepository {
 	
 	Syllabus veiwSyllabus(int subjectId); // 과목 불러오기
 	
-	List<Subject> veiwProfessorsubjectBySemesterAndYear(int id, int year, int semester);
+	List<Subject> veiwProfessorsubjectBySemesterAndYear(int professorId, int subYear, int semester);
 	
 	List<Subject> veiwProfessorsubjectByProfessorId(int professorId);
 }
