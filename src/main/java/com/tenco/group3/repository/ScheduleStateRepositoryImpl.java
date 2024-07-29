@@ -13,7 +13,7 @@ import com.tenco.group3.util.SemesterUtil;
 
 public class ScheduleStateRepositoryImpl implements ScheduleStateRepository {
 
-	private static final String SELECT_SCHEDULE_STATE = " SELECT * FROM schedule_state_tb ORDER BY year, semester DESC LIMIT 1 ";
+	private static final String SELECT_SCHEDULE_STATE = " SELECT * FROM schedule_state_tb ORDER BY year DESC, semester DESC LIMIT 1 ";
 	private static final String UPDATE_SCHEDULE = " UPDATE schedule_state_tb SET ";
 	private static final String INSERT_SCHEDULE = " INSERT INTO schedule_state_tb (year, semester) VALUES (?, ?) ";
 	

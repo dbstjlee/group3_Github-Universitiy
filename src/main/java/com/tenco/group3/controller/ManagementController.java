@@ -319,6 +319,8 @@ public class ManagementController extends HttpServlet {
 			}
 			managementRepository.updateGradeAndSemester(updatedList);
 			stuStatRepository.updateStatusById(graduatedList, "졸업");
+			String msg = "새학기 적용이 완료 되었습니다. " + SemesterUtil.getCurrentYear() + "년도 " + SemesterUtil.getCurrentSemester() + "학기가 되었습니다.";
+			AlertUtil.hrefAlert(response, msg, "/management/studentList");
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
 		}

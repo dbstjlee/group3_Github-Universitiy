@@ -36,7 +36,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 	// TODO 나중에 암호화해서 자동으로 받을예정
 	private static final String SAMPLE_PASSWORD = "123123";
 	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
-	private static final String UPDATE_GRADE_AND_SEMESTER = " UPDATE student_tb SET grade = ? , semester = ? WHERE = ? ";
+	private static final String UPDATE_GRADE_AND_SEMESTER = " UPDATE student_tb SET grade = ? , semester = ? WHERE id = ? ";
 
 	@Override
 	public List<Student> getAllStudents(int limit, int offset) {
@@ -432,6 +432,7 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 					pstmt.setInt(1, student.getGrade());
 					pstmt.setInt(2, student.getSemester());
 					pstmt.setInt(3, student.getId());
+					pstmt.executeUpdate();
 				} catch (Exception e) {
 					conn.rollback();
 					e.printStackTrace();

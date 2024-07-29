@@ -13,6 +13,7 @@ public class AlertUtil {
 
 	public static void hrefAlert(HttpServletResponse response, String msg, String path) throws IOException {
 		response.setContentType("text/html; charset=UTF-8");
-		response.getWriter().println("<script> alert('" + msg + "'); window.location.href = '" + path + "'; </script>");
+		response.getWriter().println("<script> alert('" + msg + "');");
+		response.getWriter().println(" window.location.href = '" + path + "'; </script>");
 	}
 }
