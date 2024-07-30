@@ -158,6 +158,7 @@ public class ProfessorRepositoryImpl implements ProfessorRepository {
 						.deptId(rs.getInt("dept_id"))
 						.type(rs.getString("type"))
 						.subYear(rs.getInt("sub_year"))
+						.semester(rs.getInt("semester"))
 						.startTime(rs.getInt("start_time"))
 						.endTime(rs.getInt("end_time"))
 						.build());

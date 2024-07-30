@@ -160,7 +160,7 @@ a:hover {
 				<td class="align--left">${syllabus.program}</td>
 			</tr>
 		</table>
-		<c:if test="${principal.username == syllabus.professorName}">
+		<c:if test="${principal.id == syllabus.professorId}">
 			<table>
 				<tr>
 					<td>

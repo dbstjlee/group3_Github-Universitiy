@@ -18,8 +18,9 @@ public class StuSubDetail {
 	private int absent;
 	private int lateness;
 	private int homework;
-	private int midExaml;
-	private int finalExaml;
+	private int midExam;
+	private int finalExam;
 	private int convertedMark;
-	
+	private String deptName;
+	private String studentName;
 }

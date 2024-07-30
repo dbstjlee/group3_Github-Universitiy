@@ -32,9 +32,6 @@ public class Syllabus {
     private String objective;
     private String textbook;
     private String program;
-
-	
-	
-	
+    private int professorId;
 	
 }

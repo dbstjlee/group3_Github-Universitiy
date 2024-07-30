@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<link rel="stylesheet" href="/css/subject.css">
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
+<link rel="stylesheet" href="resources/css/subject.css">
 <style>
 .sub--filter form div {
 	background-color: buttonshadow;
@@ -22,14 +22,20 @@
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
-					<td><a href="/subject/allSubject">전체 강의 조회</a></td>
+					<td>
+						<a href="/subject/allSubject">전체 강의 조회</a>
+					</td>
 				</tr>
 				<tr>
-					<td><a href="${pageContext.request.contextPath}/professor/mySubject" class="selected--menu">내 강의 조회</a></td>
+					<td>
+						<a href="/professor/mySubject" class="selected--menu">내 강의 조회</a>
+					</td>
 				</tr>
 				<c:if test="${principal.userRole.equals(\"professor\") }">
 					<tr>
-						<td><a href="/evaluation/read"> 내 강의 평가</a></td>
+						<td>
+							<a href="/evaluation/read"> 내 강의 평가</a>
+						</td>
 					</tr>
 				</c:if>
 			</table>
@@ -41,16 +47,16 @@
 		<h1>내 강의 조회</h1>
 		<div class="split--div"></div>
 		<div class="sub--filter">
-			<form action="${pageContext.request.contextPath}/professor/mySubjectBySemester" method="post">
+			<form action="/professor/mySubjectBySemester" method="post">
 				<div>
 					<select name="subYear">
-						<c:forEach items="${subjectList}" var="subjectYear">
-							<option value="${subjectYear.subYear}">${subjectYear.subYear}년도</option>
+						<c:forEach items="${yearList}" var="subjectYear">
+							<option value="${subjectYear}">${subjectYear}년도</option>
 						</c:forEach>
-					</select> 
+					</select>
 					<select name="subSemester">
-						<c:forEach items="${subjectList}" var="subjectSemester">
-							<option value="${subjectSemester.semester}">${subjectSemester.semester}학기</option>
+						<c:forEach begin="1" end="2" var="i">
+							<option value="${i}">${i}학기</option>
 						</c:forEach>
 					</select>
 					<!-- 검색 버튼 -->
@@ -81,14 +87,16 @@
 					<tr>
 						<td>${subject.id}</td>
 						<td>${subject.name}</td>
-						<td><c:choose>
+						<td>
+							<c:choose>
 								<c:when test="${subject.startTime < 10}">
 									${subject.subDay} 0${subject.startTime}:00-${subject.endTime}:00&nbsp;(${subject.roomId})								
 								</c:when>
 								<c:otherwise>
 									${subject.subDay} ${subject.startTime}:00-${subject.endTime}:00&nbsp;(${subject.roomId})							
 								</c:otherwise>
-							</c:choose></td>
+							</c:choose>
+						</td>
 						<td>
 							<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
 								<li style="height: 24px;"><a href="/subject/syllabus?subjectId=${subject.id}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
@@ -98,8 +106,8 @@
 						</td>
 						<td>
 							<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
-								<li style="height: 24px;"><a href="/professor/subject/${subject.id}">조회</a>
-								<li style="height: 24px;"><a href="/professor/subject/${subject.id}"><span class="material-symbols-outlined">content_paste_search</span></a>
+								<li style="height: 24px;"><a href="/professor/subject?id=${subject.id}&name=${subject.name}">조회</a>
+								<li style="height: 24px;"><a href="/professor/subject?id=${subject.id}&name=${subject.name}"><span class="material-symbols-outlined">content_paste_search</span></a>
 							</ul>
 						</td>
 					</tr>

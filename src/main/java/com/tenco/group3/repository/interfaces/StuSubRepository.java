@@ -34,4 +34,6 @@ public interface StuSubRepository {
 	
 	// stu_sub_detail_tb에 insert
 	void addStuSubDetail(List<Sugang> sugangList);
+	
+	void updateGrade(String grade, int id);
 }

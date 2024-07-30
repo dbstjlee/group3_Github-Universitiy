@@ -46,6 +46,9 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 
 	// stu_sub_detail_tb에 insert
 	private static final String ADD_SUBJECT_DETAIL = " INSERT INTO stu_sub_detail_tb (id, student_id, subject_id) VALUES (?,?,?) ";
+	
+	// stu_sub_tb에 update
+	private static final String UPDATE_GRADE = " UPDATE stu_sub_tb SET grade = ? WHERE id = ? ";
 
 	@Override
 	public List<RankedStudent> selectRankedStudent() {
@@ -232,6 +235,24 @@ public class StuSubRepositoryImpl implements StuSubRepository {
 				}
 			}
 			conn.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateGrade(String grade, int id) {
+		try (Connection conn = DBUtil.getConnection()) {
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_GRADE)) {
+				pstmt.setString(1, grade);
+				pstmt.setInt(2, id);
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
