@@ -230,18 +230,19 @@ main h1:first-of-type {
           height: 100%;
           position: fixed;
           top: 0;
-          left: -250px;  /* 초기 상태에서는 왼쪽으로 숨겨져 있음 */
+          left: -250px;  
         
           box-shadow: 2px 0 5px rgba(0,0,0,0.5);
           transition: left 0.3s;
           background-color: #d0d7de;
         }
         .sidebar.open {
-          left: 0;  /* 사이드바가 열릴 때 */
+          left: 0;  
         }
         body {
           transition: margin-left 0.3s;
         }
         body.shift {
-          margin-left: 250px;  /* 사이드바가 열릴 때 본문이 오른쪽으로 밀림 */
+          margin-left: 250px;  
         }
+       

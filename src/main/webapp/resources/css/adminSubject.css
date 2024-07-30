@@ -68,7 +68,7 @@ main h1:first-of-type {
 }
 
 .button {
-	background-color: rgb(2, 50, 104);
+	background-color: #00b918;;
 	border-radius: 5px;
 	color: #fff;
 	text-decoration: none;
@@ -100,7 +100,7 @@ table tr, td {
 }
 
 input[type="submit"]{
-	background-color: #023268;
+	background-color: #00b918;;
 	border-radius: 5px;
 	border: hidden;
 	color: #fff;

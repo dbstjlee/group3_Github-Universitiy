@@ -20,7 +20,7 @@ table tr, td {
 	padding: 5px 15px;
 }
 .button {
-	background-color: #023268;
+	background-color: #00b918;;
 	border-radius: 5px;
 	color: #fff;
 	text-decoration: none;
@@ -28,7 +28,7 @@ table tr, td {
 	padding: 3px;
 }
 input[type="submit"]{
-	background-color: #023268;
+	background-color: #00b918;;
 	border-radius: 5px;
 	border: hidden;
 	color: #fff;

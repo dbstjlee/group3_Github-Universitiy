@@ -137,7 +137,8 @@
 	font-weight: 600;
 }
 
-footer {
-	margin: 80px 0 30px 0;
-	text-align: center;
-}
+
+ .center--imgBox{
+        	display: flex;
+        	justify-content: center;
+        }
