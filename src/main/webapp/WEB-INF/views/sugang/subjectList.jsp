@@ -164,69 +164,79 @@
 					</div>
 				</form>
 			</div>
-			<h4>
-				<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
-			</h4>
-			<table border="1" class="sub--list--table">
-				<thead>
-					<tr>
-						<th>단과대학</th>
-						<th>개설학과</th>
-						<th>학수번호</th>
-						<th>강의구분</th>
-						<th style="width: 200px;">강의명</th>
-						<th>담당교수</th>
-						<th>학점</th>
-						<th>요일시간 (강의실)</th>
-						<th>현재인원</th>
-						<th>정원</th>
-						<th>강의계획서</th>
-					</tr>
-				</thead>
-				<c:forEach var="sugangList" items="${sugangList}">
-					<tbody>
-						<tr>
-							<td>${sugangList.collegeName}</td>
-							<td>${sugangList.departName}</td>
-							<td>${sugangList.subjectId}</td>
-							<td>${sugangList.subjectType}</td>
-							<td class="sub--list--name">${sugangList.subjectName}</td>
-							<td>${sugangList.professorName}</td>
-							<td>${sugangList.grades}</td>
-							<td><c:choose>
-									<c:when test="${sugangList.startTime < 10}">
+			<c:choose>
+				<c:when test="${not empty sugangList}">
+					<h4>
+						<span style="font-weight: 600;">강의 목록</span>&nbsp; <span style="color: gray; font-size: 18px;">[총 ${totalCount}건]</span>
+					</h4>
+					<table border="1" class="sub--list--table">
+						<thead>
+							<tr>
+								<th>단과대학</th>
+								<th>개설학과</th>
+								<th>학수번호</th>
+								<th>강의구분</th>
+								<th style="width: 200px;">강의명</th>
+								<th>담당교수</th>
+								<th>학점</th>
+								<th>요일시간 (강의실)</th>
+								<th>현재인원</th>
+								<th>정원</th>
+								<th>강의계획서</th>
+							</tr>
+						</thead>
+						<c:forEach var="sugangList" items="${sugangList}">
+							<tbody>
+								<tr>
+									<td>${sugangList.collegeName}</td>
+									<td>${sugangList.departName}</td>
+									<td>${sugangList.subjectId}</td>
+									<td>${sugangList.subjectType}</td>
+									<td class="sub--list--name">${sugangList.subjectName}</td>
+									<td>${sugangList.professorName}</td>
+									<td>${sugangList.grades}</td>
+									<td><c:choose>
+											<c:when test="${sugangList.startTime < 10}">
 							${sugangList.subjectDay} 0${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})								
 							</c:when>
-									<c:otherwise>
+											<c:otherwise>
 							${sugangList.subjectDay} ${sugangList.startTime}:00~${sugangList.endTime}:00&nbsp;(${sugangList.roomId})							
 							</c:otherwise>
-								</c:choose></td>
-							<td>${sugangList.numOfStudent}</td>
-							<td>${sugangList.capacity}</td>
-							<%-- 강의 계획서로 이동 --%>
-							<td>
-								<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
-									<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
-									<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
-											class="material-symbols-outlined">content_paste_search</span></a>
-								</ul>
-							</td>
-						</tr>
-					</tbody>
-				</c:forEach>
-			</table>
-			<div class="page--list">
-				<c:forEach begin="1" end="${totalPages}" var="i">
-					<c:choose>
-						<c:when test="${i == currentPage}">
-							<span class="current-page">${i}</span>
-						</c:when>
-						<c:otherwise>
-							<span><a href="${pageContext.request.contextPath}/sugang/subjectList?page=${i}">${i}</a></span>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-			</div>
+										</c:choose></td>
+									<td>${sugangList.numOfStudent}</td>
+									<td>${sugangList.capacity}</td>
+									<%-- 강의 계획서로 이동 --%>
+									<td>
+										<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
+											<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
+											<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
+													class="material-symbols-outlined">content_paste_search</span></a>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</c:forEach>
+					</table>
+					<div class="page--list">
+						<c:forEach begin="1" end="${totalPages}" var="i">
+							<c:choose>
+								<c:when test="${i == currentPage}">
+									<span class="current-page">${i}</span>
+								</c:when>
+								<c:otherwise>
+									<span><a href="${pageContext.request.contextPath}/sugang/subjectList?page=${i}">${i}</a></span>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<br>
+					<div>
+						<p class="no--list--p">등록된 수업 목록이 없습니다.</p>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</main>
 	</div>
 </body>

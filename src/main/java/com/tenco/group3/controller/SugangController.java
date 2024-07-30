@@ -10,6 +10,7 @@ import com.tenco.group3.repository.SugangRepositoryImpl;
 import com.tenco.group3.repository.interfaces.SugangRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
+import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -83,7 +84,7 @@ public class SugangController extends HttpServlet {
 				break;
 			default:
 				break;
-			} 
+			}
 		} else {
 			AlertUtil.backAlert(response, "휴학 기간 또는 제적 기간동안은 수강 신청이 불가능 합니다.");
 		}
@@ -101,8 +102,10 @@ public class SugangController extends HttpServlet {
 	private void showListAppSubject(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
-		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
-		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
+		List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId(), SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
+		int totalGrade = sugangRepository.getSubjectGrade(user.getId(), SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalGrade", totalGrade);
 		request.getRequestDispatcher("/WEB-INF/views/sugang/list.jsp").forward(request, response);
@@ -149,9 +152,11 @@ public class SugangController extends HttpServlet {
 		}
 		int offset = (page - 1) * pageSize;
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
-		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
+		int totalCount = sugangRepository.getSearchSubjectCount(sugang, SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-		List<Sugang> sugangList = sugangRepository.getAppSubjectBySearch(sugang, pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getAppSubjectBySearch(sugang, pageSize, offset,
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -184,13 +189,15 @@ public class SugangController extends HttpServlet {
 			e.printStackTrace();
 		}
 		int offset = (page - 1) * pageSize;
-		int totalCount = sugangRepository.getAllSubjectCount();
+		int totalCount = sugangRepository.getAllSubjectCount(SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		List<Sugang> subSugangs = sugangRepository.resultStudentCount();
 		for (Sugang sugang : subSugangs) {
 			sugangRepository.resetStudentCount(sugang.getSubjectId());
 		}
-		List<Sugang> sugangList = sugangRepository.getApplicationSubject(user.getId(), pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getApplicationSubject(user.getId(), pageSize, offset,
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 //		System.out.println(sugangList);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
@@ -231,15 +238,20 @@ public class SugangController extends HttpServlet {
 			return;
 		}
 		if (listType == 1) {
-			List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
-			int totalGrade = sugangRepository.getPreSubjectGrade(user.getId());
+			List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId(),
+					SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
+			int totalGrade = sugangRepository.getPreSubjectGrade(user.getId(), SemesterUtil.getCurrentYear(),
+					SemesterUtil.getCurrentSemester());
 			request.setAttribute("sugangPreList", sugangPreList);
 			request.setAttribute("totalGrade", totalGrade);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
 		} else if (listType == 2) {
-			List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
-			List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
-			int totalGrade = sugangRepository.getSubjectGrade(user.getId());
+			List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId(),
+					SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
+			List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId(), SemesterUtil.getCurrentYear(),
+					SemesterUtil.getCurrentSemester());
+			int totalGrade = sugangRepository.getSubjectGrade(user.getId(), SemesterUtil.getCurrentYear(),
+					SemesterUtil.getCurrentSemester());
 			request.setAttribute("sugangList", sugangList);
 			request.setAttribute("resetList", resetList);
 			request.setAttribute("totalGrade", totalGrade);
@@ -292,9 +304,11 @@ public class SugangController extends HttpServlet {
 		}
 		int offset = (page - 1) * pageSize;
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
-		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
+		int totalCount = sugangRepository.getSearchSubjectCount(sugang, SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-		List<Sugang> sugangList = sugangRepository.getPreSubjectBySearch(sugang, pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getPreSubjectBySearch(sugang, pageSize, offset,
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -327,10 +341,12 @@ public class SugangController extends HttpServlet {
 			e.printStackTrace();
 		}
 		int offset = (page - 1) * pageSize;
-		int totalCount = sugangRepository.getAllSubjectCount();
+		int totalCount = sugangRepository.getAllSubjectCount(SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-		List<Sugang> sugangList = sugangRepository.getPreApplicationSubject(user.getId(), pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getPreApplicationSubject(user.getId(), pageSize, offset,
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 //		System.out.println(sugangList);
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
@@ -380,10 +396,12 @@ public class SugangController extends HttpServlet {
 		}
 		Sugang sugang = Sugang.builder().subjectType(type).deptId(deptId).subjectName(name).build();
 		int offset = (page - 1) * pageSize;
-		int totalCount = sugangRepository.getSearchSubjectCount(sugang);
+		int totalCount = sugangRepository.getSearchSubjectCount(sugang, SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
-		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang, pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getSubjectBySearch(sugang, pageSize, offset,
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
@@ -417,11 +435,13 @@ public class SugangController extends HttpServlet {
 			e.printStackTrace();
 		}
 		int offset = (page - 1) * pageSize;
-		int totalCount = sugangRepository.getAllSubjectCount();
+		int totalCount = sugangRepository.getAllSubjectCount(SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 
 		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
-		List<Sugang> sugangList = sugangRepository.getAllSubject(pageSize, offset);
+		List<Sugang> sugangList = sugangRepository.getAllSubject(pageSize, offset, SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		request.setAttribute("sugangList", sugangList);
 		request.setAttribute("totalCount", totalCount);
 		request.setAttribute("totalPages", totalPages);
@@ -500,7 +520,8 @@ public class SugangController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
-		int totalGrade = sugangRepository.isPreTotalGradeWithinLimit(user.getId());
+		int totalGrade = sugangRepository.isPreTotalGradeWithinLimit(user.getId(), SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int grade = 0;
 		if (request.getParameter("grades") != null) {
 			grade = Integer.parseInt(request.getParameter("grades"));

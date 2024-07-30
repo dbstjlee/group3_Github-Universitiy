@@ -36,7 +36,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 	// 강의 시간표 조회
 	private static final String GET_ALL_SUBJECT_LIST = " SELECT co.name as '단과대학', de.name as '개설학과', su.id, su.type, su.name as '강의명', pr.name as '강사명', su.grades, su.sub_day, su.start_time, su.end_time,su.room_id, su.num_of_student, su.capacity "
 			+ " FROM subject_tb as su " + " JOIN professor_tb as pr on pr.id = su.professor_id "
-			+ " JOIN department_tb as de on de.id = su.dept_id " + " JOIN college_tb as co on co.id = de.college_id "
+			+ " JOIN department_tb as de on de.id = su.dept_id "
+			+ " JOIN college_tb as co on co.id = de.college_id WHERE sub_year = ? AND semester = ? "
 			+ " order by id asc " + " limit ? offset ? ";
 
 	// 예비 수강 신청 내역
@@ -48,7 +49,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " right JOIN subject_tb AS su ON pre.subject_id = su.id "
 			+ " inner JOIN department_tb AS de ON su.dept_id = de.id "
 			+ " inner JOIN college_tb AS co ON co.id = de.college_id "
-			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id" + " ORDER BY su.id ASC limit ? offset ? ";
+			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id WHERE sub_year = ? AND semester = ? "
+			+ " ORDER BY su.id ASC limit ? offset ? ";
 
 	// 수강 신청 내역
 	private static final String GET_APPLICATION_SUBJECT = " SELECT sst.student_id, su.id, su.name AS '강의명', "
@@ -60,7 +62,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " right JOIN subject_tb AS su ON sst.subject_id = su.id "
 			+ " inner JOIN department_tb AS de ON su.dept_id = de.id "
 			+ " inner JOIN college_tb AS co ON co.id = de.college_id "
-			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id" + " ORDER BY su.id ASC limit ? offset ? ";
+			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id WHERE sub_year = ? AND semester = ? "
+			+ " ORDER BY su.id ASC limit ? offset ? ";
 
 	// 강의 검색
 	private static final String GET_SUBJECT_BY_SEARCH = " SELECT " + "    co.name as '단과대학', "
@@ -70,7 +73,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ "    su.dept_id " + " FROM subject_tb as su " + " JOIN professor_tb as pr on pr.id = su.professor_id "
 			+ " JOIN department_tb as de on de.id = su.dept_id " + " JOIN college_tb as co on co.id = de.college_id "
 			+ " WHERE " + "    (? = '전체' OR su.type = ?) " + "    AND (? = -1 OR su.dept_id = ?) "
-			+ "    AND (? IS NULL OR su.name = ?) " + " ORDER BY su.id ASC limit ? offset ? ";
+			+ "    AND (? IS NULL OR su.name = ?) AND sub_year = ? AND semester = ? "
+			+ " ORDER BY su.id ASC limit ? offset ? ";
 
 	// 예비 수강 신청 검색
 	private static final String GET_PRE_SUBJECT_BY_SEARCH = " SELECT " + "    pre.student_id, " + "    su.id, "
@@ -84,7 +88,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ "    department_tb AS de ON su.dept_id = de.id " + "        inner JOIN "
 			+ "    college_tb AS co ON co.id = de.college_id " + "        inner JOIN "
 			+ "    professor_tb AS pr ON su.professor_id = pr.id "
-			+ "WHERE (? = '전체' OR su.type = ?) AND (? = -1 OR su.dept_id = ?) AND (? IS NULL OR su.name = ?) "
+			+ "WHERE (? = '전체' OR su.type = ?) AND (? = -1 OR su.dept_id = ?) AND (? IS NULL OR su.name = ?) AND sub_year = ? AND semester = ? "
 			+ "ORDER BY su.id ASC limit ? offset ? ";
 
 	// 수강 신청 검색
@@ -99,36 +103,40 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ "    department_tb AS de ON su.dept_id = de.id " + "        INNER JOIN "
 			+ "    college_tb AS co ON co.id = de.college_id " + "        INNER JOIN "
 			+ "    professor_tb AS pr ON su.professor_id = pr.id " + "WHERE (? = '전체' OR su.type = ?)  "
-			+ "    AND (? = -1 OR su.dept_id = ?)  " + "    AND (? IS NULL OR su.name = ?) "
+			+ "    AND (? = -1 OR su.dept_id = ?)  "
+			+ "    AND (? IS NULL OR su.name = ?) AND sub_year = ? AND semester = ? "
 			+ "ORDER BY su.id ASC limit ? offset ? ";
 
 	// 전체 카운트
-	private static final String COUNT_ALL_SUBJECT = " SELECT count(*) as count FROM subject_tb ";
+	private static final String COUNT_ALL_SUBJECT = " SELECT count(*) as count FROM subject_tb WHERE sub_year = ? AND semester = ? ";
 
 	// 검색 결과 카운트
-	private static final String COUNT_SEARCH_SUBJECT = " select count(*) as count from subject_tb WHERE (? = '전체' OR type = ?) AND (? = -1 OR dept_id = ?) AND (? IS NULL OR name = ?) ";
+	private static final String COUNT_SEARCH_SUBJECT = " select count(*) as count from subject_tb WHERE (? = '전체' OR type = ?) AND (? = -1 OR dept_id = ?) AND (? IS NULL OR name = ?) AND sub_year = ? AND semester = ? ";
 
 	// 수강 신청 내역
 	private static final String GET_APPLICATED_SUBJECT_LIST = " select sst.student_id, sst.subject_id, su.name as '강의명', pr.name as '담당교수', su.grades, su.sub_day, su.start_time, su.end_time,su.room_id, su.num_of_student, su.capacity "
 			+ " from stu_sub_tb as sst " + " left join subject_tb as su on sst.subject_id = su.id "
-			+ " left Join professor_tb as pr on su.professor_id = pr.id " + " where sst.student_id = ? ";
+			+ " left Join professor_tb as pr on su.professor_id = pr.id "
+			+ " where sst.student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 예비 수강 신청 내역
 	private static final String GET_PRE_APPLICATED_SUBJECT_LIST = " select pre.student_id, pre.subject_id, su.name as '강의명', pr.name as '담당교수', su.grades, su.sub_day, su.start_time, su.end_time,su.room_id, su.num_of_student, su.capacity  "
 			+ " from pre_stu_sub_tb as pre  " + " left join subject_tb as su on pre.subject_id = su.id  "
-			+ " left Join professor_tb as pr on su.professor_id = pr.id " + " where pre.student_id = ? ";
+			+ " left Join professor_tb as pr on su.professor_id = pr.id "
+			+ " where pre.student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 총 학점
 	private static final String TOTAL_SUBJECT_GRADES = " select sum(su.grades) as '총합' " + " from stu_sub_tb as sst "
-			+ " left join subject_tb as su on sst.subject_id = su.id " + " where sst.student_id = ? ";
+			+ " left join subject_tb as su on sst.subject_id = su.id "
+			+ " where sst.student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 예비 총 학점
 	private static final String TOTAL_PRE_SUBJECT_GRADES = " SELECT sum(grades) as '총합' "
 			+ "FROM pre_stu_sub_tb as pre " + "left join subject_tb as su on pre.subject_id = su.id "
-			+ "where pre.student_id = ? ";
+			+ "where pre.student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 수강 신청 여부
-	private static final String CONFIRM_SUBJECT_SQL = " select * from stu_sub_tb where student_id = ? ";
+	private static final String CONFIRM_SUBJECT_SQL = " select * from stu_sub_tb where student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 수강 취소
 	private static final String DELETE_CONFIRM_SUBJECT_SQL = " DELETE FROM stu_sub_tb WHERE subject_id = ? ";
@@ -154,14 +162,14 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " RIGHT JOIN subject_tb AS su ON pre.subject_id = su.id "
 			+ " INNER JOIN department_tb AS de ON su.dept_id = de.id "
 			+ " INNER JOIN college_tb AS co ON co.id = de.college_id "
-			+ " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id " + " WHERE pre.student_id = ? "
-			+ " ORDER BY su.id ASC ";
+			+ " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id "
+			+ " WHERE pre.student_id = ? AND sub_year = ? AND semester = ? " + " ORDER BY su.id ASC ";
 
-	// 수강 수강 학점 총합
+	// 수강 학점 총합
 	private static final String GET_TOTAL_GRADES = " select sum(complete_grade) as totalGrade from stu_sub_tb where student_id = ? ";
 
 	// 예비 수강 신청 학점 총합
-	private static final String GET_PRE_TOTAL_GRADES = " SELECT sum(grades) as totalGrade FROM pre_stu_sub_tb as pre left join subject_tb as su on pre.subject_id = su.id where pre.student_id = ? ";
+	private static final String GET_PRE_TOTAL_GRADES = " SELECT sum(grades) as totalGrade FROM pre_stu_sub_tb as pre left join subject_tb as su on pre.subject_id = su.id where pre.student_id = ? AND sub_year = ? AND semester = ? ";
 
 	// 예비 수강 신청 -> 수강 신청시 처리
 	private static final String SUBMIT_PRE_TO_ENRILMENT = " DELETE FROM pre_stu_sub_tb WHERE student_id = ? AND subject_id = ? ";
@@ -170,12 +178,14 @@ public class SugangRepositoryImpl implements SugangRepository {
 	private static final String IS_BREAK_APP = " SELECT status FROM stu_stat_tb WHERE student_id = ? ORDER BY id DESC LIMIT 1 ";
 
 	@Override
-	public List<Sugang> getAllSubject(int limit, int offset) {
+	public List<Sugang> getAllSubject(int limit, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_ALL_SUBJECT_LIST)) {
-			pstmt.setInt(1, limit);
-			pstmt.setInt(2, offset);
+			pstmt.setInt(1, year);
+			pstmt.setInt(2, semester);
+			pstmt.setInt(3, limit);
+			pstmt.setInt(4, offset);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().collegeName(rs.getString("단과대학")).departName(rs.getString("개설학과"))
@@ -197,13 +207,15 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getPreApplicationSubject(int studentId, int limit, int offset) {
+	public List<Sugang> getPreApplicationSubject(int studentId, int limit, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_PRE_APPLICATION_SUBJECT)) {
 			pstmt.setInt(1, studentId);
-			pstmt.setInt(2, limit);
-			pstmt.setInt(3, offset);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
+			pstmt.setInt(4, limit);
+			pstmt.setInt(5, offset);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().collegeName(rs.getString("단과대학")).departName(rs.getString("개설학과"))
@@ -254,7 +266,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getSubjectBySearch(Sugang sugang, int pageSize, int offset) {
+	public List<Sugang> getSubjectBySearch(Sugang sugang, int pageSize, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 
 		try (Connection conn = DBUtil.getConnection();
@@ -265,9 +277,10 @@ public class SugangRepositoryImpl implements SugangRepository {
 			pstmt.setInt(4, sugang.getDeptId());
 			pstmt.setString(5, sugang.getSubjectName());
 			pstmt.setString(6, sugang.getSubjectName());
-			pstmt.setInt(7, pageSize);
-			pstmt.setInt(8, offset);
-
+			pstmt.setInt(7, year);
+			pstmt.setInt(8, semester);
+			pstmt.setInt(9, pageSize);
+			pstmt.setInt(10, offset);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					sugang = Sugang.builder().collegeName(rs.getString("단과대학")).departName(rs.getString("개설학과"))
@@ -289,10 +302,12 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int getAllSubjectCount() {
+	public int getAllSubjectCount(int year, int semester) {
 		int subjectCount = 0;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_ALL_SUBJECT)) {
+			pstmt.setInt(1, year);
+			pstmt.setInt(2, semester);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				subjectCount = rs.getInt("count");
@@ -305,11 +320,13 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getApplicatedSubjectList(int studentId) {
+	public List<Sugang> getApplicatedSubjectList(int studentId, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_APPLICATED_SUBJECT_LIST)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().subjectId(rs.getInt("subject_id")).subjectName(rs.getString("강의명"))
@@ -329,7 +346,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getPreApplicatedSubjectList(int studentId) {
+	public List<Sugang> getPreApplicatedSubjectList(int studentId, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_PRE_APPLICATED_SUBJECT_LIST)) {
@@ -353,11 +370,13 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int getSubjectGrade(int studentId) {
+	public int getSubjectGrade(int studentId, int year, int semester) {
 		int totalGrade = 0;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(TOTAL_SUBJECT_GRADES)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				totalGrade = rs.getInt("총합");
@@ -369,11 +388,13 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public boolean getConfirmSubject(int studentId) {
+	public boolean getConfirmSubject(int studentId, int year, int semester) {
 		boolean sugang = false;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(CONFIRM_SUBJECT_SQL)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) { // 결과 집합에 데이터가 있는지 확인합니다.
 					sugang = true;
@@ -432,7 +453,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int getSearchSubjectCount(Sugang sugang) {
+	public int getSearchSubjectCount(Sugang sugang, int year, int semester) {
 		int count = 0;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(COUNT_SEARCH_SUBJECT)) {
@@ -442,6 +463,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 			pstmt.setInt(4, sugang.getDeptId());
 			pstmt.setString(5, sugang.getSubjectName());
 			pstmt.setString(6, sugang.getSubjectName());
+			pstmt.setInt(7, year);
+			pstmt.setInt(8, semester);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
@@ -502,7 +525,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getApplicationSubject(int studentId, int limit, int offset) {
+	public List<Sugang> getApplicationSubject(int studentId, int limit, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_APPLICATION_SUBJECT)) {
@@ -553,7 +576,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getPreSubjectBySearch(Sugang sugang, int limit, int offset) {
+	public List<Sugang> getPreSubjectBySearch(Sugang sugang, int limit, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 
 		try (Connection conn = DBUtil.getConnection();
@@ -564,8 +587,10 @@ public class SugangRepositoryImpl implements SugangRepository {
 			pstmt.setInt(4, sugang.getDeptId());
 			pstmt.setString(5, sugang.getSubjectName());
 			pstmt.setString(6, sugang.getSubjectName());
-			pstmt.setInt(7, limit);
-			pstmt.setInt(8, offset);
+			pstmt.setInt(7, year);
+			pstmt.setInt(8, semester);
+			pstmt.setInt(9, limit);
+			pstmt.setInt(10, offset);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
@@ -588,7 +613,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getAppSubjectBySearch(Sugang sugang, int limit, int offset) {
+	public List<Sugang> getAppSubjectBySearch(Sugang sugang, int limit, int offset, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 
 		try (Connection conn = DBUtil.getConnection();
@@ -599,8 +624,10 @@ public class SugangRepositoryImpl implements SugangRepository {
 			pstmt.setInt(4, sugang.getDeptId());
 			pstmt.setString(5, sugang.getSubjectName());
 			pstmt.setString(6, sugang.getSubjectName());
-			pstmt.setInt(7, limit);
-			pstmt.setInt(8, offset);
+			pstmt.setInt(7, year);
+			pstmt.setInt(8, semester);
+			pstmt.setInt(9, limit);
+			pstmt.setInt(10, offset);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
@@ -696,12 +723,14 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public List<Sugang> getResetPreSubject(int studentId) {
+	public List<Sugang> getResetPreSubject(int studentId, int year, int semester) {
 		List<Sugang> sugangList = new ArrayList<Sugang>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(PRE_TO_APP_SUBJECT)) {
 			pstmt.setInt(1, studentId);
 			pstmt.setInt(2, studentId);
+			pstmt.setInt(3, year);
+			pstmt.setInt(4, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().subjectId(rs.getInt("id")).subjectName(rs.getString("강의명"))
@@ -741,11 +770,13 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int isPreTotalGradeWithinLimit(int studentId) {
+	public int isPreTotalGradeWithinLimit(int studentId, int year, int semester) {
 		int totalGrade = 0;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_PRE_TOTAL_GRADES)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					totalGrade = rs.getInt("totalGrade");
@@ -760,7 +791,7 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public int getPreSubjectGrade(int studentId) {
+	public int getPreSubjectGrade(int studentId, int year, int semester) {
 		int totalGrade = 0;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(TOTAL_PRE_SUBJECT_GRADES)) {
