@@ -1,14 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/css/myInfo.css">
-
-<!-- header 부분 다시 확인!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<link rel="stylesheet" type="text/css" href="/resources/css/myInfo.css">
 
 <!-- My 상세 메뉴 -->
-<div class="d-flex justify-content-center align-items-start"
-	style="min-width: 100em;">
+<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
 			<h2>MY</h2>
@@ -18,10 +13,14 @@
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
-					<td><a href="/info/staff" class="selected--menu">내 정보 조회</a></td>
+					<td>
+						<a href="/info/staff" class="selected--menu">내 정보 조회</a>
+					</td>
 				</tr>
 				<tr>
-					<td><a href="/user/password">비밀번호 변경</a></td>
+					<td>
+						<a href="/user/password">비밀번호 변경</a>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -76,8 +75,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<button type="button" onclick="location.href='/info/update'"
-			class="btn btn-dark update--button">수정하기</button>
+		<button type="button" onclick="location.href='/info/update'" class="btn btn-dark update--button">수정하기</button>
 		<hr>
 	</main>
 </div>

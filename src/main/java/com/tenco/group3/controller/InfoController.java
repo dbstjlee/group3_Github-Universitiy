@@ -15,6 +15,9 @@ import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
+import com.tenco.group3.util.AlertUtil;
+import com.tenco.group3.util.PasswordUtil;
+import com.tenco.group3.util.ValidationUtil;
 
 @WebServlet("/info/*")
 public class InfoController extends HttpServlet {
@@ -28,8 +31,7 @@ public class InfoController extends HttpServlet {
 
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
 		System.out.println("action: " + action); // TODO - 삭제 예정
 		switch (action) {
@@ -59,26 +61,24 @@ public class InfoController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void handleUserInfo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleUserInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		User principal = (User) request.getSession().getAttribute("principal");
-		
-		if(principal.getUserRole().equals("student")) {
+
+		if (principal.getUserRole().equals("student")) {
 			Student studentInfo = userRepository.getStudentInfo(principal.getId());
 			request.setAttribute("studentInfo", studentInfo);
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
-		} else if(principal.getUserRole().equals("professor")) {
+		} else if (principal.getUserRole().equals("professor")) {
 			Professor professorInfo = userRepository.getProfessorInfo(principal.getId());
 			request.setAttribute("professorInfo", professorInfo);
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
-		} else if(principal.getUserRole().equals("staff")) {
+		} else if (principal.getUserRole().equals("staff")) {
 			Staff staffInfo = userRepository.getStaffInfo(principal.getId());
 			request.setAttribute("staffInfo", staffInfo);
 			request.getRequestDispatcher("/WEB-INF/views/user/update.jsp").forward(request, response);
-		} 
+		}
 	}
-	
 
 	/**
 	 * 직원 정보 조회(마이페이지)
@@ -88,8 +88,7 @@ public class InfoController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleInfoSelectStaff(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleInfoSelectStaff(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User principal = (User) request.getSession().getAttribute("principal");
 		if (principal != null) {
 			Staff staffInfo = userRepository.getStaffInfo(principal.getId());
@@ -111,8 +110,7 @@ public class InfoController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleInfoSelectProfessor(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleInfoSelectProfessor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User principal = (User) request.getSession().getAttribute("principal");
 		if (principal != null) {
 			Professor professorInfo = userRepository.getProfessorInfo(principal.getId());
@@ -134,8 +132,7 @@ public class InfoController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void handleInfoSelectStudent(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleInfoSelectStudent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// 1. 세션 조회
 		User principal = (User) request.getSession().getAttribute("principal");
@@ -149,7 +146,7 @@ public class InfoController extends HttpServlet {
 			if (principal.getId() == studentInfo.getId()) {
 				request.setAttribute("studentInfo", studentInfo);
 				request.setAttribute("studentStat", studentStat);
-				
+
 				// 4. jsp에 뿌리기
 				request.getRequestDispatcher("/WEB-INF/views/user/studentInfo.jsp").forward(request, response);
 			}
@@ -159,8 +156,7 @@ public class InfoController extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String action = request.getPathInfo();
 		System.out.println("action : " + action); // TODO - 삭제 예정
@@ -183,8 +179,7 @@ public class InfoController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void HandleUserInfoUpdate(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	private void HandleUserInfoUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		User principal = (User) request.getSession().getAttribute("principal");
 		String address = request.getParameter("address");
@@ -193,33 +188,42 @@ public class InfoController extends HttpServlet {
 		String password = request.getParameter("password");
 
 		// 비밀번호 확인
-		if (principal.getPassword().equals(password)) {
+		if (!PasswordUtil.checkPassword(principal.getPassword(), password)) {
+			AlertUtil.backAlert(response, "비밀번호가 일치하지 않습니다.");
+			return;
+		}
+		
+		// 유효성 검사
+		if (email == null || !ValidationUtil.isEmail(email)) {
+			AlertUtil.backAlert(response, "이메일 형식이 아닙니다.");
+			return;
+		}
+		if (address == null || !ValidationUtil.isNotOnlyWhitespace(address)) {
+			AlertUtil.backAlert(response, "주소를 입력해주세요.");
+			return;
+		}
+		
+		if (tel == null || !ValidationUtil.isValidateTel(tel)) {
+			AlertUtil.backAlert(response, "전화번호를 확인해 주세요");
+			return;
+		}
+		tel = ValidationUtil.formatTel(tel);
+		
+		if (principal.getUserRole().equals("student")) {
+			Student studentUpdate = Student.builder().address(address).email(email).tel(tel).id(principal.getId()).build();
+			userRepository.getStudentInfoUpdate(studentUpdate);
+			response.sendRedirect(request.getContextPath() + "/info/student");
 
-			if (principal.getUserRole().equals("student")) {
-				Student studentUpdate = Student.builder().address(address).email(email).tel(tel).id(principal.getId())
-						.build();
-				userRepository.getStudentInfoUpdate(studentUpdate);
-				response.sendRedirect(request.getContextPath() + "/info/student");
-				
-			} else if (principal.getUserRole().equals("professor")) {
-				Professor professorUpdate = Professor.builder().address(address).email(email).tel(tel)
-						.id(principal.getId()).build();
-				userRepository.getProfessorInfoUpdate(professorUpdate);
-				response.sendRedirect(request.getContextPath() + "/info/professor");
-				
-			} else if (principal.getUserRole().equals("staff")) {
-				Staff staffUpdate = Staff.builder().address(address).email(email).tel(tel).id(principal.getId())
-						.build();
-				userRepository.getStaffInfoUpdate(staffUpdate);
-				response.sendRedirect(request.getContextPath() + "/info/staff");
-				
-			} else {
-				PrintWriter out = response.getWriter();
-				response.setContentType("text/html; charset=UTF-8");
-				out.println("<script> alert('비밀번호가 일치하지 않습니다.');");
-				out.println("history.go(-1); </script>");
-				out.close();
-			}
+		} else if (principal.getUserRole().equals("professor")) {
+			Professor professorUpdate = Professor.builder().address(address).email(email).tel(tel).id(principal.getId()).build();
+			userRepository.getProfessorInfoUpdate(professorUpdate);
+			response.sendRedirect(request.getContextPath() + "/info/professor");
+
+		} else if (principal.getUserRole().equals("staff")) {
+			Staff staffUpdate = Staff.builder().address(address).email(email).tel(tel).id(principal.getId()).build();
+			userRepository.getStaffInfoUpdate(staffUpdate);
+			response.sendRedirect(request.getContextPath() + "/info/staff");
+
 		} else {
 			PrintWriter out = response.getWriter();
 			response.setContentType("text/html; charset=UTF-8");

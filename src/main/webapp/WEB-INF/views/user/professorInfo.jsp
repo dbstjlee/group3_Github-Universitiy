@@ -2,8 +2,6 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/myInfo.css">
 
-<!-- header 부분 다시 확인!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
 <!-- My 상세 메뉴 -->
 <div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 	<div class="sub--menu">
@@ -15,10 +13,10 @@
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
-					<td><a href="${pageContext.request.contextPath}/info/professor" class="selected--menu">내 정보 조회</a></td>
+					<td><a href="/info/professor" class="selected--menu">내 정보 조회</a></td>
 				</tr>
 				<tr>
-					<td><a href="${pageContext.request.contextPath}/user/password">비밀번호 변경</a></td>
+					<td><a href="/user/password">비밀번호 변경</a></td>
 				</tr>
 			</table>
 		</div>
