@@ -16,4 +16,6 @@ public interface TuitionRepository {
 	
 	// 등록금 미납 학생 모두 조회
 	List<Integer> getAllStudentsNon();
+	
+	int submitTuition(int studnetId);
 }

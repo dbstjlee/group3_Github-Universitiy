@@ -1,0 +1,60 @@
+@charset "UTF-8";
+/* evaluation.css */
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+hr {
+    margin: 20px 0;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+label {
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}

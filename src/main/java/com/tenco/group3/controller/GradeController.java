@@ -6,7 +6,9 @@ import java.util.List;
 import com.tenco.group3.model.Grade;
 import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
+import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.GradeRepositoryImpl;
+import com.tenco.group3.repository.interfaces.EvaluationRepository;
 import com.tenco.group3.repository.interfaces.GradeRepository;
 
 import jakarta.servlet.ServletException;
@@ -20,7 +22,7 @@ import jakarta.servlet.http.HttpSession;
 public class GradeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private GradeRepository gradeRepository;
-
+	
 	@Override
 	public void init() throws ServletException {
 		gradeRepository = new GradeRepositoryImpl();

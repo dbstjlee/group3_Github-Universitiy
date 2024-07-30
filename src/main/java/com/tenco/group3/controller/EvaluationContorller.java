@@ -7,7 +7,6 @@ import com.tenco.group3.model.Evaluation;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.interfaces.EvaluationRepository;
-import com.tenco.group3.util.AlertUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -59,6 +58,7 @@ public class EvaluationContorller extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getServletPath();
 		HttpSession session = request.getSession();
+
 		switch (action) {
 		case "/evaluation":
 			handlerEvaluation(request, response, session);
@@ -79,17 +79,25 @@ public class EvaluationContorller extends HttpServlet {
 	private void handlerEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException {
 		User user = (User) session.getAttribute("principal");
-
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 
+		int[] answers = null;
+		System.out.println(request.getParameter("answer"));
 		// 방어적 코드 - answer 값이 null 값이면 창 닫기
-		if (request.getParameter("answer") != null) {
-			int[] answers = new int[7];
-			for (int i = 0; i < 7; i++) { // 각 문항 답을 배열로 저장
-				answers[i] = Integer.parseInt(request.getParameter("answer" + (i + 1)));
+		for (int i = 0; i < 7; i++) {
+			if (request.getParameter("answer" + (i + 1)) != null) {
+				answers = new int[7];
+				for (int i1 = 0; i1 < 7; i1++) { // 각 문항 답을 배열로 저장
+					answers[i1] = Integer.parseInt(request.getParameter("answer" + (i1 + 1)));
+				}
+			} else {
+				response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script> alert('올바른 값을 제출하세요.'); window.close(); </script>");
+				return;
 			}
 			String improvements = request.getParameter("improvements");
-			
+
 			Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
 					.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
 					.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
@@ -101,20 +109,16 @@ public class EvaluationContorller extends HttpServlet {
 				out.println("<script> alert('이미 평가를 작성했습니다.'); window.close(); </script>");
 				return;
 			}
-			
+
 			// 평가 작성
 			evaluationRepository.addEvaluation(evaluation);
-			
-			response.setContentType("text/html;charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<script> alert('제출 되었습니다.'); window.close(); </script>");
 
-		} else {
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			out.println("<script> alert('올바른 값을 제출하세요.'); window.close(); </script>");
-			return;
+			out.println("<script> alert('제출 되었습니다.'); window.opener.location.href='/grade/thisSemester'; window.close(); </script>");
+		    out.close();
 		}
+
 	}
 
 }

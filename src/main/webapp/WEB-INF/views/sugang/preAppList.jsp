@@ -137,7 +137,8 @@
 															</c:when>
 															<c:otherwise>
 																<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-																	<input type="hidden" name="subjectId" value="${resetSugang.subjectId}"> <input type="hidden" name="type" value="0">
+																	<input type="hidden" name="subjectId" value="${resetSugang.subjectId}"> <input type="hidden" name="type" value="0"> <input type="hidden"
+																		name="grades" value="${sugangItem.grades}">
 																	<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
 																</form>
 															</c:otherwise>
@@ -198,11 +199,10 @@
 									</table>
 								</div>
 							</c:if>
-							<br>
-							<hr>
 							<c:if test="${empty sugangList}">
+								<br>
 								<div>
-									<p>수강 신청 내역이 없습니다.</p>
+									<p class="no--list--p">수강 신청 내역이 없습니다.</p>
 								</div>
 							</c:if>
 						</div>

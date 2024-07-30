@@ -195,6 +195,7 @@
 									<c:otherwise>
 										<form action="${pageContext.request.contextPath}/sugang/pre" method="post">
 											<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
+											<input type="hidden" name="grades" value="${sugangItem.grades}">
 											<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
 										</form>
 									</c:otherwise>

@@ -14,7 +14,8 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 			+ " (student_id, subject_id, answer1, answer2, answer3, "
 			+ " answer4, answer5, answer6, answer7, improvements) VALUES (?,?,?,?,?,?,?,?,?,?) ";
 
-	private static final String IS_EVALUATION_SQL = " SELECT * " + " FROM evaluation_tb " + " WHERE student_id = ? ";
+	private static final String IS_EVALUATION_SQL = " SELECT * " + " FROM evaluation_tb "
+			+ " WHERE student_id = ? AND subject_id = ? ";
 
 	@Override
 	public int addEvaluation(Evaluation evaluation) {
@@ -46,14 +47,13 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 
 	@Override
 	public boolean isEvaluation(int studentId, int subjectId) {
-		boolean isGetEvaluation = true;
+		boolean isGetEvaluation = false;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(IS_EVALUATION_SQL)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, subjectId);
 			try (ResultSet rs = pstmt.executeQuery()) {
-				if (!rs.isBeforeFirst()) {
-					isGetEvaluation = false;
-				} else {
+				if (rs.next()) {
 					isGetEvaluation = true;
 				}
 			} catch (Exception e) {

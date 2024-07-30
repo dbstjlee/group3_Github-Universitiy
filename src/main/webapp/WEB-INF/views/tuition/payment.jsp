@@ -67,7 +67,14 @@
 						<tbody>
 							<tr>
 								<th colspan="2">장 학 유 형</th>
-								<th colspan="2">${paymentTuition.scholarType}</th>
+								<th colspan="2"><c:choose>
+										<c:when test="${paymentTuition.scholarType eq 0}">
+											해당 없음
+										</c:when>
+										<c:otherwise>
+											${checkTuition.scholarType}
+										</c:otherwise>
+									</c:choose></th>
 							</tr>
 							<tr>
 								<th colspan="2">등 록 금</th>
@@ -95,15 +102,15 @@
 					</table>
 				</div>
 				<c:choose>
-						<c:when test="${paymentTuition.status == 0}">
-							<form action="${pageContext.request.contextPath}/tuition/payment">
-								<button type="submit">납부하기</button>
-							</form>
-						</c:when>
-						<c:otherwise>
-							<p class="no--list--p">이미 납부 하셨습니다.</p>
-						</c:otherwise>
-					</c:choose>
+					<c:when test="${paymentTuition.status == 0}">
+						<form action="${pageContext.request.contextPath}/tuition/payment" method="post">
+							<button type="submit" onclick="return confirm('등록금을 납부 하시겠습니까?');">등록금 납부</button>
+						</form>
+					</c:when>
+					<c:otherwise>
+						<p class="no--list--p">이미 납부 하셨습니다.</p>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</main>
 	</div>
