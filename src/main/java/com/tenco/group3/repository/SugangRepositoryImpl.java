@@ -165,6 +165,9 @@ public class SugangRepositoryImpl implements SugangRepository {
 
 	// 예비 수강 신청 학점 총합
 	private static final String GET_PRE_TOTAL_GRADES = " SELECT sum(grades) as totalGrade FROM pre_stu_sub_tb as pre left join subject_tb as su on pre.subject_id = su.id where pre.student_id = ? ";
+	
+	// 예비 수강 신청 -> 수강 신청시 처리
+	private static final String SUBMIT_PRE_TO_ENRILMENT = " DELETE FROM pre_stu_sub_tb WHERE student_id = ? AND subject_id = ? ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -770,6 +773,27 @@ public class SugangRepositoryImpl implements SugangRepository {
 			e.printStackTrace();
 		}
 		return totalGrade;
+	}
+
+	@Override
+	public int submitPreToEnrolment(int studentId, int subjectId) {
+		int rowCount = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(SUBMIT_PRE_TO_ENRILMENT)){
+				pstmt.setInt(1, studentId);
+				pstmt.setInt(2, subjectId);
+				
+				rowCount = pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowCount;
 	}
 
 }

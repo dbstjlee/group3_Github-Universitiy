@@ -456,6 +456,7 @@ public class SugangController extends HttpServlet {
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
 		int grade = 0;
+		System.out.println(subjectId);
 		if (request.getParameter("grades") != null) {
 			grade = Integer.parseInt(request.getParameter("grades"));
 		}
@@ -470,8 +471,8 @@ public class SugangController extends HttpServlet {
 		} else {
 			if ((Define.MAX_GRADES - totalGrade) >= grade) {
 				int rowCount = sugangRepository.addEnrolment(user.getId(), subjectId, grade);
+				sugangRepository.submitPreToEnrolment(user.getId(), subjectId);
 				if (rowCount != 0) {
-					sugangRepository.deletePreConfirmSubject(subjectId);
 					response.sendRedirect(request.getContextPath() + "/sugang/application");
 				} else {
 					AlertUtil.backAlert(response, "정원 초과된 강의입니다.");

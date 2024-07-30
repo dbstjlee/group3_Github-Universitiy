@@ -51,4 +51,6 @@ public interface SugangRepository {
 
 	int isPreTotalGradeWithinLimit(int studentId);
 
+	int submitPreToEnrolment(int studentId, int subjectId);
+
 }
