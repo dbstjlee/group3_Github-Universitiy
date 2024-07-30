@@ -14,5 +14,5 @@
 		jdbcUrl="jdbc:mysql://localhost:3306/db_greenboard?serverTimezone=Asia/Seoul"
 		driverClassName="com.mysql.cj.jdbc.Driver"
 		username="root"
-		password="194e9w3j"/>
+		password="asd123"/>
 </Context>
