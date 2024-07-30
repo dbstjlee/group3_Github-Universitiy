@@ -21,13 +21,14 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 	private static final String IS_EVALUATION_SQL = " SELECT * " + " FROM evaluation_tb "
 			+ " WHERE student_id = ? AND subject_id = ? ";
 
-	// TODO 교수만의 subject여야 한다 !!!! where in 걸면될듯
-	
-	private static final String SELECT_ALL_SUB_EVAL = " SELECT e.subject_id, s.name as subject_name FROM subject_tb s JOIN evaluation_tb e ON e.subject_id = s.id GROUP BY e.subject_id ";
+	private static final String SELECT_ALL_SUB_EVAL = " SELECT e.subject_id, s.name as subject_name FROM subject_tb s JOIN evaluation_tb e ON e.subject_id = s.id WHERE s.professor_id = ? GROUP BY e.subject_id ";
 	private static final String SELECT_ALL_EVAL = " SELECT e.evaluation_id, e.improvements, "
 			+ " ROUND((answer1 + answer2 + answer3 + answer4 + answer5 + answer6 + answer7) / 7.0, 2) AS avg,  "
-			+ " s.name as subject_name FROM subject_tb s JOIN evaluation_tb e ON e.subject_id = s.id ";
-	
+			+ " s.name as subject_name FROM subject_tb s JOIN evaluation_tb e ON e.subject_id = s.id WHERE s.professor_id = ? ";
+	private static final String SELECT_ALL_EVAL_BY_SUB = " SELECT e.evaluation_id, e.improvements, "
+			+ " ROUND((answer1 + answer2 + answer3 + answer4 + answer5 + answer6 + answer7) / 7.0, 2) AS avg,  "
+			+ " s.name as subject_name FROM subject_tb s JOIN evaluation_tb e ON e.subject_id = s.id WHERE s.professor_id = ? AND e.subject_id = ? ";
+
 	@Override
 	public int addEvaluation(Evaluation evaluation) {
 		int rowCount = 0;
@@ -77,15 +78,15 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 	}
 
 	@Override
-	public List<Subject> getAllSubjectEvaluation() {
+	public List<Subject> getAllSubjectEvaluation(int professorId) {
 		List<Subject> subjectList = new ArrayList<>();
-		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUB_EVAL)) {
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUB_EVAL)) {
+			pstmt.setInt(1, professorId);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				subjectList.add(Subject.builder()
-					.id(rs.getInt("subject_id"))
-					.name(rs.getString("subject_name"))
-					.build());
+				subjectList
+						.add(Subject.builder().id(rs.getInt("subject_id")).name(rs.getString("subject_name")).build());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,21 +94,41 @@ public class EvaluationRepositoryImpl implements EvaluationRepository {
 		return subjectList;
 	}
 
-//	@Override
-//	public List<Evaluation> getAllEvaluation() {
-//		List<Subject> subjectList = new ArrayList<>();
-//		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SUB_EVAL)) {
-//			ResultSet rs = pstmt.executeQuery();
-//			while (rs.next()) {
-//				subjectList.add(Subject.builder()
-//					.id(rs.getInt("subject_id"))
-//					.name(rs.getString("subject_name"))
-//					.build());
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return subjectList;
-//	}
+	@Override
+	public List<Evaluation> getAllEvaluation(int professorId) {
+		List<Evaluation> evaluationList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_EVAL)) {
+			pstmt.setInt(1, professorId);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				evaluationList.add(Evaluation.builder().evaluationId(rs.getInt("evaluation_id"))
+						.improvments(rs.getString("improvements")).avg(rs.getDouble("avg"))
+						.subjectName(rs.getString("subject_name")).build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return evaluationList;
+	}
+
+	@Override
+	public List<Evaluation> getAllEvaluationBySubjectId(int professorId, int subjectId) {
+		List<Evaluation> evaluationList = new ArrayList<>();
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_EVAL_BY_SUB)) {
+			pstmt.setInt(1, professorId);
+			pstmt.setInt(2, subjectId);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				evaluationList.add(Evaluation.builder().evaluationId(rs.getInt("evaluation_id"))
+						.improvments(rs.getString("improvements")).avg(rs.getDouble("avg"))
+						.subjectName(rs.getString("subject_name")).build());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return evaluationList;
+	}
 
 }

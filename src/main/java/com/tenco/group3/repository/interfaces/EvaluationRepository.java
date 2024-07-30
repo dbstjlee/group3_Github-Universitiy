@@ -10,7 +10,9 @@ public interface EvaluationRepository {
 
 	boolean isEvaluation(int studentId, int subjectId);
 	
-	List<Subject> getAllSubjectEvaluation();
+	List<Subject> getAllSubjectEvaluation(int professorId);
 	
-//	List<Evaluation> getAllEvaluation();
+	List<Evaluation> getAllEvaluation(int professorId);
+	
+	List<Evaluation> getAllEvaluationBySubjectId(int professorId, int subjectId);
 }

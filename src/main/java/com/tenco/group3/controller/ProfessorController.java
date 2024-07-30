@@ -50,7 +50,8 @@ public class ProfessorController extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		String action = request.getPathInfo();
 		HttpSession session = request.getSession(false);
@@ -69,7 +70,7 @@ public class ProfessorController extends HttpServlet {
 			showUpdateStudentDetail(request, response);
 			break;
 		case "/evaluation":
-			showEvaluation(request, response);
+			showEvaluation(request, response, session);
 			break;
 		default:
 
@@ -78,22 +79,26 @@ public class ProfessorController extends HttpServlet {
 
 	}
 
-	private void showEvaluation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO 강의 평가가 존재하는 과목의 과목명 리스트 받기
-		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation();
-		// List<Evaluation> evaluationList = ''
+	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws ServletException, IOException {
+		// 강의 평가가 존재하는 과목의 과목명 리스트 받기
+		User user = (User) session.getAttribute("pincipal");
+		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation(user.getId());
+		List<Evaluation> evaluationList = evaluationRepository.getAllEvaluation(user.getId());
 		request.setAttribute("subjectName", subjectName);
-		//request.setAttribute("evaluationList", evaluationList);
+		request.setAttribute("evaluationList", evaluationList);
 		request.getRequestDispatcher("/WEB-INF/views/professor/myEvaluation.jsp").forward(request, response);
 	}
 
-	private void showUpdateStudentDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showUpdateStudentDetail(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		StuSubDetail student = subDetailRepository.getDetailById(Integer.parseInt(request.getParameter("id")));
 		request.setAttribute("student", student);
 		request.getRequestDispatcher("/WEB-INF/views/professor/updateStudentDetail.jsp").forward(request, response);
 	}
 
-	private void subjectById(HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, ServletException {
+	private void subjectById(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException, ServletException {
 		int subjectId = Integer.parseInt(request.getParameter("id"));
 		String subjectName = request.getParameter("name");
 		List<StuSubDetail> studentList = subDetailRepository.getAllDetailBySubjectId(subjectId);
@@ -103,7 +108,8 @@ public class ProfessorController extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getPathInfo();
 		HttpSession session = request.getSession(false);
 		switch (action) {
@@ -117,7 +123,7 @@ public class ProfessorController extends HttpServlet {
 			handleStudentGrade(request, response);
 			break;
 		case "/evaluation":
-			searchEvaluation(request, response);
+			searchEvaluation(request, response, session);
 			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -126,9 +132,15 @@ public class ProfessorController extends HttpServlet {
 
 	}
 
-	private void searchEvaluation(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
+	private void searchEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+		// 강의 평가가 존재하는 과목의 과목명 리스트 받기
+		User user = (User) session.getAttribute("pincipal");
+		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation(user.getId());
+		List<Evaluation> evaluationList = evaluationRepository.getAllEvaluation(user.getId());
+		request.setAttribute("subjectName", subjectName);
+		request.setAttribute("evaluationList", evaluationList);
+		request.getRequestDispatcher("/WEB-INF/views/professor/myEvaluation.jsp").forward(request, response);
+
 	}
 
 	private void handleStudentGrade(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -141,15 +153,8 @@ public class ProfessorController extends HttpServlet {
 			int convertedMark = Integer.parseInt(request.getParameter("convertedMark"));
 			int id = Integer.parseInt(request.getParameter("id"));
 			String grade = request.getParameter("grade");
-			StuSubDetail stuSubDetail = StuSubDetail.builder()
-				.id(id)
-				.absent(absent)
-				.lateness(lateness)
-				.homework(homework)
-				.midExam(midExam)
-				.finalExam(finalExam)
-				.convertedMark(convertedMark)
-				.build();
+			StuSubDetail stuSubDetail = StuSubDetail.builder().id(id).absent(absent).lateness(lateness)
+					.homework(homework).midExam(midExam).finalExam(finalExam).convertedMark(convertedMark).build();
 			subDetailRepository.updateDetailById(stuSubDetail);
 			stuSubRepository.updateGrade(grade, id);
 			Subject subject = subDetailRepository.getSubjectByDetailId(id);
@@ -215,7 +220,8 @@ public class ProfessorController extends HttpServlet {
 		try {
 			request.setAttribute("yearList", yearList);
 			request.setAttribute("subjectList", subjectList);
-			request.getRequestDispatcher("/WEB-INF/views/professor/professorSubjectList.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/professor/professorSubjectList.jsp").forward(request,
+					response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessage", "잘못된 접근");
@@ -225,13 +231,14 @@ public class ProfessorController extends HttpServlet {
 	/**
 	 * @학기별조회
 	 */
-	private void searchPorfessorSubjectBySeemester(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws SecurityException, IOException {
+	private void searchPorfessorSubjectBySeemester(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) throws SecurityException, IOException {
 		User user = (User) session.getAttribute("principal");
 
 		int year = Integer.parseInt(request.getParameter("subYear"));
 		int semester = Integer.parseInt(request.getParameter("subSemester"));
-		List<Subject> subjectlist = professorRepository.veiwProfessorsubjectBySemesterAndYear(user.getId(), year, semester);
+		List<Subject> subjectlist = professorRepository.veiwProfessorsubjectBySemesterAndYear(user.getId(), year,
+				semester);
 		// 학년도 를 띄우려고 받아옴
 		List<Subject> subjectList = professorRepository.veiwProfessorsubjectByProfessorId(user.getId());
 		List<Integer> yearList = new ArrayList<>();
@@ -245,14 +252,16 @@ public class ProfessorController extends HttpServlet {
 		request.setAttribute("yearList", yearList);
 
 		try {
-			request.getRequestDispatcher("/WEB-INF/views/professor/professorSubjectList.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/professor/professorSubjectList.jsp").forward(request,
+					response);
 		} catch (ServletException | IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void handleSyllabusUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void handleSyllabusUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		User principal = (User) request.getSession().getAttribute("principal");
 		String overview = request.getParameter("overview");
@@ -261,13 +270,8 @@ public class ProfessorController extends HttpServlet {
 		String program = request.getParameter("program");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 
-		Syllabus syllabus = Syllabus.builder()
-			.overview(overview)
-			.objective(objective)
-			.textbook(textbook)
-			.program(program)
-			.subjectId(subjectId)
-			.build();
+		Syllabus syllabus = Syllabus.builder().overview(overview).objective(objective).textbook(textbook)
+				.program(program).subjectId(subjectId).build();
 		professorRepository.updateSyllabus(syllabus);
 
 		response.setContentType("text/html;charset=UTF-8");
