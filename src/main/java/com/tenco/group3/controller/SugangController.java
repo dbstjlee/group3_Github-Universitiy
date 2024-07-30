@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.Builder.Default;
 
 @WebServlet("/sugang/*")
 public class SugangController extends HttpServlet {
@@ -35,53 +34,58 @@ public class SugangController extends HttpServlet {
 		int sugangDay = (int) getServletContext().getAttribute("sugang");
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
-		switch (action) {
-		case "/subjectList":
-			showSubjectList(request, response, session);
-			break;
-		case "/subjectList/search":
-			showSearchSubject(request, response, session);
-			break;
-		case "/pre":
-			if (sugangDay == ScheduleState.PRE) {
-				showPreliminaryList(request, response, session);
-			} else {
-				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
-			}
-			break;
-		case "/pre/search":
-			if (sugangDay == ScheduleState.PRE) {
-				showSearchPreliminary(request, response, session);
-			} else {
-				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
-			}
-			break;
-		case "/preAppList":
-			showPreliminaryAppList(request, response, session);
-			break;
-		case "/application":
-			if (sugangDay == ScheduleState.TRUE) {
-				showApplicationList(request, response, session);
-			} else {
-				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
-			}
-			break;
-		case "/application/search":
-			if (sugangDay == ScheduleState.TRUE) {
-				showSearchApplication(request, response, session);
-			} else {
-				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
-			}
-			break;
-		case "/list":
-			if (sugangDay == ScheduleState.TRUE || sugangDay == ScheduleState.END) {
-				showListAppSubject(request, response, session);
-			} else {
-				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
-			}
-			break;
-		default:
-			break;
+		User user = (User) session.getAttribute("principal");
+		if (!sugangRepository.isBreakedApp(user.getId())) {
+			switch (action) {
+			case "/subjectList":
+				showSubjectList(request, response, session);
+				break;
+			case "/subjectList/search":
+				showSearchSubject(request, response, session);
+				break;
+			case "/pre":
+				if (sugangDay == ScheduleState.PRE) {
+					showPreliminaryList(request, response, session);
+				} else {
+					AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
+				}
+				break;
+			case "/pre/search":
+				if (sugangDay == ScheduleState.PRE) {
+					showSearchPreliminary(request, response, session);
+				} else {
+					AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
+				}
+				break;
+			case "/preAppList":
+				showPreliminaryAppList(request, response, session);
+				break;
+			case "/application":
+				if (sugangDay == ScheduleState.TRUE) {
+					showApplicationList(request, response, session);
+				} else {
+					AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+				}
+				break;
+			case "/application/search":
+				if (sugangDay == ScheduleState.TRUE) {
+					showSearchApplication(request, response, session);
+				} else {
+					AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+				}
+				break;
+			case "/list":
+				if (sugangDay == ScheduleState.TRUE || sugangDay == ScheduleState.END) {
+					showListAppSubject(request, response, session);
+				} else {
+					AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+				}
+				break;
+			default:
+				break;
+			} 
+		} else {
+			AlertUtil.backAlert(response, "휴학 기간 동안은 수강 신청이 불가능 합니다.");
 		}
 	}
 

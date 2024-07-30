@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.tags.shaded.org.apache.regexp.RE;
+
 import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Sugang;
 import com.tenco.group3.repository.interfaces.SugangRepository;
@@ -168,6 +170,9 @@ public class SugangRepositoryImpl implements SugangRepository {
 	
 	// 예비 수강 신청 -> 수강 신청시 처리
 	private static final String SUBMIT_PRE_TO_ENRILMENT = " DELETE FROM pre_stu_sub_tb WHERE student_id = ? AND subject_id = ? ";
+	
+	// 휴학 여부
+	private static final String IS_BREAK_APP = " SELECT * FROM break_app_tb WHERE student_id = ? AND status = '승인' ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -794,6 +799,25 @@ public class SugangRepositoryImpl implements SugangRepository {
 			e.printStackTrace();
 		}
 		return rowCount;
+	}
+
+	@Override
+	public boolean isBreakedApp(int studentId) {
+		boolean isBreaked = false;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(IS_BREAK_APP)){
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()){
+				if(rs.next()) {
+					isBreaked = true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isBreaked;
 	}
 
 }
