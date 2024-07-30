@@ -7,19 +7,26 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css?v=1.0">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
-<body>
+				<div class="logo--section">
+				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.gif"></a>
+				</div>
+<body>	
 	<header>
 		<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">
 			<div class="header--top">
+			<div class="hamburger-menu">
+  					<span></span>
+  					<span></span>
+  					<span></span>
+			</div>
 				<ul>
 					<li>${principal.username}님(${principal.id})</li>
 					<li style="margin: 0 15px;">|</li>
 					<li><a href="${pageContext.request.contextPath}/user/logOut">로그아웃</a></li>
 				</ul>
 			</div>
-
+	<div class="sidebar">
 			<nav class="main--menu">
-				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.png"></a>
 
 				<c:choose>
 					<c:when test="${principal.userRole == 'student'}">
@@ -51,5 +58,18 @@
 					</c:when>
 				</c:choose>
 			</nav>
+	</div>
 		</form>
+		
 	</header>
+	 <script>
+        document.querySelector('.hamburger-menu').addEventListener('click', function() {
+          document.querySelector('.sidebar').classList.toggle('open');
+          document.body.classList.toggle('shift');
+        });
+    </script>
+	
+	
+
+  <!-- 사이드바 내용 -->
+  
