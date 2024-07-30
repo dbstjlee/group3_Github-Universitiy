@@ -127,7 +127,7 @@ public class SugangController extends HttpServlet {
 		if (name == null || name.trim().isEmpty()) {
 			name = null;
 		}
-		if (type.equals("전체") || deptId == -1 || name == null) {
+		if (type.equals("전체") && deptId == -1 && name == null) {
 			response.sendRedirect(request.getContextPath() + "/sugang/application");
 			return;
 		}
@@ -269,7 +269,7 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 
-		if (type.equals("전체") || deptId == -1 || name == null) {
+		if (type.equals("전체") && deptId == -1 && name == null) {
 			response.sendRedirect(request.getContextPath() + "/sugang/pre");
 			return;
 		}
