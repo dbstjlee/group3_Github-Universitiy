@@ -31,7 +31,7 @@ public class SugangController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 0 - 수강 신청 이전 기간 , 1 - 수강 신청 기간, 2 - 수강 신청 마감 이후 기간, 3 - 예비 수강 신청 기간
-		int sugangDay = (int) getServletContext().getAttribute("Sugang");
+		int sugangDay = (int) getServletContext().getAttribute("sugang");
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
 		// TODO - 수강 신청 기간이 아닐 때 접근 막고, 수강 신청 기간으로 변경시 신청 값이 강의 인원수 제한을
