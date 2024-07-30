@@ -65,7 +65,12 @@
 							<td><fmt:formatNumber value="${checkTuition.collAmount}" pattern="#,###" /></td>
 							<td><fmt:formatNumber value="${checkTuition.scholarAmount}" pattern="#,###" /></td>
 							<td><fmt:formatNumber value="${checkTuition.totalAmount}" pattern="#,###" /></td>
-							<td>${checkTuition.status}</td>
+							<td>
+							<c:choose>
+							<c:when test="${checkTuition.status == 1}">납부</c:when>
+							<c:otherwise>미납</c:otherwise>
+							</c:choose>
+							</td>
 						</tr>
 					</table>
 				</c:when>

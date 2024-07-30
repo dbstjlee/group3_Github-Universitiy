@@ -18,7 +18,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 	private static final String GET_TUITION_BY_STUDENTID = " SELECT " + "	st.id AS studentId, "
 			+ "    st.name AS studentName, " + " de.name AS deptName, " + " co.name AS collgeName, "
 			+ "    ct.amount AS collTution, " + "    tu.sch_type AS scholarType, " + "	tu.tui_amount AS scholar, "
-			+ "    (tu.tui_amount - tu.sch_amount) AS totaltution, tu.status as status " + " FROM "
+			+ "    (ct.amount - tu.tui_amount) AS totaltution, tu.status as status " + " FROM "
 			+ "    student_tb AS st " + " JOIN " + " department_tb AS de ON st.dept_id = de.id " + " JOIN "
 			+ "    college_tb AS co ON de.college_id = co.id " + " JOIN "
 			+ "    coll_tuit_tb AS ct ON co.id = ct.college_id " + " JOIN "
@@ -35,6 +35,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			+ " WHERE ss.status IN ('입학','복학') ";
 	private static final String ADD_ALL_TUITIONS = " INSERT INTO tuition_tb (student_id, tui_year, semester, tui_amount, sch_type, sch_amount) VALUES ";
 
+	private static final String UPDATE_TUITION_STATE = " UPDATE tuition_tb SET status = 1 where student_id = ? ";
 	@Override
 	public Tuition getTuitionByStudentId(int studentId) {
 		Tuition tuition = null;
@@ -43,11 +44,11 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					tuition = Tuition.builder().studentId(rs.getInt("student_id"))
-							.studentName(rs.getString("student_name")).deptName(rs.getString("dept_name"))
-							.collgeName(rs.getString("collage_name")).collAmount(rs.getInt("collage_amount"))
-							.scholarType(rs.getInt("sch_type")).scholarAmount(rs.getInt("sch_amount"))
-							.totalAmount(rs.getInt("total_amount")).status(rs.getInt("status")).build();
+					tuition = Tuition.builder().studentId(rs.getInt("studentId"))
+							.studentName(rs.getString("studentName")).deptName(rs.getString("deptName"))
+							.collgeName(rs.getString("collgeName")).collAmount(rs.getInt("collTution"))
+							.scholarType(rs.getInt("scholarType")).scholarAmount(rs.getInt("scholar"))
+							.totalAmount(rs.getInt("totaltution")).status(rs.getInt("status")).build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -127,6 +128,26 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 					pstmt.setInt(count++, tuition.getScholarAmount());
 				}
 				rowCount = pstmt.executeUpdate();
+				conn.commit();
+			} catch (Exception e) {
+				conn.rollback();
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowCount;
+	}
+
+	@Override
+	public int submitTuition(int studnetId) {
+		int rowCount = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			conn.setAutoCommit(false);
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TUITION_STATE)){
+				pstmt.setInt(1, studnetId);
+				rowCount = pstmt.executeUpdate();
+				
 				conn.commit();
 			} catch (Exception e) {
 				conn.rollback();

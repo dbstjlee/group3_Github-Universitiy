@@ -32,7 +32,7 @@ public class TuitionController extends HttpServlet {
 		switch (action) {
 		case "/payment":
 			// TODO - 납부 기간아니면 alert 으로 접근 막기
-			if(true) {
+			if (true) {
 				showPaymentTuition(request, response, session);
 				break;
 			} else {
@@ -45,19 +45,21 @@ public class TuitionController extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 등록금 내역 조회 페이지 이동
+	 * 
 	 * @param request
 	 * @param response
-	 * @param session 
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @param session
+	 * @throws IOException
+	 * @throws ServletException
 	 */
-	private void showListTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+	private void showListTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		Tuition checkTuition = tuitionRepository.getSummaryTuitionByStudentId(user.getId());
-		
+
 //		System.out.println(tuition.toString());
 		request.setAttribute("checkTuition", checkTuition);
 		request.getRequestDispatcher("/WEB-INF/views/tuition/check.jsp").forward(request, response);
@@ -68,7 +70,7 @@ public class TuitionController extends HttpServlet {
 	 * 
 	 * @param request
 	 * @param response
-	 * @param session 
+	 * @param session
 	 * @throws IOException
 	 * @throws ServletException
 	 */
@@ -84,7 +86,29 @@ public class TuitionController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		String action = request.getPathInfo();
+		HttpSession session = request.getSession(false);
+		switch (action) {
+		case "/payment":
+			handlerSubmitTuition(request, response, session);
+			break;
+		default:
+			break;
+		}
 	}
 
+	/**
+	 * 등록금 납부 기능
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void handlerSubmitTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+		User user = (User) session.getAttribute("principal");
+		tuitionRepository.submitTuition(user.getId());
+		response.sendRedirect(request.getContextPath() + "/tuition/payment");
+	}
 }

@@ -9,11 +9,9 @@ public interface SugangRepository {
 
 	List<Sugang> getAllSubject(int limit, int offset);
 
-	List<Sugang> getSubjectBySearch(Sugang sugang);
+	List<Sugang> getSubjectBySearch(Sugang sugang, int pageSize, int offset);
 
 	List<Sugang> getApplicationSubject(int studentId, int limit, int offset);
-
-	int addEnrolment(int studentId, int subjectId);
 
 	int getAllSubjectCount();
 
@@ -31,10 +29,6 @@ public interface SugangRepository {
 
 	int deletePreConfirmSubject(int subjectId);
 
-	List<Sugang> getPreSubjectBySearch(Sugang sugang);
-
-	List<Sugang> getAppSubjectBySearch(Sugang sugang);
-
 	int addPreEnrolment(int studentId, int subjectId);
 
 	void resetStudentCount(int subjectId);
@@ -42,6 +36,14 @@ public interface SugangRepository {
 	List<Sugang> resultStudentCount();
 
 	List<Sugang> getPreApplicatedSubjectList(int studentId);
-	
+
 	List<Sugang> getResetPreSubject(int studentId);
+
+	int addEnrolment(int studentId, int subjectId, int grade);
+
+	boolean getTotalGrade(int studentId);
+
+	List<Sugang> getPreSubjectBySearch(Sugang sugang, int limit, int offset);
+
+	List<Sugang> getAppSubjectBySearch(Sugang sugang, int limit, int offset);
 }

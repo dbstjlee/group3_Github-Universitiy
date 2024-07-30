@@ -20,7 +20,7 @@ public class Grade {
 	private String type; // 전공, 교양, 전체
 	private String grade; // 학점
 	private int grades; // 이수 학점
-	private int evaluationId;
+	private int evaluationId; // 평가 여부
 	private double sumGrades; // 전체 학점
 	private double myGrades; // 전체 이수 학점
 	private double average; // 평균 

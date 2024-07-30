@@ -14,7 +14,8 @@ import com.tenco.group3.util.DBUtil;
 public class GradeRepositoryImpl implements GradeRepository {
 
 	// 이번학기 성적
-	private static final String GET_THIS_SEMESTER_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type,gr.grade, su.grades, RANK() OVER(ORDER BY gr.grade_value DESC) 석차, ev.evaluation_id "
+	private static final String GET_THIS_SEMESTER_SQL = " SELECT su.sub_year, su.semester, st.subject_id, su.name as '과목이름',pr.name as '교수이름', su.type,gr.grade, su.grades, RANK() OVER(ORDER BY gr.grade_value DESC) 석차, ev.evaluation_id,    CASE \r\n"
+			+ "        WHEN ev.evaluation_id IS NOT NULL THEN 1 " + "        ELSE 0 " + "    END AS evaluation_id "
 			+ " FROM stu_sub_tb AS st " + " INNER JOIN subject_tb AS su " + " ON st.subject_id = su.id "
 			+ " INNER JOIN professor_tb AS pr " + " ON su.professor_id = pr.id " + " INNER JOIN grade_tb AS gr "
 			+ " ON st.grade = gr.grade " + " INNER JOIN student_tb AS stud " + " on st.student_id = stud.id "
@@ -67,7 +68,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 					Grade grade = Grade.builder().subYear(rs.getInt("sub_year")).semester(rs.getInt("semester"))
 							.subjectId(rs.getInt("subject_id")).subjectName(rs.getString("과목이름"))
 							.professorName(rs.getString("교수이름")).type(rs.getString("type")).grade(rs.getString("grade"))
-							.grades(rs.getInt("grades")).build();
+							.grades(rs.getInt("grades")).evaluationId(rs.getInt("evaluation_id")).build();
 					gradeList.add(grade);
 				}
 			} catch (Exception e) {
@@ -208,6 +209,5 @@ public class GradeRepositoryImpl implements GradeRepository {
 		}
 		return semester;
 	}
-
 
 }

@@ -204,7 +204,13 @@
 							<td>${sugangList.numOfStudent}</td>
 							<td>${sugangList.capacity}</td>
 							<%-- 강의 계획서로 이동 --%>
-							<td><a href="">조회</a></td>
+							<td>
+								<ul class="d-flex justify-content-center sub--plan--view" style="margin: 0;">
+									<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">조회</a>
+									<li style="height: 24px;"><a href="/subject/syllabus/${sugangList.subjectId}" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;"><span
+											class="material-symbols-outlined">content_paste_search</span></a>
+								</ul>
+							</td>
 						</tr>
 					</tbody>
 				</c:forEach>

@@ -197,10 +197,10 @@
 										<td>${sugangItem.grades}</td>
 										<td><c:choose>
 												<c:when test="${sugangItem.startTime < 10}">
-                                            ${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${searchItem.roomId})
+                                            ${sugangItem.subjectDay} 0${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})
                                         </c:when>
 												<c:otherwise>
-                                            ${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${searchItem.roomId})
+                                            ${sugangItem.subjectDay} ${sugangItem.startTime}:00~${sugangItem.endTime}:00&nbsp;(${sugangItem.roomId})
                                         </c:otherwise>
 											</c:choose></td>
 										<td>${sugangItem.numOfStudent}</td>
@@ -211,10 +211,25 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="page--list">
+						<c:forEach begin="1" end="${totalPages}" var="i">
+							<c:choose>
+								<c:when test="${i == currentPage}">
+									<span class="current-page">${i}</span>
+								</c:when>
+								<c:otherwise>
+									<span><a
+										href="${pageContext.request.contextPath}/sugang/subjectSearch?type=${sugangSearch.subjectType}&deptId=${sugangSearch.deptId}&name=${sugangSearch.subjectName}&page=${i}">${i}</a></span>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</div>
+
 				</c:when>
 				<c:otherwise>
+					<br>
 					<div>
-						<p>검색 결과 없음.</p>
+						<p class="no--list--p">검색된 결과가 없습니다.</p>
 					</div>
 				</c:otherwise>
 			</c:choose>

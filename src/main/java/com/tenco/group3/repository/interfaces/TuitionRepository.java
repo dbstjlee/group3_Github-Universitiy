@@ -13,4 +13,6 @@ public interface TuitionRepository {
 	
 	// 등록금 발송 (tuition 테이블에 insert)
 	int addAllTuitions(List<Tuition> tuitionList);
+	
+	int submitTuition(int studnetId);
 }

@@ -219,7 +219,8 @@
 													</c:when>
 													<c:otherwise>
 														<form action="${pageContext.request.contextPath}/sugang/application" method="post">
-															<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0">
+															<input type="hidden" name="subjectId" value="${sugangItem.subjectId}"> <input type="hidden" name="type" value="0"> <input type="hidden" name="grades"
+																value="${sugangItem.grades}">
 															<button type="submit" onclick="return confirm('해당 강의를 수강 신청 하시겠습니까?');" style="background-color: #548AC2;">수강 신청</button>
 														</form>
 													</c:otherwise>
@@ -233,8 +234,21 @@
 							</c:forEach>
 						</tbody>
 					</table>
+					<div class="page--list">
+						<c:forEach begin="1" end="${totalPages}" var="i">
+							<c:choose>
+								<c:when test="${i == currentPage}">
+									<span class="current-page">${i}</span>
+								</c:when>
+								<c:otherwise>
+									<span><a href="${pageContext.request.contextPath}/sugang/applicationSearch?page=${i}">${i}</a></span>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</div>
 				</c:when>
 				<c:otherwise>
+					<br>
 					<div>
 						<p class="no--list--p">검색 결과 없음.</p>
 					</div>

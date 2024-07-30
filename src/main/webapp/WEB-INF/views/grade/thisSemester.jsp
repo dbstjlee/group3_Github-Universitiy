@@ -53,13 +53,18 @@
 									<td>${grade.type}</td>
 									<td>${grade.grades}</td>
 									<td>${grade.grade}</td>
-									<td>
-										<form action="${pageContext.request.contextPath}/evaluation" method="get" target="popupWindow"
-											onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
-											<input type="hidden" name="subjectId" value="${grade.subjectId}">
-											<button type="submit">Click</button>
-										</form>
-									</td>
+									<td><c:choose>
+											<c:when test="${grade.evaluationId == 0}">
+												<form action="${pageContext.request.contextPath}/evaluation" method="get" target="popupWindow"
+													onsubmit="window.open('', 'popupWindow', 'width=1000,height=1200,scrollbars=yes');">
+													<input type="hidden" name="subjectId" value="${grade.subjectId}">
+													<button type="submit">Click</button>
+												</form>
+											</c:when>
+											<c:otherwise>
+												<p>작성완료</p>
+											</c:otherwise>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</table>
