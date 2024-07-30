@@ -471,6 +471,7 @@ public class SugangController extends HttpServlet {
 			if ((Define.MAX_GRADES - totalGrade) >= grade) {
 				int rowCount = sugangRepository.addEnrolment(user.getId(), subjectId, grade);
 				if (rowCount != 0) {
+					sugangRepository.deletePreConfirmSubject(subjectId);
 					response.sendRedirect(request.getContextPath() + "/sugang/application");
 				} else {
 					AlertUtil.backAlert(response, "정원 초과된 강의입니다.");
