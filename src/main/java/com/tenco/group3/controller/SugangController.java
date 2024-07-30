@@ -35,7 +35,7 @@ public class SugangController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
 		User user = (User) session.getAttribute("principal");
-		if (!sugangRepository.isBreakedApp(user.getId())) {
+		if (!sugangRepository.isBreakedApp(user.getId()) && !sugangRepository.isWeeding(user.getId())) {
 			switch (action) {
 			case "/subjectList":
 				showSubjectList(request, response, session);
@@ -85,7 +85,7 @@ public class SugangController extends HttpServlet {
 				break;
 			} 
 		} else {
-			AlertUtil.backAlert(response, "휴학 기간 동안은 수강 신청이 불가능 합니다.");
+			AlertUtil.backAlert(response, "휴학 기간 또는 제적 기간동안은 수강 신청이 불가능 합니다.");
 		}
 	}
 

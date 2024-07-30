@@ -7,14 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.tags.shaded.org.apache.regexp.RE;
-
-import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Sugang;
 import com.tenco.group3.repository.interfaces.SugangRepository;
 import com.tenco.group3.util.DBUtil;
-import com.tenco.group3.util.SemesterUtil;
-import com.tenco.group3.util.Define;
 
 public class SugangRepositoryImpl implements SugangRepository {
 
@@ -167,12 +162,12 @@ public class SugangRepositoryImpl implements SugangRepository {
 
 	// 예비 수강 신청 학점 총합
 	private static final String GET_PRE_TOTAL_GRADES = " SELECT sum(grades) as totalGrade FROM pre_stu_sub_tb as pre left join subject_tb as su on pre.subject_id = su.id where pre.student_id = ? ";
-	
+
 	// 예비 수강 신청 -> 수강 신청시 처리
 	private static final String SUBMIT_PRE_TO_ENRILMENT = " DELETE FROM pre_stu_sub_tb WHERE student_id = ? AND subject_id = ? ";
-	
+
 	// 휴학 여부
-	private static final String IS_BREAK_APP = " SELECT * FROM break_app_tb WHERE student_id = ? AND status = '승인' ";
+	private static final String IS_BREAK_APP = " SELECT status FROM stu_stat_tb WHERE student_id = ? ORDER BY id DESC LIMIT 1 ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -783,12 +778,12 @@ public class SugangRepositoryImpl implements SugangRepository {
 	@Override
 	public int submitPreToEnrolment(int studentId, int subjectId) {
 		int rowCount = 0;
-		try (Connection conn = DBUtil.getConnection()){
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
-			try (PreparedStatement pstmt = conn.prepareStatement(SUBMIT_PRE_TO_ENRILMENT)){
+			try (PreparedStatement pstmt = conn.prepareStatement(SUBMIT_PRE_TO_ENRILMENT)) {
 				pstmt.setInt(1, studentId);
 				pstmt.setInt(2, subjectId);
-				
+
 				rowCount = pstmt.executeUpdate();
 				conn.commit();
 			} catch (Exception e) {
@@ -804,12 +799,32 @@ public class SugangRepositoryImpl implements SugangRepository {
 	@Override
 	public boolean isBreakedApp(int studentId) {
 		boolean isBreaked = false;
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(IS_BREAK_APP)){
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(IS_BREAK_APP)) {
 			pstmt.setInt(1, studentId);
-			try (ResultSet rs = pstmt.executeQuery()){
-				if(rs.next()) {
-					isBreaked = true;
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					if (rs.getString("status").equals("휴학")) {
+						isBreaked = true;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isBreaked;
+	}
+
+	public boolean isWeeding(int studentId) {
+		boolean isBreaked = false;
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(IS_BREAK_APP)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					if (rs.getString("status").equals("제적")) {
+						isBreaked = true;
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

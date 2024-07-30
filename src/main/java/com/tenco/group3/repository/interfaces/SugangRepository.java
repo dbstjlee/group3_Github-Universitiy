@@ -54,4 +54,6 @@ public interface SugangRepository {
 	int submitPreToEnrolment(int studentId, int subjectId);
 
 	boolean isBreakedApp(int studentId);
+	
+	boolean isWeeding(int studentId);
 }
