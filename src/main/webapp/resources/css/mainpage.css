@@ -19,8 +19,14 @@
 
 
 .main--page--notice {
-	margin: 0 50px;
+	padding: 20;
+    margin: 0 50px;
+    border-radius: 9px;
+    box-shadow: black;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #d0d7de;
 }
+
 
 .main--page--notice tr td:first-of-type {
 	width: 400px;
@@ -35,7 +41,12 @@
 	font-size: 19px;
 }
 .main--page--calander{
-	margin: 0 80px;
+	padding: 20;
+    margin: 0 50px;
+    border-radius: 9px;
+    box-shadow: black;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #d0d7de;
 }
 .main--page--calander tr td:first-of-type {
 	white-space: nowrap;
@@ -79,6 +90,7 @@
 	justify-content: flex-end;
 	align-items: flex-start;
 	margin-left: 60px;
+	box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .main--page--profile table {
@@ -101,7 +113,7 @@
 }
 
 .profile--button--div button {
-	background-color: #98afcb;
+	background-color: #00b918;
 	padding: 3px 13px 4px;
 	border: none;
 	border-radius: 5px;

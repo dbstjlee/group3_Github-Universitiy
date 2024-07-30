@@ -12,9 +12,7 @@
 	style="min-width: 100em;">
 
 	<div>
-		<img
-			src="${pageContext.request.contextPath}/resources/images/university.jpg"
-			class="main--page--img">
+		
 		<div class="d-flex justify-content-center align-items-start">
 			<div class="main--page--div">
 				<div class="d-flex">
@@ -138,5 +136,4 @@
 		</div>
 	</div>
 </div>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

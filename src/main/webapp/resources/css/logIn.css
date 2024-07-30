@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 * {
-	background-color: #f7f6f6;
+	background-color: white;
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -13,11 +13,17 @@
 	align-items: center;
 }
 
-.logo {
-	width: 400px;
-	height: 100px;
+.logo--section{
+	display: flex;
+	justify-content: center;
+	
 }
-
+.logo {
+	width: 250px;
+	height: 160px;
+	margin-top:70px ;
+	
+}
 .main--container {
 	width: 400px;
 	padding-top: 15px;
@@ -100,8 +106,9 @@ label {
 	width: 400px;
 	border: 1px solid #e8e6e6;
 	margin-top: 40px;
-	background-color: rgb(3, 17, 95);
+	background-color: #00b918;
 	color: white;
+	border-radius: 15px;
 }
 
 .login--info {

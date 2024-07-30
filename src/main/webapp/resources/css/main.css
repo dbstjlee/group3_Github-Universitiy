@@ -9,7 +9,9 @@
   'GRAD' 0,
   'opsz' 48;
 }
-
+.side--a{
+	color: white;
+}
 .material--li {
 	display: flex; 
 	align-items: center;
@@ -22,7 +24,7 @@
 
 a {
 	text-decoration: none;
-	color: white;
+	color: black;
 }
 
 a:hover {
@@ -82,7 +84,6 @@ header {
 
 .main--menu ul {
 	display: flex;
-	
 	margin: 0;
 	flex-direction: column;
 	 align-items: flex-start;
@@ -94,7 +95,7 @@ header {
 
 .main--menu ul li a {
     padding: 27px 5px;
-    font-size: 25;
+    font-size: 25px !important;
     font-weight: 600;
 }
 
@@ -230,10 +231,10 @@ main h1:first-of-type {
           position: fixed;
           top: 0;
           left: -250px;  /* 초기 상태에서는 왼쪽으로 숨겨져 있음 */
-          background-color: #fff;
+        
           box-shadow: 2px 0 5px rgba(0,0,0,0.5);
           transition: left 0.3s;
-          background-color: black;
+          background-color: #d0d7de;
         }
         .sidebar.open {
           left: 0;  /* 사이드바가 열릴 때 */

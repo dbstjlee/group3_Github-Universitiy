@@ -10,6 +10,9 @@
 </head>
 <body>
 	<div class="login--div">
+			<div class="logo--section">
+				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.gif" ></a>
+				</div>
 		<div class="logo">
 			<a></a>
 		</div>
@@ -51,5 +54,4 @@
 	<div>
 		<pre class="exam">학생 2023000001 교직원 230001 교수 23000001 비밀번호 123123</pre>
 	</div>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

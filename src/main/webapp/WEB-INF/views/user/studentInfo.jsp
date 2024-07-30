@@ -138,5 +138,4 @@
 		</main>
 	</div>
 </form>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

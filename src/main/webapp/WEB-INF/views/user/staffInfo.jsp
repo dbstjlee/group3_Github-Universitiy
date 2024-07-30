@@ -79,5 +79,4 @@
 		<hr>
 	</main>
 </div>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

@@ -62,5 +62,4 @@
 				  보안을 위해 로그인 후 비밀번호를 변경해주세요.
 			</div>
 	</section>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

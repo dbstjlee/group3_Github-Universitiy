@@ -2,10 +2,17 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/college.css">
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/college.css">
 <title>단과대학</title>
-
+<style>
+.main--menu ul li a {
+    padding: 27px 5px;
+    font-size: 25px !important;
+    font-weight: 600;
+}
+</style>
+<div class = "body2">
 <div class="sub-main">
 	<div class="sub--menu">
 		<div class="sub--menu--top">
@@ -82,5 +89,5 @@
 		</div>
 	</main>
 </div>
-</body>
-</html>
+</div>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

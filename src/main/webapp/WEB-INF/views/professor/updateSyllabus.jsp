@@ -69,5 +69,4 @@ textarea {
 		</form>
 	</section>
 	</c:set>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

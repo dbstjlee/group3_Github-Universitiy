@@ -171,6 +171,4 @@ a:hover {
 		</c:if>
 
 	</section>
-
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

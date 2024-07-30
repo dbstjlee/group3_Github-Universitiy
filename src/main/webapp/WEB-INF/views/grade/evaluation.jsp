@@ -78,5 +78,4 @@
 			<button type="submit">제출하기</button>
 		</div>
 	</form>
-</body>
-</html>
+<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
