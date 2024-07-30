@@ -35,8 +35,6 @@ public class SugangController extends HttpServlet {
 		int sugangDay = (int) getServletContext().getAttribute("sugang");
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo();
-		// TODO - 수강 신청 기간이 아닐 때 접근 막고, 수강 신청 기간으로 변경시 신청 값이 강의 인원수 제한을
-		// 넘길 경우 해당 강의 초기화
 		switch (action) {
 		case "/subjectList":
 			showSubjectList(request, response, session);
@@ -45,7 +43,6 @@ public class SugangController extends HttpServlet {
 			showSearchSubject(request, response, session);
 			break;
 		case "/pre":
-			// TODO - 예비 수강 신청 기간 처리
 			if (sugangDay == ScheduleState.PRE) {
 				showPreliminaryList(request, response, session);
 			} else {
@@ -53,7 +50,6 @@ public class SugangController extends HttpServlet {
 			}
 			break;
 		case "/pre/search":
-			// TODO - 예비 수강 신청 기간 처리
 			if (sugangDay == ScheduleState.PRE) {
 				showSearchPreliminary(request, response, session);
 			} else {
@@ -61,11 +57,9 @@ public class SugangController extends HttpServlet {
 			}
 			break;
 		case "/preAppList":
-			// 수강 신청 기간 내부 처리
 			showPreliminaryAppList(request, response, session);
 			break;
 		case "/application":
-			// TODO - 수강신청 기간 설정
 			if (sugangDay == ScheduleState.TRUE) {
 				showApplicationList(request, response, session);
 			} else {
@@ -73,7 +67,6 @@ public class SugangController extends HttpServlet {
 			}
 			break;
 		case "/application/search":
-			// TODO - 수강신청 기간 설정
 			if (sugangDay == ScheduleState.TRUE) {
 				showSearchApplication(request, response, session);
 			} else {
@@ -81,7 +74,6 @@ public class SugangController extends HttpServlet {
 			}
 			break;
 		case "/list":
-			// TODO - 수강신청 기간 설정
 			if (sugangDay == ScheduleState.TRUE || sugangDay == ScheduleState.END) {
 				showListAppSubject(request, response, session);
 			} else {
@@ -135,7 +127,7 @@ public class SugangController extends HttpServlet {
 		if (name == null || name.trim().isEmpty()) {
 			name = null;
 		}
-		if (type.equals("전체") && deptId == -1 && name == null || name.trim().isEmpty()) {
+		if (type.equals("전체") || deptId == -1 || name == null) {
 			response.sendRedirect(request.getContextPath() + "/sugang/application");
 			return;
 		}
@@ -215,17 +207,25 @@ public class SugangController extends HttpServlet {
 	private void showPreliminaryAppList(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
-		int listType = 0;
 		int sugangDay = (int) getServletContext().getAttribute("sugang");
-		// TODO - 수강신청 기간
-		if (sugangDay == ScheduleState.TRUE) {
+		int listType = 0;
+		String typeParam = request.getParameter("type");
+		System.out.println(typeParam);
+		if (typeParam != null) {
+			listType = Integer.parseInt(typeParam);
+		} else {
+			AlertUtil.backAlert(response, "정상적인 접근이 아닙니다.");
+		}
+		if (sugangDay == ScheduleState.TRUE && listType == 2) {
 			listType = 2;
 			request.setAttribute("listType", listType);
-		} else if (sugangDay == ScheduleState.PRE){
+		} else if (sugangDay == ScheduleState.PRE && listType == 1) {
 			listType = 1;
 			request.setAttribute("listType", listType);
+		} else {
+			AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+			return;
 		}
-		System.out.println(listType);
 		if (listType == 1) {
 			List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
 			int totalGrade = sugangRepository.getPreSubjectGrade(user.getId());
@@ -269,7 +269,7 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 
-		if (type.equals("전체") && deptId == -1 && name == null || name.trim().isEmpty()) {
+		if (type.equals("전체") || deptId == -1 || name == null) {
 			response.sendRedirect(request.getContextPath() + "/sugang/pre");
 			return;
 		}
@@ -358,7 +358,7 @@ public class SugangController extends HttpServlet {
 			name = null;
 		}
 
-		if (type.equals("전체") && deptId == -1 && name == null || name.trim().isEmpty()) {
+		if (type.equals("전체") && deptId == -1 && name == null) {
 			response.sendRedirect(request.getContextPath() + "/sugang/subjectList");
 			return;
 		}

@@ -40,6 +40,7 @@ public class ValidationUtil {
 			return false;
 		}
 	}
+	
 
 	// 주소가 정규표현식을 만족하는지 확인
 	public static boolean isValidateAddress(String address) {
