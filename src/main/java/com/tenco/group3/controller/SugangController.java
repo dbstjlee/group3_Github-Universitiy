@@ -215,7 +215,7 @@ public class SugangController extends HttpServlet {
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		int listType = 0;
-		int sugangDay = (int) getServletContext().getAttribute("Sugang");
+		int sugangDay = (int) getServletContext().getAttribute("sugang");
 		// TODO - 수강신청 기간
 		if (sugangDay == 1) {
 			listType = 1;

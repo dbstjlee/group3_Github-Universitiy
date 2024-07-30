@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,8 @@
 <title>강의계획서</title>
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
-*{
+
+* {
 	margin: 0 auto;
 	padding: 0 auto;
 	font-family: 'Noto Sans KR', sans-serif;
@@ -15,10 +16,11 @@
 
 .header--top {
 	width: 100%;
-	height: 40px; 
+	height: 40px;
 	background-color: #031734;
 }
-.section--header{
+
+.section--header {
 	text-align: center;
 }
 
@@ -53,11 +55,11 @@
 	width: 30%;
 }
 
-.align--left{
+.align--left {
 	text-align: left;
 }
 
-a{
+a {
 	text-decoration: none;
 	color: black;
 }
@@ -107,7 +109,7 @@ a:hover {
 			</tr>
 			<tr>
 				<td>강의 시간</td>
-				<td>${syllabus.subDay} ${syllabus.startTime}:00 - ${syllabus.endTime}:00</td>
+				<td>${syllabus.subDay}${syllabus.startTime}:00 - ${syllabus.endTime}:00</td>
 				<td>강의실</td>
 				<td>${syllabus.roomId}(${syllabus.collName})</td>
 			</tr>
@@ -158,16 +160,15 @@ a:hover {
 				<td class="align--left">${syllabus.program}</td>
 			</tr>
 		</table>
-		<c:choose>
-			<c:when test="${principal.userRole == 'professor'}">
-		<table>
-			<tr>
-				<td><a href="/professor/veiwSyllabusUpdate?subjectId=${syllabus.subjectId }" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;" >수정하기</a></td>
-			</tr>
-		</table>
-			</c:when>
-			<c:otherwise></c:otherwise>
-		</c:choose>
+		<c:if test="${principal.username == syllabus.professorName}">
+			<table>
+				<tr>
+					<td>
+						<a href="/professor/veiwSyllabusUpdate?subjectId=${syllabus.subjectId }" onclick="window.open(this.href, '_blank', 'width=1000, height=1000'); return false;">수정하기</a>
+					</td>
+				</tr>
+			</table>
+		</c:if>
 
 	</section>
 
