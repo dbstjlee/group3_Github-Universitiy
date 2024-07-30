@@ -22,6 +22,8 @@ public class Evaluation {
 	private int answer5; 
 	private int answer6; 
 	private int answer7; 
-	private String improvments; 
+	private String improvments;
+	private double avg;
+	private String subjectName;
 	 
 }

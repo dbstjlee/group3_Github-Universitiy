@@ -7,14 +7,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tenco.group3.model.Evaluation;
 import com.tenco.group3.model.StuSubDetail;
 import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Syllabus;
 import com.tenco.group3.model.User;
+import com.tenco.group3.repository.EvaluationRepositoryImpl;
 import com.tenco.group3.repository.ProfessorRepositoryImpl;
 import com.tenco.group3.repository.StuSubDetailRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
 import com.tenco.group3.repository.SubjectRepositoryImpl;
+import com.tenco.group3.repository.interfaces.EvaluationRepository;
 import com.tenco.group3.repository.interfaces.ProfessorRepository;
 import com.tenco.group3.repository.interfaces.StuSubDetailRepository;
 import com.tenco.group3.repository.interfaces.StuSubRepository;
@@ -32,6 +35,7 @@ import jakarta.servlet.http.HttpSession;
 public class ProfessorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ProfessorRepository professorRepository;
+	private EvaluationRepository evaluationRepository;
 	private SubjectRepository subjectRepository;
 	private StuSubDetailRepository subDetailRepository;
 	private StuSubRepository stuSubRepository;
@@ -42,6 +46,7 @@ public class ProfessorController extends HttpServlet {
 		subjectRepository = new SubjectRepositoryImpl();
 		subDetailRepository = new StuSubDetailRepositoryImpl();
 		stuSubRepository = new StuSubRepositoryImpl();
+		evaluationRepository = new EvaluationRepositoryImpl();
 	}
 
 	@Override
@@ -63,11 +68,23 @@ public class ProfessorController extends HttpServlet {
 		case "/subject/student":
 			showUpdateStudentDetail(request, response);
 			break;
+		case "/evaluation":
+			showEvaluation(request, response);
+			break;
 		default:
 
 			break;
 		}
 
+	}
+
+	private void showEvaluation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO 강의 평가가 존재하는 과목의 과목명 리스트 받기
+		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation();
+		// List<Evaluation> evaluationList = ''
+		request.setAttribute("subjectName", subjectName);
+		//request.setAttribute("evaluationList", evaluationList);
+		request.getRequestDispatcher("/WEB-INF/views/professor/myEvaluation.jsp").forward(request, response);
 	}
 
 	private void showUpdateStudentDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -99,11 +116,19 @@ public class ProfessorController extends HttpServlet {
 		case "/student":
 			handleStudentGrade(request, response);
 			break;
+		case "/evaluation":
+			searchEvaluation(request, response);
+			break;
 		default:
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			break;
 		}
 
+	}
+
+	private void searchEvaluation(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void handleStudentGrade(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -117,14 +142,14 @@ public class ProfessorController extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 			String grade = request.getParameter("grade");
 			StuSubDetail stuSubDetail = StuSubDetail.builder()
-					.id(id)
-					.absent(absent)
-					.lateness(lateness)
-					.homework(homework)
-					.midExam(midExam)
-					.finalExam(finalExam)
-					.convertedMark(convertedMark)
-					.build();
+				.id(id)
+				.absent(absent)
+				.lateness(lateness)
+				.homework(homework)
+				.midExam(midExam)
+				.finalExam(finalExam)
+				.convertedMark(convertedMark)
+				.build();
 			subDetailRepository.updateDetailById(stuSubDetail);
 			stuSubRepository.updateGrade(grade, id);
 			Subject subject = subDetailRepository.getSubjectByDetailId(id);

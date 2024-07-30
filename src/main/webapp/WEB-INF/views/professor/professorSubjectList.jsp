@@ -34,7 +34,7 @@
 				<c:if test="${principal.userRole.equals(\"professor\") }">
 					<tr>
 						<td>
-							<a href="/evaluation/read"> 내 강의 평가</a>
+							<a href="/professor/evaluation"> 내 강의 평가</a>
 						</td>
 					</tr>
 				</c:if>
