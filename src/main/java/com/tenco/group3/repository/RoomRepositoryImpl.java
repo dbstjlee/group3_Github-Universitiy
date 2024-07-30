@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tenco.group3.model.College;
 import com.tenco.group3.model.Room;
 import com.tenco.group3.repository.interfaces.RoomRepository;
 import com.tenco.group3.util.DBUtil;

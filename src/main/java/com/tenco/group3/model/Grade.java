@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Grade {
+
 	private int subYear;
 	private int semester;
 	private int subjectId;
@@ -23,5 +24,6 @@ public class Grade {
 	private int evaluationId; // 평가 여부
 	private double sumGrades; // 전체 학점
 	private double myGrades; // 전체 이수 학점
-	private double average; // 평균 
+	private double average; // 평균
+
 }

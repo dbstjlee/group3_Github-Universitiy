@@ -6,7 +6,6 @@ import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
 import com.tenco.group3.util.AlertUtil;
-import com.tenco.group3.util.Define;
 import com.tenco.group3.util.PasswordUtil;
 import com.tenco.group3.util.ValidationUtil;
 
@@ -35,7 +34,6 @@ public class UserController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
-		System.out.println("action: " + action); // TODO - 삭제 예정
 		switch (action) {
 		case "/logIn":
 			request.getRequestDispatcher("/WEB-INF/views/user/logIn.jsp").forward(request, response);
@@ -238,7 +236,6 @@ public class UserController extends HttpServlet {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String userRole = request.getParameter("userRole");
-		System.out.println("userRole:" + userRole); // TODO 삭제
 		User user = null;
 
 		// 유효성 검사
@@ -303,7 +300,6 @@ public class UserController extends HttpServlet {
 		}
 
 		User principal = userRepository.getUserById(id);
-		System.out.println("principal:" + principal); // TODO 삭제
 
 		// 현재 아이디가 일치하지 않은 경우
 		if (principal == null || principal.getId() != id) {

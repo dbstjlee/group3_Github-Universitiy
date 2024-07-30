@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebFilter("/management/*")
+@WebFilter(urlPatterns = {"/management/*", "/admin/* " })
 public class ManagementFilter extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 1L;
 

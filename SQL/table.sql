@@ -153,7 +153,7 @@ CREATE TABLE coll_tuit_tb
 CREATE TABLE scholarship_tb
 (
    type INT PRIMARY KEY COMMENT '장학금 유형',
-   max_amount INT NOT NULL COMMENT '최대 지원 금액'
+   max_amount INT NOT NULL COMMENT '지원 비율'
 );
 
 -- 학생별 장학금 유형

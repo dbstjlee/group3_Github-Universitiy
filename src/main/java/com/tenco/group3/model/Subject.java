@@ -13,6 +13,7 @@ import lombok.ToString;
 @Builder
 
 public class Subject {
+
 	private int id;
 	private String name; // 수업 명
 	private int professorId; // 교수 ID
@@ -30,4 +31,5 @@ public class Subject {
 	private int grades; // 학점
 	private int capacity; // 학생 정원
 	private int numOfStudent; // 신청 학생수
+
 }

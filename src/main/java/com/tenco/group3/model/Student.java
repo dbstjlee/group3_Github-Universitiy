@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Student {
+
 	private int id;
 	private String name;
 	private Date birthDate;
@@ -31,4 +32,5 @@ public class Student {
 	private String status;
 	private Date fromDate;
 	private String description;
+
 }

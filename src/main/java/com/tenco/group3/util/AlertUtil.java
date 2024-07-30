@@ -16,10 +16,22 @@ public class AlertUtil {
 		response.getWriter().println("<script> alert('" + msg + "');");
 		response.getWriter().println(" window.location.href = '" + path + "'; </script>");
 	}
-	
+
 	public static void hrefConfirm(HttpServletResponse response, String msg, String path) throws IOException {
 		response.setContentType("text/html; charset=UTF-8");
 		response.getWriter().println("<script> if(confirm('" + msg + "')){");
 		response.getWriter().println(" window.location.href = '" + path + "';} else {history.back();} </script>");
+	}
+
+	public static void openerHrefAlertClosing(HttpServletResponse response, String msg, String path)
+			throws IOException {
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().println("<script> alert('" + msg + "');");
+		response.getWriter().println(" window.opener.location.href = '" + path + "'; window.close(); </script>");
+	}
+
+	public static void closeAlert(HttpServletResponse response, String msg) throws IOException {
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().println("<script> alert('" + msg + "'); window.close(); </script>");
 	}
 }

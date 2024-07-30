@@ -12,6 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class Tuition {
+
 	private int studentId;
 	private int year;
 	private int semester;
@@ -24,4 +25,5 @@ public class Tuition {
 	private String collgeName;
 	private int collAmount;
 	private int totalAmount;
+
 }

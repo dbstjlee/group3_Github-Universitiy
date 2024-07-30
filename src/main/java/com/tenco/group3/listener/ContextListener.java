@@ -1,12 +1,5 @@
 package com.tenco.group3.listener;
 
-import java.awt.Font;
-import java.util.List;
-
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ScheduleStateRepository;

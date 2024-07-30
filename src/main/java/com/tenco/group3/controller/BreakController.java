@@ -1,8 +1,6 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.util.List;
 
 import com.tenco.group3.model.BreakApp;
@@ -25,7 +23,6 @@ import jakarta.servlet.http.HttpSession;
 public class BreakController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BreakAppRepository breakAppRepository;
-	private LocalDate currentDate = LocalDate.now();
 
 	@Override
 	public void init() throws ServletException {
@@ -65,8 +62,8 @@ public class BreakController extends HttpServlet {
 		int thisYear = (int) getServletContext().getAttribute("year");
 		int thisSemester = (int) getServletContext().getAttribute("semester");
 		User user = (User) session.getAttribute("principal");
-		if(isBreakDay == ScheduleState.TRUE) {
-			if(breakAppRepository.isSubmitBreakApp(user.getId())) {
+		if (isBreakDay == ScheduleState.TRUE) {
+			if (breakAppRepository.isSubmitBreakApp(user.getId())) {
 				AlertUtil.backAlert(response, "이미 휴학 신청을 하였습니다.");
 				return;
 			}
@@ -92,13 +89,11 @@ public class BreakController extends HttpServlet {
 	private void showBreakListDetail(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException, ServletException {
 		int breakId = Integer.parseInt(request.getParameter("breakId"));
-//		System.out.println("breakId : " + breakId);
 		BreakApp breakApp = breakAppRepository.getBreakAppDetail(breakId);
 		if (breakApp == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-//		System.out.println(breakApp.toString());
 		request.setAttribute("breakApp", breakApp);
 		request.getRequestDispatcher("/WEB-INF/views/break/detail.jsp").forward(request, response);
 	}
@@ -114,7 +109,6 @@ public class BreakController extends HttpServlet {
 	 */
 	private void showBreakList(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException, ServletException {
-		// TODO - 학생 ID값 추가(세션에서 받음)
 		User user = (User) session.getAttribute("principal");
 		List<BreakApp> breakList = breakAppRepository.getBreakAppList(user.getId());
 		request.setAttribute("breakList", breakList);
@@ -125,10 +119,6 @@ public class BreakController extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
 		HttpSession session = request.getSession();
-		if (session == null) {
-			// TODO - 로그인 화면으로 이동
-			return;
-		}
 		switch (action) {
 		case "/application":
 			handlerApplication(request, response, session);
@@ -139,21 +129,20 @@ public class BreakController extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
-	 * 휴학 신청 취소 
+	 * 휴학 신청 취소
+	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	private void handlerCancleBreak(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+	private void handlerCancleBreak(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws IOException {
 		User user = (User) session.getAttribute("principal");
 		breakAppRepository.cancleBreakApp(user.getId());
-		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<script> alert('취소되었습니다.'); window.opener.location.href='/break/list'; window.close(); </script>");
-	    out.close();
+		AlertUtil.openerHrefAlertClosing(response, "취소되었습니다.", "/break/list");
 	}
 
 	/**
@@ -172,9 +161,9 @@ public class BreakController extends HttpServlet {
 		int breakYear = Integer.parseInt(request.getParameter("breakYear"));
 		int semester = SemesterUtil.getCurrentSemester();
 		int currentYear = SemesterUtil.getCurrentYear();
-		// TODO - 샘플데이터 값 학생정보에서 받아오기.
-		BreakApp breakApp = BreakApp.builder().studentId(user.getId()).studentGrade(student.getGrade()).fromYear(currentYear).fromSemester(semester)
-				.toYear(breakYear).toSemester(semester).type(breakType).build();
+		BreakApp breakApp = BreakApp.builder().studentId(user.getId()).studentGrade(student.getGrade())
+				.fromYear(currentYear).fromSemester(semester).toYear(breakYear).toSemester(semester).type(breakType)
+				.build();
 		breakAppRepository.addBreakApp(breakApp);
 		response.sendRedirect(request.getContextPath() + "/break/list");
 	}

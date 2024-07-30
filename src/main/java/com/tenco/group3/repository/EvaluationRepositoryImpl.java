@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tenco.group3.model.Evaluation;
-import com.tenco.group3.model.StuSubDetail;
 import com.tenco.group3.model.Subject;
 import com.tenco.group3.repository.interfaces.EvaluationRepository;
 import com.tenco.group3.util.DBUtil;

@@ -1,17 +1,14 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.tenco.group3.model.Schedule;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.ScheduleRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ScheduleRepository;
+import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
@@ -34,7 +31,6 @@ public class ScheduleController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
-		System.out.println("action:" + action);
 		switch (action) {
 		case "/list":
 			showScheduleList(request, response);
@@ -71,7 +67,7 @@ public class ScheduleController extends HttpServlet {
 
 		int scheduleId = Integer.parseInt(request.getParameter("id"));
 		scheduleRepository.deleteSchedule(scheduleId);
-		response.sendRedirect(request.getContextPath() + "/schedule/create");
+		response.sendRedirect("/schedule/create");
 	}
 
 	/**
@@ -108,7 +104,7 @@ public class ScheduleController extends HttpServlet {
 			request.setAttribute("schedule", schedule);
 			request.getRequestDispatcher("/WEB-INF/views/schedule/scheduleDetail.jsp").forward(request, response);
 		} else {
-			response.sendRedirect(request.getContextPath() + "/user/logIn");
+			response.sendRedirect("/user/logIn");
 		}
 	}
 
@@ -147,7 +143,6 @@ public class ScheduleController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
-		System.out.println("action:" + action);
 		switch (action) {
 		case "/add":
 			handleScheduleAdd(request, response);
@@ -188,7 +183,7 @@ public class ScheduleController extends HttpServlet {
 				schedule.setStartDay(sqlStartDate);
 				schedule.setEndDay(sqlEndDate);
 				if (information == null || !ValidationUtil.isNotOnlyWhitespace(information)) {
-					sendError(response, "수정할 내용을 입력해주세요.");
+					AlertUtil.backAlert(response, "수정할 내용을 입력해주세요.");
 					return;
 				}
 				Schedule scheduleList = Schedule.builder()
@@ -199,12 +194,12 @@ public class ScheduleController extends HttpServlet {
 						.build();
 				scheduleRepository.updateSchedule(scheduleList);
 			} else {
-				sendError(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
+				AlertUtil.backAlert(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
 			}
 		} catch (IllegalArgumentException e) {
-			sendError(response, "날짜를 입력해주세요.");
+			AlertUtil.backAlert(response, "날짜를 입력해주세요.");
 		}
-		response.sendRedirect(request.getContextPath() + "/schedule/create");
+		response.sendRedirect("/schedule/create");
 	}
 
 	/**
@@ -235,7 +230,7 @@ public class ScheduleController extends HttpServlet {
 				schedule.setEndDay(sqlEndDate);
 
 				if (information == null || !ValidationUtil.isNotOnlyWhitespace(information)) {
-					sendError(response, "수정할 내용을 입력해주세요.");
+					AlertUtil.backAlert(response, "수정할 내용을 입력해주세요.");
 					return;
 				}
 
@@ -244,20 +239,12 @@ public class ScheduleController extends HttpServlet {
 				scheduleRepository.addSchedule(scheduleListById);
 				request.setAttribute("scheduleListById", scheduleListById);
 			} else {
-				sendError(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
+				AlertUtil.backAlert(response, "종료 날짜를 시작 날짜 이후로 선택해주세요.");
 			}
 		} catch (IllegalArgumentException e) {
-			sendError(response, "날짜를 입력해주세요.");
+			AlertUtil.backAlert(response, "날짜를 입력해주세요.");
 		}
-		response.sendRedirect(request.getContextPath() + "/schedule/create");
+		response.sendRedirect("/schedule/create");
 	}
 
-	// 에러 메시지
-	private void sendError(HttpServletResponse response, String message) throws IOException {
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html; charset=UTF-8");
-		out.println("<script> alert('" + message + "');");
-		out.println("history.go(-1); </script>");
-		out.close();
-	}
 }

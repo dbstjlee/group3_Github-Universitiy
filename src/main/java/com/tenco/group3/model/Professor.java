@@ -7,13 +7,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
 public class Professor {
-	private int id; 
+
+	private int id;
 	private String name;
 	private Date birthDate;
 	private String gender;
@@ -24,5 +26,5 @@ public class Professor {
 	private Date hireDate;
 	private String deptname;
 	private String collname;
-		
+
 }

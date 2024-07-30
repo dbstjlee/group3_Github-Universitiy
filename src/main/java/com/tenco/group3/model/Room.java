@@ -15,5 +15,5 @@ public class Room {
 
 	private String id;
 	private int collegeId;
-	
+
 }

@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/tuition/*")
 public class TuitionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
 	private TuitionRepository tuitionRepository;
 
 	@Override
@@ -56,7 +57,6 @@ public class TuitionController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		Tuition checkTuition = tuitionRepository.getSummaryTuitionByStudentId(user.getId());
 
-//		System.out.println(tuition.toString());
 		request.setAttribute("checkTuition", checkTuition);
 		request.getRequestDispatcher("/WEB-INF/views/tuition/check.jsp").forward(request, response);
 	}
@@ -77,7 +77,6 @@ public class TuitionController extends HttpServlet {
 		int isTuition = (int) getServletContext().getAttribute("tuition");
 		
 		if(isTuition == ScheduleState.TRUE) {
-//		System.out.println(tuition.toString());
 			request.setAttribute("paymentTuition", paymentTuition);
 			request.getRequestDispatcher("/WEB-INF/views/tuition/payment.jsp").forward(request, response);
 		} else {
@@ -111,6 +110,6 @@ public class TuitionController extends HttpServlet {
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
 		tuitionRepository.submitTuition(user.getId());
-		response.sendRedirect(request.getContextPath() + "/tuition/payment");
+		response.sendRedirect("/tuition/payment");
 	}
 }

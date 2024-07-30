@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class RankedStudent {
+
 	private int studentId;
 	private int deptId;
 	private int grade;

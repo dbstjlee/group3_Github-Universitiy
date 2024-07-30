@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class BreakApp {
+
 	private int id;
 	private int studentId; // 학생 ID
 	private int studentGrade; // 학년
@@ -28,5 +29,6 @@ public class BreakApp {
 	private String departmentName; // 학과 이름
 	private String studentTel; // 학생 전화번호
 	private String studentAdds; // 학생 주소
-	private String collegeName; // 공대 
+	private String collegeName; // 공대
+
 }

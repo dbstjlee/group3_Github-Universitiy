@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 public class Sugang {
+
 	private String collegeName;
 	private String departName;
 	private int subjectId;
@@ -31,4 +32,5 @@ public class Sugang {
 	private int result;
 	private int sub;
 	private int sugangId;
+
 }

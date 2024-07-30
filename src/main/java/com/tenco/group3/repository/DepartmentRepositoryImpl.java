@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 import com.tenco.group3.model.College;
 import com.tenco.group3.model.Department;
 import com.tenco.group3.repository.interfaces.DepartmentRepository;

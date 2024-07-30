@@ -12,18 +12,19 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Evaluation {
+
 	private int evaluationId;
 	private int studentId;
 	private int subjectId;
-	private int answer1; 
-	private int answer2; 
-	private int answer3; 
-	private int answer4; 
-	private int answer5; 
-	private int answer6; 
-	private int answer7; 
+	private int answer1;
+	private int answer2;
+	private int answer3;
+	private int answer4;
+	private int answer5;
+	private int answer6;
+	private int answer7;
 	private String improvments;
 	private double avg;
 	private String subjectName;
-	 
+
 }

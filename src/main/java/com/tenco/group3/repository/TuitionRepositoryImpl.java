@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tenco.group3.model.RankedStudent;
-import com.tenco.group3.model.Student;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.DBUtil;

@@ -33,8 +33,6 @@ public class ManagementRepositoryImpl implements ManagementRepository {
 			+ " VALUES (?, ?, ?, ?, ?, ?) ";
 	private static final String SELECT_STAFF_ID_LAST = " SELECT id FROM staff_tb ORDER BY id DESC LIMIT 1 ";
 	private static final String INSERT_USER_SQL = " INSERT INTO user_tb (id, password, user_role) VALUES (?, ?, ";
-	// TODO 나중에 암호화해서 자동으로 받을예정
-	private static final String SAMPLE_PASSWORD = "123123";
 	private static final String CHECK_BREAK_APP_DONE = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
 	private static final String UPDATE_GRADE_AND_SEMESTER = " UPDATE student_tb SET grade = ? , semester = ? WHERE id = ? ";
 

@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/sugang/*")
 public class SugangController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
 	private SugangRepository sugangRepository;
 
 	@Override

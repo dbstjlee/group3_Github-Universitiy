@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// TODO 물어보고 삭제 예정
 public class MyEvaluation {
 
 	private Integer professorId;

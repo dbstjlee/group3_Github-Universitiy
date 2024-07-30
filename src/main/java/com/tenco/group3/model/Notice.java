@@ -21,4 +21,5 @@ public class Notice {
 	private String content;
 	private Timestamp createdTime;
 	private int views;
+
 }

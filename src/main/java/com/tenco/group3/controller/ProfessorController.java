@@ -1,7 +1,6 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -34,19 +33,20 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/professor/*")
 public class ProfessorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ProfessorRepository professorRepository;
-	private EvaluationRepository evaluationRepository;
-	private SubjectRepository subjectRepository;
+
 	private StuSubDetailRepository subDetailRepository;
+	private EvaluationRepository evaluationRepository;
+	private ProfessorRepository professorRepository;
+	private SubjectRepository subjectRepository;
 	private StuSubRepository stuSubRepository;
 
 	@Override
 	public void init() throws ServletException {
+		subDetailRepository = new StuSubDetailRepositoryImpl();
+		evaluationRepository = new EvaluationRepositoryImpl();
 		professorRepository = new ProfessorRepositoryImpl();
 		subjectRepository = new SubjectRepositoryImpl();
-		subDetailRepository = new StuSubDetailRepositoryImpl();
 		stuSubRepository = new StuSubRepositoryImpl();
-		evaluationRepository = new EvaluationRepositoryImpl();
 	}
 
 	@Override
@@ -132,7 +132,8 @@ public class ProfessorController extends HttpServlet {
 
 	}
 
-	private void searchEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+	private void searchEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws ServletException, IOException {
 		// 강의 평가가 존재하는 과목의 과목명 리스트 받기
 		User user = (User) session.getAttribute("pincipal");
 		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation(user.getId());
@@ -179,24 +180,6 @@ public class ProfessorController extends HttpServlet {
 			request.setAttribute("errorMessage", "잘못된 접근");
 			return;
 		}
-	}
-
-	private void syllabusUpdated(HttpServletRequest request, HttpServletResponse response) {
-		String overview = request.getParameter("overview");
-		String objective = request.getParameter("objective");
-		String textbook = request.getParameter("textbook");
-		String subjectId = request.getParameter("subjectId");
-
-		Syllabus syllabus = Syllabus.builder().overview(overview).objective(objective).textbook(textbook).build();
-		professorRepository.updateSyllabus(syllabus);
-		try {
-			request.getRequestDispatcher("/WEB-INF/views/syllabus/updateSyllabus.jsp").forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -262,8 +245,6 @@ public class ProfessorController extends HttpServlet {
 
 	private void handleSyllabusUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		User principal = (User) request.getSession().getAttribute("principal");
 		String overview = request.getParameter("overview");
 		String objective = request.getParameter("objective");
 		String textbook = request.getParameter("textbook");
@@ -273,15 +254,8 @@ public class ProfessorController extends HttpServlet {
 		Syllabus syllabus = Syllabus.builder().overview(overview).objective(objective).textbook(textbook)
 				.program(program).subjectId(subjectId).build();
 		professorRepository.updateSyllabus(syllabus);
-
-		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<script type=\"text/javascript\">");
-		out.println("alert('수정완료');");
-		out.println("window.close();");
-		out.println("</script>");
-		out.close();
-
+		
+		AlertUtil.closeAlert(response, "수정완료");
 	}
 
 }

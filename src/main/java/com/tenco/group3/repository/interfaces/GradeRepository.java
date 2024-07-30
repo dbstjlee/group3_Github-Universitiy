@@ -3,7 +3,6 @@ package com.tenco.group3.repository.interfaces;
 import java.util.List;
 
 import com.tenco.group3.model.Grade;
-import com.tenco.group3.model.Student;
 
 public interface GradeRepository {
 	List<Grade> getThisSemester(int studentId, int semester, int sub_year);

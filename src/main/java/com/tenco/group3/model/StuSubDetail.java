@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class StuSubDetail {
+
 	private int id;
 	private int studentId;
 	private int subjectId;
@@ -23,4 +24,5 @@ public class StuSubDetail {
 	private int convertedMark;
 	private String deptName;
 	private String studentName;
+
 }

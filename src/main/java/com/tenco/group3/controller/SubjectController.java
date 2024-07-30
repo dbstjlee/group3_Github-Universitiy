@@ -31,7 +31,8 @@ public class SubjectController extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getPathInfo();
 
 		switch (action) {
@@ -54,9 +55,8 @@ public class SubjectController extends HttpServlet {
 
 	}
 
-//	}
-
-	private void showAllSubject(HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException {
+	private void showAllSubject(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException {
 
 		int page = 1;
 		int pageSize = 20;
@@ -90,7 +90,8 @@ public class SubjectController extends HttpServlet {
 		}
 	}
 
-	private void searchSubject(HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException {
+	private void searchSubject(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException {
 		int page = 1;
 		int pageSize = 20;
 		int year = Integer.parseInt(request.getParameter("subYear"));
@@ -138,7 +139,8 @@ public class SubjectController extends HttpServlet {
 	 * @throws IOException
 	 */
 
-	private void subjectById(HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, ServletException {
+	private void subjectById(HttpServletRequest request, HttpServletResponse response)
+			throws SecurityException, IOException, ServletException {
 		// TODO 유효성 검사
 		String name = request.getParameter("name");
 		int semester = Integer.parseInt(request.getParameter("semester"));
@@ -150,7 +152,8 @@ public class SubjectController extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/views/subject/subject.jsp").forward(request, response);
 	}
 
-	private void showSyllabus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showSyllabus(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		try {
 			int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 			Syllabus syllabus = subjectRepository.getSyllabusById(subjectId);
@@ -164,9 +167,4 @@ public class SubjectController extends HttpServlet {
 		}
 	}
 
-	// TODO 안쓰면 삭제
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
 }

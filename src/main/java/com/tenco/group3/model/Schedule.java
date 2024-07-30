@@ -1,7 +1,5 @@
 package com.tenco.group3.model;
 
-
-
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +21,5 @@ public class Schedule {
 	private Date startDay;
 	private Date endDay;
 	private String information;
+
 }

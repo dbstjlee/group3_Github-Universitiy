@@ -54,10 +54,6 @@ public class ManagementController extends HttpServlet {
 	private StuSubRepository stuSubRepository;
 	private StuSchRepository stuSchRepository;
 
-	public ManagementController() {
-		super();
-	}
-
 	@Override
 	public void init() throws ServletException {
 		scheduleStateRepository = new ScheduleStateRepositoryImpl();
@@ -560,11 +556,19 @@ public class ManagementController extends HttpServlet {
 			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
-
+	
+	/**
+	 * 휴학 처리 메서드 (승인 --> 학적 변동)
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	private void handleBreakState(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int breakId = Integer.parseInt(request.getParameter("id"));
 		String status = request.getParameter("status");
 		String type = request.getParameter("type");
+		
+		// 휴학 처리 (승인 or 반려)
 		breakAppRepository.updateBreakAppStatus(breakId, status);
 		if ("승인".equals(status)) {
 			List<Integer> studentList = new ArrayList<>();

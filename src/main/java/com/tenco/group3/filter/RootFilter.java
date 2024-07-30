@@ -32,15 +32,13 @@ import jakarta.servlet.http.HttpSession;
 @WebFilter("/*")
 public class RootFilter extends HttpFilter implements Filter {
 
+	private static final long serialVersionUID = 1L;
+	
 	private NoticeRepository noticeRepository;
 	private ScheduleRepository scheduleRepository;
 	private UserRepository userRepository;
 
 	List<String> ignoreURLs = new ArrayList<>();
-
-	public RootFilter() {
-		super();
-	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
