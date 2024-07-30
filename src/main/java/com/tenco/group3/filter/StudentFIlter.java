@@ -7,7 +7,6 @@ import com.tenco.group3.util.AlertUtil;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -20,9 +19,6 @@ import jakarta.servlet.http.HttpSession;
 @WebFilter(urlPatterns = { "/break/*", "/grade/*", "/tuition/*", "/sugang/*" })
 public class StudentFIlter extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 1L;
-
-	public void destroy() {
-	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {

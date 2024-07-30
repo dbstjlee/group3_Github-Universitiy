@@ -121,7 +121,6 @@ public class UserRepositoryImpl implements UserRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(user); // TODO 삭제
 		return user;
 	}
 

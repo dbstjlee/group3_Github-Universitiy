@@ -10,10 +10,10 @@
 </head>
 <body>
 	<div>
+		<h3>휴학 내역</h3>
 		<form action="${pageContext.request.contextPath}/break/cancle" method="post">
 			<table border="1">
 				<c:set var="breakApp" value="${breakApp}" />
-				<h3>휴학 내역</h3>
 				<tbody>
 					<tr>
 						<th>단과대</th>
