@@ -156,6 +156,9 @@ public class ProfessorController extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * @학기별조회
+	 * */
 	private void searchPorfessorSubjectBySeemester(HttpServletRequest request, HttpServletResponse response ,HttpSession session)throws SecurityException, IOException  {
 		User user = (User) session.getAttribute("principal");
 		if (user == null) {
