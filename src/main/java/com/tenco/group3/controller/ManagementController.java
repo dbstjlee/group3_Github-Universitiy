@@ -15,6 +15,7 @@ import com.tenco.group3.model.Subject;
 import com.tenco.group3.model.Sugang;
 import com.tenco.group3.model.Tuition;
 import com.tenco.group3.repository.BreakAppRepositoryImpl;
+import com.tenco.group3.repository.DepartmentRepositoryImpl;
 import com.tenco.group3.repository.ManagementRepositoryImpl;
 import com.tenco.group3.repository.ScheduleStateRepositoryImpl;
 import com.tenco.group3.repository.StuSchRepositoryImpl;
@@ -22,6 +23,7 @@ import com.tenco.group3.repository.StuStatRepositoryImpl;
 import com.tenco.group3.repository.StuSubRepositoryImpl;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.BreakAppRepository;
+import com.tenco.group3.repository.interfaces.DepartmentRepository;
 import com.tenco.group3.repository.interfaces.ManagementRepository;
 import com.tenco.group3.repository.interfaces.ScheduleStateRepository;
 import com.tenco.group3.repository.interfaces.StuSchRepository;
@@ -31,6 +33,7 @@ import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.PasswordUtil;
 import com.tenco.group3.util.SemesterUtil;
+import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,6 +47,7 @@ public class ManagementController extends HttpServlet {
 
 	private ScheduleStateRepository scheduleStateRepository;
 	private ManagementRepository managementRepository;
+	private DepartmentRepository departmentRepository;
 	private BreakAppRepository breakAppRepository;
 	private StuStatRepository stuStatRepository;
 	private TuitionRepository tuitionRepository;
@@ -58,6 +62,7 @@ public class ManagementController extends HttpServlet {
 	public void init() throws ServletException {
 		scheduleStateRepository = new ScheduleStateRepositoryImpl();
 		managementRepository = new ManagementRepositoryImpl();
+		departmentRepository = new DepartmentRepositoryImpl();
 		breakAppRepository = new BreakAppRepositoryImpl();
 		tuitionRepository = new TuitionRepositoryImpl();
 		stuStatRepository = new StuStatRepositoryImpl();
@@ -65,8 +70,7 @@ public class ManagementController extends HttpServlet {
 		stuSchRepository = new StuSchRepositoryImpl();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
 
 		switch (action) {
@@ -77,11 +81,12 @@ public class ManagementController extends HttpServlet {
 			showProfessorList(request, response);
 			break;
 		case "/student":
+			request.setAttribute("departmentList", departmentRepository.getAllDepartment());
 			request.getRequestDispatcher("/WEB-INF/views/management/registStudentForm.jsp").forward(request, response);
 			break;
 		case "/professor":
-			request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request,
-					response);
+			request.setAttribute("departmentList", departmentRepository.getAllDepartment());
+			request.getRequestDispatcher("/WEB-INF/views/management/registProfessorForm.jsp").forward(request, response);
 			break;
 		case "/staff":
 			request.getRequestDispatcher("/WEB-INF/views/management/registStaffForm.jsp").forward(request, response);
@@ -126,8 +131,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showStudentList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showStudentList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 페이징 처리를 위한 변수 선언
 		int page = 1; // 기본 페이지 번호
 		int pageSize = 20; // 한 페이지당 보여질 게시글 수
@@ -168,8 +172,7 @@ public class ManagementController extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/views/management/studentList.jsp").forward(request, response);
 	}
 
-	private void showProfessorList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showProfessorList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 페이징 처리를 위한 변수 선언
 		int page = 1; // 기본 페이지 번호
 		int pageSize = 20; // 한 페이지당 보여질 게시글 수
@@ -216,8 +219,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showTuitionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if ((int) getServletContext().getAttribute("sugang") != ScheduleState.END) {
 			AlertUtil.backAlert(response, "수강 신청 기간이 끝나야 등록금 고지서 발송이 가능합니다.");
 		} else {
@@ -268,8 +270,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showBreakPage(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showBreakPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int isBreak = (int) getServletContext().getAttribute("breakApp");
 		request.setAttribute("isBreak", isBreak);
 		if (isBreak == ScheduleState.TRUE) {
@@ -287,8 +288,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, int state)
-			throws ServletException, IOException {
+	private void handleBreakState(HttpServletRequest request, HttpServletResponse response, int state) throws ServletException, IOException {
 		if (state == ScheduleState.END && !managementRepository.checkBreakAppDone()) {
 			AlertUtil.backAlert(response, "처리되지 않은 휴학 신청이 있습니다.");
 		} else {
@@ -306,8 +306,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showBreakDetailPage(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showBreakDetailPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BreakApp breakApp = breakAppRepository.getBreakAppDetail(Integer.parseInt(request.getParameter("id")));
 		request.setAttribute("breakApp", breakApp);
 		request.getRequestDispatcher("/WEB-INF/views/management/breakDetail.jsp").forward(request, response);
@@ -335,8 +334,7 @@ public class ManagementController extends HttpServlet {
 		int breakAppState = (int) getServletContext().getAttribute("breakApp");
 		int sugangState = (int) getServletContext().getAttribute("sugang");
 		int tuitionState = (int) getServletContext().getAttribute("tuition");
-		if (breakAppState == ScheduleState.END && sugangState == ScheduleState.END
-				&& tuitionState == ScheduleState.END) {
+		if (breakAppState == ScheduleState.END && sugangState == ScheduleState.END && tuitionState == ScheduleState.END) {
 			// 직전학기 성적 확인하여 장학금 타입 설정 후 학생별 장학금 타입 테이블에 인서트
 			List<RankedStudent> rankedStudentList = stuSubRepository.selectRankedStudent();
 			stuSchRepository.insertStuSch(rankedStudentList);
@@ -352,12 +350,12 @@ public class ManagementController extends HttpServlet {
 			SemesterUtil.setCurrentSemester(SemesterUtil.getAfterSemester());
 			SemesterUtil.setAfterYear(0);
 			SemesterUtil.setAfterSemester(0);
-			
+
 			// 휴학이 끝난 사람을 복학 상태로 변경
 			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
 			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
 			stuStatRepository.updateStatusById(studentIdList, "복학");
-			
+
 			// 학년 업데이트
 			List<Student> studentList = stuStatRepository.getCurrentGrade();
 			List<Student> updatedList = new ArrayList<>();
@@ -372,8 +370,7 @@ public class ManagementController extends HttpServlet {
 			}
 			managementRepository.updateGradeAndSemester(updatedList);
 			stuStatRepository.updateStatusById(graduatedList, "졸업");
-			String msg = "새학기 적용이 완료 되었습니다. " + SemesterUtil.getCurrentYear() + "년도 "
-					+ SemesterUtil.getCurrentSemester() + "학기가 되었습니다.";
+			String msg = "새학기 적용이 완료 되었습니다. " + SemesterUtil.getCurrentYear() + "년도 " + SemesterUtil.getCurrentSemester() + "학기가 되었습니다.";
 			AlertUtil.hrefAlert(response, msg, "/management/studentList");
 		} else {
 			AlertUtil.backAlert(response, "해당 학기의 모든 학사일정이 완료되어야 합니다.");
@@ -388,8 +385,7 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleSugangState(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleSugangState(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if ((int) getServletContext().getAttribute("breakApp") != ScheduleState.END) {
 			AlertUtil.backAlert(response, "휴학 신청 기간이 끝나야 수강 신청기간을 진행할 수 있습니다.");
 			return;
@@ -399,6 +395,7 @@ public class ManagementController extends HttpServlet {
 		// 받아온 수강 신청기간에 대한 상태를 반영
 		if (stateStr != null) {
 			sugang = Integer.parseInt(stateStr);
+			scheduleStateRepository.updateSchedule("sugang", sugang);
 			getServletContext().setAttribute("sugang", sugang);
 		}
 
@@ -436,8 +433,7 @@ public class ManagementController extends HttpServlet {
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
 		switch (action) {
 		case "/student":
@@ -465,13 +461,25 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void handleCreateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// TODO 유효성 검사
+
+		// 유효성 검사 메서드
+		String msg = null;
+		if ((msg = vaildationCheck(request, "student")) != null) {
+			AlertUtil.backAlert(response, msg);
+			return;
+		}
+
 		try {
-			Student student = Student.builder().name(request.getParameter("name"))
-					.birthDate(Date.valueOf(request.getParameter("birthDate"))).gender(request.getParameter("gender"))
-					.address(request.getParameter("address")).tel(request.getParameter("tel"))
-					.email(request.getParameter("email")).deptId(Integer.parseInt(request.getParameter("deptId")))
-					.entranceDate(Date.valueOf(request.getParameter("entranceDate"))).build();
+			Student student = Student.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(ValidationUtil.formatTel(request.getParameter("tel")))
+				.email(request.getParameter("email"))
+				.deptId(Integer.parseInt(request.getParameter("deptId")))
+				.entranceDate(Date.valueOf(request.getParameter("entranceDate")))
+				.build();
 
 			// 비밀번호 생성
 			String password = PasswordUtil.generatePassword();
@@ -479,8 +487,7 @@ public class ManagementController extends HttpServlet {
 			String pwSalt = PasswordUtil.hashPassword(password, salt);
 			int id = managementRepository.createStudent(student, pwSalt);
 			if (id != 0) {
-				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password,
-						"/management/student");
+				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password, "/management/student");
 			} else {
 				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
@@ -491,21 +498,29 @@ public class ManagementController extends HttpServlet {
 	}
 
 	private void handleCreateProfessor(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// TODO 유효성 검사
+		// 유효성 검사 메서드
+		String msg = null;
+		if ((msg = vaildationCheck(request, "professor")) != null) {
+			AlertUtil.backAlert(response, msg);
+			return;
+		}
 		try {
-			Professor professor = Professor.builder().name(request.getParameter("name"))
-					.birthDate(Date.valueOf(request.getParameter("birthDate"))).gender(request.getParameter("gender"))
-					.address(request.getParameter("address")).tel(request.getParameter("tel"))
-					.email(request.getParameter("email")).deptId(Integer.parseInt(request.getParameter("deptId")))
-					.build();
+			Professor professor = Professor.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(request.getParameter("tel"))
+				.email(request.getParameter("email"))
+				.deptId(Integer.parseInt(request.getParameter("deptId")))
+				.build();
 			// 비밀번호 생성
 			String password = PasswordUtil.generatePassword();
 			String salt = PasswordUtil.getSalt();
 			String pwSalt = PasswordUtil.hashPassword(password, salt);
 			int id = managementRepository.createProfessor(professor, pwSalt);
 			if (id != 0) {
-				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password,
-						"/management/professor");
+				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password, "/management/professor");
 			} else {
 				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
@@ -516,19 +531,27 @@ public class ManagementController extends HttpServlet {
 	}
 
 	private void handleCreateStaff(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// TODO 유효성 검사
+		// 유효성 검사 메서드
+		String msg = null;
+		if ((msg = vaildationCheck(request, "staff")) != null) {
+			AlertUtil.backAlert(response, msg);
+			return;
+		}
 		try {
-			Staff staff = Staff.builder().name(request.getParameter("name"))
-					.birthDate(Date.valueOf(request.getParameter("birthDate"))).gender(request.getParameter("gender"))
-					.address(request.getParameter("address")).tel(request.getParameter("tel"))
-					.email(request.getParameter("email")).build();
+			Staff staff = Staff.builder()
+				.name(request.getParameter("name"))
+				.birthDate(Date.valueOf(request.getParameter("birthDate")))
+				.gender(request.getParameter("gender"))
+				.address(request.getParameter("address"))
+				.tel(request.getParameter("tel"))
+				.email(request.getParameter("email"))
+				.build();
 			String password = PasswordUtil.generatePassword();
 			String salt = PasswordUtil.getSalt();
 			String pwSalt = PasswordUtil.hashPassword(password, salt);
 			int id = managementRepository.createStaff(staff, pwSalt);
 			if (id != 0) {
-				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password,
-						"/management/staff");
+				AlertUtil.hrefAlert(response, "등록 성공 아이디 : " + String.valueOf(id) + "비밀번호 : " + password, "/management/staff");
 			} else {
 				AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			}
@@ -549,6 +572,49 @@ public class ManagementController extends HttpServlet {
 			stuStatRepository.updateStatusById(studentList, "휴학", type);
 		}
 		response.sendRedirect("/management/break");
+	}
+	
+	/**
+	 * 유효성 검사 메서드
+	 * @param request
+	 * @param type
+	 * @return
+	 * @throws IOException
+	 */
+	private String vaildationCheck(HttpServletRequest request, String type) throws IOException {
+
+		Date birthDate = null;
+
+		try {
+			birthDate = Date.valueOf(request.getParameter("birthDate"));
+			if (type.equals("student")) {
+				Date.valueOf(request.getParameter("entranceDate"));
+			}
+		} catch (Exception e) {
+			return "날짜를 입력해주세요";
+		}
+
+		String name = request.getParameter("name");
+		String address = request.getParameter("address");
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+
+		if (name == null || !ValidationUtil.isValidateName(name)) {
+			return "올바르지 않은 이름입니다.";
+		}
+		if (address == null || !ValidationUtil.isValidateAddress(address)) {
+			return "잘못된 주소 형식 입니다.";
+		}
+		if (tel == null || !ValidationUtil.isValidateTel(tel)) {
+			return "올바르지 않은 번호입니다.";
+		}
+		if (email == null || !ValidationUtil.isEmail(email)) {
+			return "이메일 형식이 아닙니다.";
+		}
+		if (birthDate == null || !ValidationUtil.isDateBeforeToday(birthDate.toString())) {
+			return "날짜를 똑바로 입력해주세요";
+		}
+		return null;
 	}
 
 }

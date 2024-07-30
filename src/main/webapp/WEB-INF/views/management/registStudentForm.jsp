@@ -86,8 +86,7 @@
 					</td>
 					<td style="padding-top: 7px">
 						<label for="male">남성</label> <input type="radio" value="남성" name="gender" id="male" checked="checked"> &nbsp; <label for="female">여성</label> <input type="radio"
-							value="여성" name="gender" id="female"
-						>
+							value="여성" name="gender" id="female">
 					</td>
 				</tr>
 				<tr>
@@ -116,10 +115,14 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="deptId">과 ID</label>
+						<label for="deptId">학과명</label>
 					</td>
 					<td>
-						<input type="text" name="deptId" id="deptId" class="input--box">
+						<select name="deptId">
+							<c:forEach items="${departmentList}" var="department">
+								<option value="${department.id}">${department.name}</option>
+							</c:forEach>
+						</select>
 					</td>
 				</tr>
 				<tr>

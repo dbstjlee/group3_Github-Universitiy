@@ -198,8 +198,8 @@ public class InfoController extends HttpServlet {
 			AlertUtil.backAlert(response, "이메일 형식이 아닙니다.");
 			return;
 		}
-		if (address == null || !ValidationUtil.isNotOnlyWhitespace(address)) {
-			AlertUtil.backAlert(response, "주소를 입력해주세요.");
+		if (address == null || !ValidationUtil.isValidateAddress(address)) {
+			AlertUtil.backAlert(response, "잘못된 주소 형식 입니다.");
 			return;
 		}
 		

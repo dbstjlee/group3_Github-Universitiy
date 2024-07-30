@@ -117,10 +117,14 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="deptId">과 ID</label>
+						<label for="deptId">학과명</label>
 					</td>
 					<td>
-						<input type="text" name="deptId" id="deptId" class="input--box">
+						<select name="deptId">
+							<c:forEach items="${departmentList}" var="department">
+								<option value="${department.id}">${department.name}</option>
+							</c:forEach>
+						</select>
 					</td>
 				</tr>
 			</table>
