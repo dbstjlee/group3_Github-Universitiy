@@ -1,15 +1,13 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import com.tenco.group3.model.Professor;
-import com.tenco.group3.model.Student;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
 import com.tenco.group3.repository.interfaces.UserRepository;
 import com.tenco.group3.util.AlertUtil;
 import com.tenco.group3.util.Define;
+import com.tenco.group3.util.PasswordUtil;
 import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
@@ -35,8 +33,7 @@ public class UserController extends HttpServlet {
 		userRepository = new UserRepositoryImpl();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
 		System.out.println("action: " + action); // TODO - 삭제 예정
 		switch (action) {
@@ -76,8 +73,7 @@ public class UserController extends HttpServlet {
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getPathInfo();
 		switch (action) {
 		case "/logIn":
@@ -153,13 +149,24 @@ public class UserController extends HttpServlet {
 			AlertUtil.backAlert(response, "비밀번호를 찾을 수 없습니다.");
 		}
 
-		String tempPwd = Define.TEMP_PWD;
+		// 비밀번호 생성
+		String password = PasswordUtil.generatePassword();
+		String salt = PasswordUtil.getSalt();
+		String pwSalt = PasswordUtil.hashPassword(password, salt);
 
-		User updatedPwd = User.builder().id(user.getId()).username(user.getUsername()).userRole(user.getUserRole())
-				.email(user.getEmail()).password(tempPwd).build();
+		String tempPwd = pwSalt;
 
+		User updatedPwd = User.builder()
+			.id(user.getId())
+			.username(user.getUsername())
+			.userRole(user.getUserRole())
+			.email(user.getEmail())
+			.password(tempPwd)
+			.build();
+		
 		userRepository.getUpdatePassword(updatedPwd);
-		request.setAttribute("updatedPwd", updatedPwd);
+		request.setAttribute("username", updatedPwd.getUsername());
+		request.setAttribute("password", password);
 		request.getRequestDispatcher("/WEB-INF/views/user/temporaryPassword.jsp").forward(request, response);
 	}
 
@@ -189,8 +196,14 @@ public class UserController extends HttpServlet {
 			return;
 		}
 
+		// 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
+		if (!newPassword.equals(confirmPassword)) {
+			AlertUtil.backAlert(response, "변경할 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+			return;
+		}
+		
 		// 현재 비밀번호가 일치하지 않는 경우
-		if (!principal.getPassword().equals(currentPassword)) {
+		if (!PasswordUtil.checkPassword(principal.getPassword(), currentPassword)) {
 			AlertUtil.backAlert(response, "현재 비밀번호가 일치하지 않습니다.");
 			return;
 		}
@@ -200,18 +213,16 @@ public class UserController extends HttpServlet {
 			AlertUtil.backAlert(response, "현재 비밀번호와 변경할 비밀번호가 동일합니다.");
 			return;
 		}
-
-		// 새 비밀번호와 확인 비밀번호가 일치하지 않는 경우
-		if (!newPassword.equals(confirmPassword)) {
-			AlertUtil.backAlert(response, "변경할 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-			return;
-		}
+		String salt = PasswordUtil.getSalt();
+		String pwSalt = PasswordUtil.hashPassword(newPassword, salt);
+		
 
 		// 비밀번호 변경
-		User updatedUser = User.builder().id(principal.getId()).password(newPassword).build();
-
-		userRepository.getUpdatePassword(updatedUser);
-		AlertUtil.backAlert(response, "비밀번호가 변경되었습니다. 비밀번호 재변경 시 로그아웃 후 변경해주세요.");
+		principal.setPassword(pwSalt);
+		
+		userRepository.getUpdatePassword(principal);
+		request.getSession().setAttribute("principal", principal);
+		AlertUtil.backAlert(response, "비밀번호가 변경되었습니다.");
 	}
 
 	/**
@@ -222,8 +233,7 @@ public class UserController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleFindId(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleFindId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 이름, 이메일
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
@@ -272,8 +282,7 @@ public class UserController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleLogin(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		String idStr = request.getParameter("id");
 		String password = request.getParameter("password");
@@ -302,35 +311,30 @@ public class UserController extends HttpServlet {
 			return;
 		}
 
-		// 현재 비밀번호가 일치하지 않거나 공백인 경우
-		if (!principal.getPassword().equals(password)) {
+		// 현재 비밀번호가 일치하지 않는 경우
+		if (!PasswordUtil.checkPassword(principal.getPassword(), password)) {
 			AlertUtil.backAlert(response, "현재 비밀번호가 일치하지 않습니다.");
 			return;
 		}
 
 		// 로그인 성공 시 세션 생성
-		if (principal != null && principal.getPassword().equals(password)) {
-			HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 
-			// 체크박스 - 체크 상태일 때(쿠키 생성)
-			if ("on".equals(rememberId)) {
-				Cookie cookie = new Cookie("id", String.valueOf(id));
-				cookie.setMaxAge(60 * 60 * 24);
-				response.addCookie(cookie);
-			} else { // 체크 박스 - 체크 해제 상태일 때
-				if (rememberId == null) {
-					Cookie[] cookies = request.getCookies();
-					for (Cookie cookie : cookies) {
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					}
+		// 체크박스 - 체크 상태일 때(쿠키 생성)
+		if ("on".equals(rememberId)) {
+			Cookie cookie = new Cookie("id", String.valueOf(id));
+			cookie.setMaxAge(60 * 60 * 24);
+			response.addCookie(cookie);
+		} else { // 체크 박스 - 체크 해제 상태일 때
+			if (rememberId == null) {
+				Cookie[] cookies = request.getCookies();
+				for (Cookie cookie : cookies) {
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
 				}
 			}
-			session.setAttribute("principal", principal);
-			response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
-		} else {
-			// 에러 메시지 (로그인 실패)
-			AlertUtil.backAlert(response, "아이디 또는 비밀번호가 틀립니다.");
 		}
+		session.setAttribute("principal", principal);
+		response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
 	}
 }

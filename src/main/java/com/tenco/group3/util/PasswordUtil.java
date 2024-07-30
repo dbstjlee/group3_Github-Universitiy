@@ -35,11 +35,15 @@ public class PasswordUtil {
 
 	// 비밀번호 확인 메서드
 	public static boolean checkPassword(String dbPwSalt, String inputPw) {
-		StringTokenizer token = new StringTokenizer(dbPwSalt, ":");
-		token.nextToken();
-		String salt = token.nextToken();
-		if(dbPwSalt.equals(hashPassword(inputPw, salt))) {
-			return true;
+		try {
+			StringTokenizer token = new StringTokenizer(dbPwSalt, ":");
+			token.nextToken();
+			String salt = token.nextToken();
+			if(dbPwSalt.equals(hashPassword(inputPw, salt))) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return false;
 	}

@@ -54,15 +54,13 @@
 			<h2>비밀번호 찾기</h2>
 			<br>
 		</div>
-		<form action="/user/findPwd" method="post">
 			<div class="section--content">
-				${updatedPwd.username}의 임시 비밀번호는
+				${username}의 임시 비밀번호는
 				 <br>
-				 <span style="font-weight: bold;">${updatedPwd.password}</span>입니다.
+				 <span style="font-weight: bold;">${password}</span>입니다.
 				 <br>
 				  보안을 위해 로그인 후 비밀번호를 변경해주세요.
 			</div>
-		</form>
 	</section>
 </body>
 </html>
