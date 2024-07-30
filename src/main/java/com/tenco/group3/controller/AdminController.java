@@ -49,11 +49,6 @@ public class AdminController extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getPathInfo();
 
-//		HttpSession session = request.getSession(false);
-//		if(session == null || session.getAttribute("principal") == null ) {
-//			response.sendRedirect(request.getContextPath() + "");
-//		}
-
 		System.out.println("action : " + action);
 		switch (action) {
 		case "/college":
