@@ -17,10 +17,12 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 	private static final String ADD_BREAK_APP = " INSERT INTO break_app_tb "
 			+ " (student_id, student_grade, from_year, from_semester, to_year, " + " to_semester, type) "
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+	
 	// 휴학 신청 리스트
 	private static final String GET_BREAK_APP_LIST = " SELECT br.*, st.name AS studentName, de.name as departmentname, type "
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
 			+ " JOIN department_tb as de on st.dept_id = de.id  " + " WHERE st.id = ? ";
+	
 	// 휴학 신청 자세히
 	private static final String GET_BREAK_APP_DETAIL = " SELECT br.*, st.name AS studentName, de.name as departmentname, st.address, st.tel, co.name as collegename, type "
 			+ " FROM break_app_tb AS br " + " JOIN student_tb AS st ON br.student_id = st.id "
@@ -37,6 +39,7 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 	private static final String SELECT_ALL_BREAK_APP_IN_PROGRESS = " SELECT * FROM break_app_tb WHERE status = '처리중' ";
 	private static final String UPDATE_BREAK_APP_STATUS = " UPDATE break_app_tb SET status = ? WHERE id = ? ";
 
+	private static final String IS_BREAK_APP_SQL = " SELECT * FROM break_app_tb WHERE student_id = ? ";
 	@Override
 	public void addBreakApp(BreakApp breakApp) {
 		try (Connection conn = DBUtil.getConnection()) {
@@ -214,6 +217,25 @@ public class BreakAppRepositoryImpl implements BreakAppRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean isSubmitBreakApp(int studentId) {
+		boolean isSubmit = false;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(IS_BREAK_APP_SQL)){
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()){
+				if(rs.next()) {
+					isSubmit = true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSubmit;
 	}
 
 }

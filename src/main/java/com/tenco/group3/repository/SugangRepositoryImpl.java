@@ -46,11 +46,11 @@ public class SugangRepositoryImpl implements SugangRepository {
 	private static final String GET_PRE_APPLICATION_SUBJECT = " SELECT pre.student_id, su.id, su.name AS '강의명', "
 			+ " pr.name AS '담당교수', de.name AS '개설학과', co.name AS '단과대학', "
 			+ " su.grades, su.type, su.sub_day, su.start_time, su.end_time, su.room_id, su.num_of_student, su.capacity, "
-			+ " CASE WHEN pre.student_id IS NOT NULL THEN 1 ELSE 0 END AS confirm"
-			+ " FROM (select student_id, subject_id from pre_stu_sub_tb where student_id = ?) AS pre"
-			+ " right JOIN subject_tb AS su ON pre.subject_id = su.id"
-			+ " inner JOIN department_tb AS de ON su.dept_id = de.id"
-			+ " inner JOIN college_tb AS co ON co.id = de.college_id"
+			+ " CASE WHEN pre.student_id IS NOT NULL THEN 1 ELSE 0 END AS confirm "
+			+ " FROM (select student_id, subject_id from pre_stu_sub_tb where student_id = ?) AS pre "
+			+ " right JOIN subject_tb AS su ON pre.subject_id = su.id "
+			+ " inner JOIN department_tb AS de ON su.dept_id = de.id "
+			+ " inner JOIN college_tb AS co ON co.id = de.college_id "
 			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id" + " ORDER BY su.id ASC limit ? offset ? ";
 
 	// 수강 신청 내역
@@ -59,10 +59,10 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " su.grades, su.type, su.sub_day, su.start_time, su.end_time, su.room_id, su.num_of_student, su.capacity, "
 			+ " CASE WHEN sst.student_id IS NOT NULL THEN 1 ELSE 0 END AS confirm, "
 			+ " (capacity - num_of_student)AS result "
-			+ " FROM (select student_id, subject_id from stu_sub_tb where student_id = ?) AS sst"
-			+ " right JOIN subject_tb AS su ON sst.subject_id = su.id"
-			+ " inner JOIN department_tb AS de ON su.dept_id = de.id"
-			+ " inner JOIN college_tb AS co ON co.id = de.college_id"
+			+ " FROM (select student_id, subject_id from stu_sub_tb where student_id = ?) AS sst "
+			+ " right JOIN subject_tb AS su ON sst.subject_id = su.id "
+			+ " inner JOIN department_tb AS de ON su.dept_id = de.id "
+			+ " inner JOIN college_tb AS co ON co.id = de.college_id "
 			+ " inner JOIN professor_tb AS pr ON su.professor_id = pr.id" + " ORDER BY su.id ASC limit ? offset ? ";
 
 	// 강의 검색
@@ -125,6 +125,11 @@ public class SugangRepositoryImpl implements SugangRepository {
 	private static final String TOTAL_SUBJECT_GRADES = " select sum(su.grades) as '총합' " + " from stu_sub_tb as sst "
 			+ " left join subject_tb as su on sst.subject_id = su.id " + " where sst.student_id = ? ";
 
+	// 예비 총 학점
+	private static final String TOTAL_PRE_SUBJECT_GRADES = " SELECT sum(grades) as '총합' "
+			+ "FROM pre_stu_sub_tb as pre " + "left join subject_tb as su on pre.subject_id = su.id "
+			+ "where pre.student_id = ? ";
+
 	// 수강 신청 여부
 	private static final String CONFIRM_SUBJECT_SQL = " select * from stu_sub_tb where student_id = ? ";
 
@@ -155,7 +160,11 @@ public class SugangRepositoryImpl implements SugangRepository {
 			+ " INNER JOIN professor_tb AS pr ON su.professor_id = pr.id " + " WHERE pre.student_id = ? "
 			+ " ORDER BY su.id ASC ";
 
+	// 수강 수강 학점 총합
 	private static final String GET_TOTAL_GRADES = " select sum(complete_grade) as totalGrade from stu_sub_tb where student_id = ? ";
+
+	// 예비 수강 신청 학점 총합
+	private static final String GET_PRE_TOTAL_GRADES = " SELECT sum(grades) as totalGrade FROM pre_stu_sub_tb as pre left join subject_tb as su on pre.subject_id = su.id where pre.student_id = ? ";
 
 	@Override
 	public List<Sugang> getAllSubject(int limit, int offset) {
@@ -710,9 +719,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 	}
 
 	@Override
-	public boolean getTotalGrade(int studentId) {
+	public int isTotalGradeWithinLimit(int studentId) {
 		int totalGrade = 0;
-		boolean isTotalGrade = false;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_TOTAL_GRADES)) {
 			pstmt.setInt(1, studentId);
@@ -726,12 +734,42 @@ public class SugangRepositoryImpl implements SugangRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (totalGrade > Define.MAX_GRADES) {
-			isTotalGrade = true;
-		} else {
-			isTotalGrade = false;
+		return totalGrade;
+	}
+
+	@Override
+	public int isPreTotalGradeWithinLimit(int studentId) {
+		int totalGrade = 0;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(GET_PRE_TOTAL_GRADES)) {
+			pstmt.setInt(1, studentId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					totalGrade = rs.getInt("totalGrade");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return isTotalGrade;
+		return totalGrade;
+	}
+
+	@Override
+	public int getPreSubjectGrade(int studentId) {
+		int totalGrade = 0;
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(TOTAL_PRE_SUBJECT_GRADES)) {
+			pstmt.setInt(1, studentId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				totalGrade = rs.getInt("총합");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return totalGrade;
 	}
 
 }

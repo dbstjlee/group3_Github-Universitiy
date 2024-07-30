@@ -3,6 +3,7 @@ package com.tenco.group3.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Sugang;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.SugangRepositoryImpl;
@@ -45,7 +46,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/pre":
 			// TODO - 예비 수강 신청 기간 처리
-			if (sugangDay == 3) {
+			if (sugangDay == ScheduleState.PRE) {
 				showPreliminaryList(request, response, session);
 			} else {
 				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
@@ -53,7 +54,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/pre/search":
 			// TODO - 예비 수강 신청 기간 처리
-			if (sugangDay == 3) {
+			if (sugangDay == ScheduleState.PRE) {
 				showSearchPreliminary(request, response, session);
 			} else {
 				AlertUtil.backAlert(response, "예비 수강 신청 기간이 아닙니다.");
@@ -65,7 +66,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/application":
 			// TODO - 수강신청 기간 설정
-			if (sugangDay == 1) {
+			if (sugangDay == ScheduleState.TRUE) {
 				showApplicationList(request, response, session);
 			} else {
 				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
@@ -73,7 +74,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/application/search":
 			// TODO - 수강신청 기간 설정
-			if (sugangDay == 1) {
+			if (sugangDay == ScheduleState.TRUE) {
 				showSearchApplication(request, response, session);
 			} else {
 				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
@@ -81,7 +82,7 @@ public class SugangController extends HttpServlet {
 			break;
 		case "/list":
 			// TODO - 수강신청 기간 설정
-			if (sugangDay != 1 && sugangDay != 3) {
+			if (sugangDay == ScheduleState.TRUE || sugangDay == ScheduleState.END) {
 				showListAppSubject(request, response, session);
 			} else {
 				AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
@@ -217,27 +218,30 @@ public class SugangController extends HttpServlet {
 		int listType = 0;
 		int sugangDay = (int) getServletContext().getAttribute("sugang");
 		// TODO - 수강신청 기간
-		if (sugangDay == 1) {
+		if (sugangDay == ScheduleState.TRUE) {
+			listType = 2;
+			request.setAttribute("listType", listType);
+		} else if (sugangDay == ScheduleState.PRE){
 			listType = 1;
-		} else if (sugangDay == 3){
-			listType = 0;
+			request.setAttribute("listType", listType);
 		}
-		if (listType == 0) {
+		System.out.println(listType);
+		if (listType == 1) {
 			List<Sugang> sugangPreList = sugangRepository.getPreApplicatedSubjectList(user.getId());
-			int totalGrade = sugangRepository.getSubjectGrade(user.getId());
+			int totalGrade = sugangRepository.getPreSubjectGrade(user.getId());
 			request.setAttribute("sugangPreList", sugangPreList);
 			request.setAttribute("totalGrade", totalGrade);
-			request.setAttribute("listType", listType);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
-		} else if (listType == 1) {
+		} else if (listType == 2) {
 			List<Sugang> sugangList = sugangRepository.getApplicatedSubjectList(user.getId());
 			List<Sugang> resetList = sugangRepository.getResetPreSubject(user.getId());
 			int totalGrade = sugangRepository.getSubjectGrade(user.getId());
 			request.setAttribute("sugangList", sugangList);
 			request.setAttribute("resetList", resetList);
 			request.setAttribute("totalGrade", totalGrade);
-			request.setAttribute("listType", listType);
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
+		} else {
+			AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
 		}
 	}
 
@@ -455,7 +459,7 @@ public class SugangController extends HttpServlet {
 		if (request.getParameter("grades") != null) {
 			grade = Integer.parseInt(request.getParameter("grades"));
 		}
-		boolean totalGrade = sugangRepository.getTotalGrade(user.getId());
+		int totalGrade = sugangRepository.isTotalGradeWithinLimit(user.getId());
 		if (type.equals("1")) {
 			int rowCount = sugangRepository.deleteConfirmSubject(subjectId);
 			if (rowCount != 0) {
@@ -464,7 +468,7 @@ public class SugangController extends HttpServlet {
 				AlertUtil.backAlert(response, "신청 내역이 존재하지 않습니다.");
 			}
 		} else {
-			if (totalGrade) {
+			if ((Define.MAX_GRADES - totalGrade) >= grade) {
 				int rowCount = sugangRepository.addEnrolment(user.getId(), subjectId, grade);
 				if (rowCount != 0) {
 					response.sendRedirect(request.getContextPath() + "/sugang/application");
@@ -475,7 +479,6 @@ public class SugangController extends HttpServlet {
 				AlertUtil.backAlert(response, "18학점 이상으로는 신청이 불가능 합니다.");
 			}
 		}
-
 	}
 
 	/**
@@ -491,8 +494,11 @@ public class SugangController extends HttpServlet {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String type = request.getParameter("type");
-		int totalGrade = sugangRepository.getSubjectGrade(user.getId());
-		System.out.println(totalGrade);
+		int totalGrade = sugangRepository.isPreTotalGradeWithinLimit(user.getId());
+		int grade = 0;
+		if (request.getParameter("grades") != null) {
+			grade = Integer.parseInt(request.getParameter("grades"));
+		}
 		if (type.equals("1")) {
 			int rowCount = sugangRepository.deletePreConfirmSubject(subjectId);
 			if (rowCount != 0) {
@@ -501,7 +507,7 @@ public class SugangController extends HttpServlet {
 				AlertUtil.backAlert(response, "신청 내역이 존재하지 않습니다.");
 			}
 		} else {
-			if (totalGrade <= Define.MAX_GRADES) {
+			if ((Define.MAX_GRADES - totalGrade) >= grade) {
 				sugangRepository.addPreEnrolment(user.getId(), subjectId);
 				response.sendRedirect(request.getContextPath() + "/sugang/pre");
 			} else {

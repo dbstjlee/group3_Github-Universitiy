@@ -66,6 +66,10 @@ public class BreakController extends HttpServlet {
 		int thisSemester = (int) getServletContext().getAttribute("semester");
 		User user = (User) session.getAttribute("principal");
 		if(isBreakDay == ScheduleState.TRUE) {
+			if(breakAppRepository.isSubmitBreakApp(user.getId())) {
+				AlertUtil.backAlert(response, "이미 휴학 신청을 하였습니다.");
+				return;
+			}
 			Student student = breakAppRepository.getStudentInfo(user.getId());
 			request.setAttribute("student", student);
 			request.setAttribute("thisYear", thisYear);
@@ -113,7 +117,6 @@ public class BreakController extends HttpServlet {
 		// TODO - 학생 ID값 추가(세션에서 받음)
 		User user = (User) session.getAttribute("principal");
 		List<BreakApp> breakList = breakAppRepository.getBreakAppList(user.getId());
-		System.out.println(breakList.toString());
 		request.setAttribute("breakList", breakList);
 		request.getRequestDispatcher("/WEB-INF/views/break/list.jsp").forward(request, response);
 	}
@@ -149,8 +152,8 @@ public class BreakController extends HttpServlet {
 		breakAppRepository.cancleBreakApp(user.getId());
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		out.println("<script> alert('취소되었습니다.'); window.close(); </script>");
-		return;
+		out.println("<script> alert('취소되었습니다.'); window.opener.location.href='/break/list'; window.close(); </script>");
+	    out.close();
 	}
 
 	/**
@@ -172,7 +175,6 @@ public class BreakController extends HttpServlet {
 		// TODO - 샘플데이터 값 학생정보에서 받아오기.
 		BreakApp breakApp = BreakApp.builder().studentId(user.getId()).studentGrade(student.getGrade()).fromYear(currentYear).fromSemester(semester)
 				.toYear(breakYear).toSemester(semester).type(breakType).build();
-		System.out.println("brakApp : " + breakApp);
 		breakAppRepository.addBreakApp(breakApp);
 		response.sendRedirect(request.getContextPath() + "/break/list");
 	}

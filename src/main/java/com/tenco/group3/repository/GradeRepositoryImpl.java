@@ -130,16 +130,17 @@ public class GradeRepositoryImpl implements GradeRepository {
 	}
 
 	@Override
-	public Grade getTotalGrade(int studentId) {
-		Grade grade = null;
+	public List<Grade> getTotalGrade(int studentId) {
+		List<Grade> gradeList = new ArrayList<Grade>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_TOTAL_GRADE)) {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					grade = Grade.builder().subYear(rs.getInt("sub_year")).semester(rs.getInt("semester"))
+				while (rs.next()) {
+					Grade grade = Grade.builder().subYear(rs.getInt("sub_year")).semester(rs.getInt("semester"))
 							.sumGrades(rs.getDouble("sum_grades")).myGrades(rs.getDouble("my_grades"))
 							.average(rs.getDouble("average")).build();
+					gradeList.add(grade);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -147,7 +148,7 @@ public class GradeRepositoryImpl implements GradeRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return grade;
+		return gradeList;
 	}
 
 	@Override

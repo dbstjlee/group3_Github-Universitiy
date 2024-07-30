@@ -16,7 +16,7 @@
 					<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
 				</tr>
 				<tr>
-					<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=1">수강 신청</a></td>
+					<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=2">수강 신청</a></td>
 				</tr>
 				<tr>
 					<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
@@ -67,7 +67,7 @@
 											<td class="sub--list--button--row">
 												<form action="${pageContext.request.contextPath}/sugang/application" method="post">
 													<input type="hidden" name="subjectId" value="${sugang.subjectId}"> <input type="hidden" name="type" value="1">
-													<button type="submit" onclick="return confirm('수강신청을 취소하시겠습니까?');" style="background-color: #a7a7a7;">취소</button>
+													<button type="submit" onclick="return confirm('수강신청을 취소하시겠습니까?');" style="background-color: #a7a7a7;">수강 취소</button>
 												</form>
 											</td>
 										</tr>

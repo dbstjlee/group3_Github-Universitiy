@@ -21,6 +21,8 @@ public interface SugangRepository {
 
 	int getSubjectGrade(int studentId);
 
+	int getPreSubjectGrade(int studentId);
+
 	boolean getConfirmSubject(int studentId);
 
 	int deleteConfirmSubject(int subjectId);
@@ -38,11 +40,15 @@ public interface SugangRepository {
 	List<Sugang> getPreApplicatedSubjectList(int studentId);
 
 	List<Sugang> getResetPreSubject(int studentId);
-	int addEnrolment(int studentId, int subjectId, int grade);
 
-	boolean getTotalGrade(int studentId);
+	int addEnrolment(int studentId, int subjectId, int grade);
 
 	List<Sugang> getPreSubjectBySearch(Sugang sugang, int limit, int offset);
 
 	List<Sugang> getAppSubjectBySearch(Sugang sugang, int limit, int offset);
+
+	int isTotalGradeWithinLimit(int studentId);
+
+	int isPreTotalGradeWithinLimit(int studentId);
+
 }

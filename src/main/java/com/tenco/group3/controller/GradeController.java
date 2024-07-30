@@ -62,9 +62,8 @@ public class GradeController extends HttpServlet {
 		// TODO - 수강신청에서 학기, 연도 받기
 		// 세션에서 학생 ID 받기
 		User user = (User) session.getAttribute("principal");
-//		gradeRepository.getTotalGrade(student.getId());
-		Grade grade = gradeRepository.getTotalGrade(user.getId());
-		request.setAttribute("grade", grade);
+		List<Grade> gradeList = gradeRepository.getTotalGrade(user.getId());
+		request.setAttribute("gradeList", gradeList);
 		request.getRequestDispatcher("/WEB-INF/views/grade/total.jsp").forward(request, response);
 
 	}

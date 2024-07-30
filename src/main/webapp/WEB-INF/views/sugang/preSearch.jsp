@@ -16,7 +16,7 @@
 					<td><a href="${pageContext.request.contextPath}/sugang/pre">예비 수강 신청</a></td>
 				</tr>
 				<tr>
-					<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=1">수강 신청</a></td>
+					<td><a href="${pageContext.request.contextPath}/sugang/preAppList?type=2">수강 신청</a></td>
 				</tr>
 				<tr>
 					<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
@@ -163,7 +163,7 @@
 						<button type="submit">조회</button>
 					</div>
 				</form>
-				<a href="${pageContext.request.contextPath}/sugang/preAppList?type=0">
+				<a href="${pageContext.request.contextPath}/sugang/preAppList?type=1">
 					<button class="preStuSubList--button">예비 수강 신청 내역</button>
 				</a>
 			</div>

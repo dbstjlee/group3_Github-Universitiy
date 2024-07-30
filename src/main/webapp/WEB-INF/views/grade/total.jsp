@@ -33,8 +33,9 @@
 			<h1>전체 누계 성적</h1>
 			<div class="split--div"></div>
 			<c:choose>
-				<c:when test="${not empty grade}">
-					<h4 style="font-weight: 600">평점 평균</h4>
+				<c:when test="${not empty gradeList}">
+					<h4 style="font-weight: 600">학점 평균</h4>
+					<c:forEach var="gradeList" items="${gradeList}">
 					<table border="1" class="sub--list--table">
 						<thead>
 							<tr>
@@ -47,14 +48,15 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>${grade.subYear}년</td>
-								<td>${grade.semester}학기</td>
-								<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${grade.sumGrades}" /></td>
-								<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${grade.myGrades}" /></td>
-								<td>${grade.average}</td>
+								<td>${gradeList.subYear}년</td>
+								<td>${gradeList.semester}학기</td>
+								<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${gradeList.sumGrades}" /></td>
+								<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${gradeList.myGrades}" /></td>
+								<td>${gradeList.average}</td>
 							</tr>
 						</tbody>
 					</table>
+					</c:forEach>
 				</c:when>
 				<c:otherwise>
 					<p class="no--list--p">강의 신청 및 수강 이력 확인 바랍니다.</p>

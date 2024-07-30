@@ -23,4 +23,6 @@ public interface BreakAppRepository {
 	List<BreakApp> getAllBreakAppInProgress();
 	// 휴학 상태 변경
 	void updateBreakAppStatus(int breakId, String status);
+	
+	boolean isSubmitBreakApp(int studentId);
 }
