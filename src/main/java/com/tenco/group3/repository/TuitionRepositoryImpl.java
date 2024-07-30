@@ -17,8 +17,8 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 
 	private static final String GET_TUITION_BY_STUDENTID = " SELECT " + "	st.id AS studentId, "
 			+ "    st.name AS studentName, " + " de.name AS deptName, " + " co.name AS collgeName, "
-			+ "    ct.amount AS collTution, " + "    tu.sch_type AS scholarType, " + "	tu.tui_amount AS scholar, "
-			+ "    (ct.amount - tu.tui_amount) AS totaltution, tu.status as status " + " FROM "
+			+ "    ct.amount AS collTution, " + "    tu.sch_type AS scholarType, " + "	tu.sch_amount AS scholar, "
+			+ "    (ct.amount - tu.sch_amount) AS totaltution, tu.status as status " + " FROM "
 			+ "    student_tb AS st " + " JOIN " + " department_tb AS de ON st.dept_id = de.id " + " JOIN "
 			+ "    college_tb AS co ON de.college_id = co.id " + " JOIN "
 			+ "    coll_tuit_tb AS ct ON co.id = ct.college_id " + " JOIN "
