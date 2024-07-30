@@ -252,7 +252,7 @@ public class ManagementController extends HttpServlet {
 	private void handleEndTuition(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		getServletContext().setAttribute("tuition", ScheduleState.END);
 		scheduleStateRepository.updateSchedule("tuition", ScheduleState.END);
-		// TODO 등록금을 납부 하지 않은 학생을 제적 (미등록) 으로 학적 변동
+		// 등록금을 납부 하지 않은 학생을 제적 (미등록) 으로 학적 변동
 		List<Integer> studentList = tuitionRepository.getAllStudentsNon();
 
 		int rowCount = stuStatRepository.updateStatusById(studentList, "제적", "미등록");

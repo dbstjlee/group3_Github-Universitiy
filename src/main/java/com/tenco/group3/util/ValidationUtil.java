@@ -11,20 +11,20 @@ public class ValidationUtil {
 		return isNotOnlyWhitespace(str) &&
 				isOnlyKorean(str) &&
 				isLessThanOrEqual(str, 10) &&
-				containsWhitespace(str);
+				isNotContainsWhitespace(str);
 	}
 	
 	// 유효한 아이디인지 확인
 	public static boolean isValidateId(String str) {
 		return isOnlyNumber(str) &&
 			   isNotOnlyWhitespace(str) &&
-			   containsWhitespace(str);
+			   isNotContainsWhitespace(str);
 	}
 	
 	// 유효한 비밀번호인지 확인
 	public static boolean isValidatePwd(String str) {
 		return isNotOnlyWhitespace(str) &&
-			   containsWhitespace(str) &&
+				isNotContainsWhitespace(str) &&
 			   isLessThanOrEqual(str, 20) &&
 			   isMoreThanOrEqual(str, 6);
 	}
@@ -46,7 +46,7 @@ public class ValidationUtil {
 		return Pattern.matches(KOREAN_ADDRESS_PATTERN, address);
 	}
 	
-	// 문자열이 공백으로만 이루어져 있는지 검사
+	// 문자열이 공백으로만 이루어져 있지 않은지 검사
 	public static boolean isNotOnlyWhitespace(String str) {
 		return str != null && !str.trim().isEmpty();
 	}
@@ -76,8 +76,8 @@ public class ValidationUtil {
 		return str != null && str.length() >= length;
 	}
 
-	// 문자열에 공백이 포함되어 있는지 검사
-	public static boolean containsWhitespace(String str) {
+	// 문자열에 공백이 포함되어 있지 않은지 검사
+	public static boolean isNotContainsWhitespace(String str) {
 		return str != null && !str.contains(" ");
 	}
 
@@ -119,5 +119,10 @@ public class ValidationUtil {
 			sb.append(false);
 		}
 		return sb.toString();
+	}
+	
+	// TODO 삭제
+	public static void main(String[] args) {
+		System.out.println(ValidationUtil.isNotOnlyWhitespace(" "));
 	}
 }

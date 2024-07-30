@@ -12,6 +12,7 @@ import com.tenco.group3.model.Schedule;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.ScheduleRepositoryImpl;
 import com.tenco.group3.repository.interfaces.ScheduleRepository;
+import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -186,8 +187,7 @@ public class ScheduleController extends HttpServlet {
 				Schedule schedule = new Schedule();
 				schedule.setStartDay(sqlStartDate);
 				schedule.setEndDay(sqlEndDate);
-
-				if (information == null || information.isEmpty()) {
+				if (information == null || !ValidationUtil.isNotOnlyWhitespace(information)) {
 					sendError(response, "수정할 내용을 입력해주세요.");
 					return;
 				}
@@ -234,8 +234,8 @@ public class ScheduleController extends HttpServlet {
 				schedule.setStartDay(sqlStartDate);
 				schedule.setEndDay(sqlEndDate);
 
-				if (information == null || information.isEmpty()) {
-					sendError(response, "내용을 입력해주세요.");
+				if (information == null || !ValidationUtil.isNotOnlyWhitespace(information)) {
+					sendError(response, "수정할 내용을 입력해주세요.");
 					return;
 				}
 

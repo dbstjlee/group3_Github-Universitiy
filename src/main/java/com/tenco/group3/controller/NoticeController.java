@@ -9,6 +9,8 @@ import com.tenco.group3.model.Notice;
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.NoticeRepositoryImpl;
 import com.tenco.group3.repository.interfaces.NoticeRepository;
+import com.tenco.group3.util.AlertUtil;
+import com.tenco.group3.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -80,32 +82,36 @@ public class NoticeController extends HttpServlet {
 
 		List<Notice> noticeList = new ArrayList<>();
 	    
-	    if (type.equals("title")) {
-	        // 제목으로 검색
-	        noticeList = noticeRepository.searchTitle(keyword, pageSize, 0);
-	    } else if (type.equals("keyword")) {
-	        // 제목 + 내용으로 검색
-	        noticeList = noticeRepository.searchTitleAndContent(keyword, pageSize, 0);
-	    }
-	    
-
 		try {
 			String pageStr = request.getParameter("page");
-
+			
 			if (pageStr != null) {
 				page = Integer.parseInt(pageStr);
 			}
 		} catch (Exception e) {
 			page = 1;
 		}
-
+		
 		int offset = (page - 1) * pageSize;
+		int totalNotices = 0;
+		
+	    if (type.equals("title")) {
+	        // 제목으로 검색
+	        noticeList = noticeRepository.searchTitle(keyword, pageSize, offset);
+	        totalNotices = noticeRepository.getNoticeCountBySearchTitle(keyword);
+	    } else if (type.equals("keyword")) {
+	        // 제목 + 내용으로 검색
+	        noticeList = noticeRepository.searchTitleAndContent(keyword, pageSize, offset);
+	        totalNotices = noticeRepository.getNoticeCountBySearchTitleAndContent(keyword);
+	    }
+	    
+
 
 		// 총 페이지 수 계산
-		int totalpages = (int) Math.ceil((double) noticeList.size() / pageSize);
+		int totalpages = (int) Math.ceil((double) totalNotices / pageSize);
 
 		request.setAttribute("totalPages", totalpages);
-		request.setAttribute("currentPage", noticeList.size());
+		request.setAttribute("currentPage", page);
 	    request.setAttribute("noticeList", noticeList);
 	    request.setAttribute("keyword", keyword);
 	    request.setAttribute("type", type);
@@ -269,7 +275,12 @@ public class NoticeController extends HttpServlet {
 		int noticeId = Integer.parseInt(request.getParameter("id"));
 		String noticeTitle = request.getParameter("title");
 		String noticeContent = request.getParameter("content");
-
+		
+		if (!ValidationUtil.isNotOnlyWhitespace(noticeTitle) || !ValidationUtil.isNotOnlyWhitespace(noticeContent)) {
+			AlertUtil.backAlert(response, "내용을 입력해주세요.");
+			return;
+		}
+		
 		if (principal.getUserRole().equals("staff")) {
 			Notice notice = Notice.builder().id(noticeId).title(noticeTitle).content(noticeContent).build();
 			noticeRepository.updateNotice(notice);

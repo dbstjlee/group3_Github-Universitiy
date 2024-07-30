@@ -26,8 +26,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	private static final String COUNT_ALL_NOTICES = " SELECT count(*) AS count FROM notice_tb; ";
 	
 	private static final String SEARCH_TITLE = " SELECT * FROM notice_tb WHERE title LIKE ? ORDER BY id DESC limit ? offset ? ; ";
+
+	private static final String COUNT_NOTICES_BY_TITLE = " SELECT count(*) AS count FROM notice_tb WHERE title LIKE ? ";
 	
 	private static final String SEARCH_TITLE_AND_CONTENT = " SELECT * FROM notice_tb WHERE title AND content LIKE ?  ORDER BY id DESC limit ? offset ? ";
+	
+	private static final String COUNT_NOTICES_BY_TITLE_AND_CONTENT = " SELECT count(*) AS count FROM notice_tb WHERE title AND content LIKE ? ";
 	
 	 private static final String UPDATE_VIEWS_COUNT = " UPDATE notice_tb SET views = views + 1 WHERE id = ? ";
 	
@@ -207,6 +211,28 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		}
 		return noticeList;
 	}
+	
+	/**
+	 * 제목 검색 게시글 수
+	 */
+	@Override
+	public int getNoticeCountBySearchTitle(String title) {
+		int totalNotices = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(COUNT_NOTICES_BY_TITLE)){
+				pstmt.setString(1, "%" + title + "%");
+				ResultSet rs = pstmt.executeQuery();
+				if(rs.next()) {
+					totalNotices = rs.getInt("count");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return totalNotices;
+	}
 
 	/**
 	 * 제목 + 내용 검색
@@ -238,6 +264,28 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			e.printStackTrace();
 		}
 		return noticeList;
+	}
+	
+	/**
+	 * 제목 + 내용 검색 게시글 수
+	 */
+	@Override
+	public int getNoticeCountBySearchTitleAndContent(String titleAndcontent) {
+		int totalNotices = 0;
+		try (Connection conn = DBUtil.getConnection()){
+			try (PreparedStatement pstmt = conn.prepareStatement(COUNT_NOTICES_BY_TITLE_AND_CONTENT)){
+				pstmt.setString(1, "%" + titleAndcontent + "%");
+				ResultSet rs = pstmt.executeQuery();
+				if(rs.next()) {
+					totalNotices = rs.getInt("count");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return totalNotices;
 	}
 
 	/**
