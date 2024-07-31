@@ -75,7 +75,7 @@
 		<div>
 			<%-- TODO - 과목번호 넣기 --%>
 			<input type="hidden" name="subjectId" value="${subjectId}">
-			<button type="submit">제출하기</button>
+			<button type="submit" onclick="return confirm('제출 하시겠습니까?');">제출하기</button>
 		</div>
 	</form>
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>

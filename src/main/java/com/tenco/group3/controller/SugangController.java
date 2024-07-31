@@ -227,6 +227,7 @@ public class SugangController extends HttpServlet {
 			listType = Integer.parseInt(typeParam);
 		} else {
 			AlertUtil.backAlert(response, "정상적인 접근이 아닙니다.");
+			return;
 		}
 		if (sugangDay == ScheduleState.TRUE && listType == 2) {
 			listType = 2;
@@ -259,6 +260,7 @@ public class SugangController extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/sugang/preAppList.jsp").forward(request, response);
 		} else {
 			AlertUtil.backAlert(response, "수강 신청 기간이 아닙니다.");
+			return;
 		}
 	}
 
