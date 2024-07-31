@@ -351,6 +351,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_PRE_APPLICATED_SUBJECT_LIST)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().subjectId(rs.getInt("subject_id")).subjectName(rs.getString("강의명"))
@@ -796,6 +798,8 @@ public class SugangRepositoryImpl implements SugangRepository {
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(TOTAL_PRE_SUBJECT_GRADES)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				totalGrade = rs.getInt("총합");
