@@ -4,15 +4,12 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
-
 <body>
 	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
-	<div class="sub--menu">
+		<div class="sub--menu">
 		<div class="sub--menu--top">
-				<h2>강의 시간표 조회</h2>
+			<h2>강의 시간표 조회</h2>
 		</div>
-	
-		<!-- 좌측 메뉴 -->
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
@@ -28,6 +25,7 @@
 					<td><a href="${pageContext.request.contextPath}/sugang/list">수강 신청 내역</a></td>
 				</tr>
 			</table>
+			</div>
 		</div>
 		<main>
 			<h1>강의 시간표 조회</h1>
@@ -243,7 +241,6 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
-			</div>
 		</main>
 	</div>
 	

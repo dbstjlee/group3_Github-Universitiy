@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/document.css">
 <body>
 	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
 		<div class="sub--menu">

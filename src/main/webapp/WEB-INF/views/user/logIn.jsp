@@ -55,6 +55,6 @@
 	</form>
 	</div>
 	<div>
-		<pre class="exam">학생 2023000001 교직원 230001 교수 23000001 비밀번호 123123</pre>
+		<pre class="exam"></pre>
 	</div>
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>
