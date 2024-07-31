@@ -262,7 +262,7 @@ public class AdminController extends HttpServlet {
 		if (result > 0) {
 			response.sendRedirect("/admin/subject");
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
@@ -287,14 +287,15 @@ public class AdminController extends HttpServlet {
 		String gradesStr = request.getParameter("grades");
 		String capacityStr = request.getParameter("capacity");
 
-		if (name == null || name.trim().isEmpty() || professorIdStr == null || professorIdStr.trim().isEmpty()
-				|| roomId == null || roomId.trim().isEmpty() || deptIdStr == null || deptIdStr.trim().isEmpty()
-				|| type == null || type.trim().isEmpty() || subYearStr == null || subYearStr.trim().isEmpty()
-				|| semesterStr == null || semesterStr.trim().isEmpty() || subDay == null || subDay.trim().isEmpty()
-				|| startTimeStr == null || startTimeStr.trim().isEmpty() || endTimeStr == null
-				|| endTimeStr.trim().isEmpty() || gradesStr == null || gradesStr.trim().isEmpty() || capacityStr == null
-				|| capacityStr.trim().isEmpty()) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		
+		if (!ValidationUtil.isNotOnlyWhitespace(name) || !ValidationUtil.isNotOnlyWhitespace(professorIdStr)
+				|| !ValidationUtil.isNotOnlyWhitespace(roomId) || !ValidationUtil.isOnlyNumber(roomId)
+				|| !ValidationUtil.isNotOnlyWhitespace(deptIdStr) || !ValidationUtil.isNotOnlyWhitespace(type)
+				|| !ValidationUtil.isNotOnlyWhitespace(subYearStr) || !ValidationUtil.isNotOnlyWhitespace(semesterStr)
+				|| !ValidationUtil.isNotOnlyWhitespace(subDay) || !ValidationUtil.isNotOnlyWhitespace(startTimeStr)
+				|| !ValidationUtil.isNotOnlyWhitespace(endTimeStr) || !ValidationUtil.isNotOnlyWhitespace(gradesStr)
+				|| !ValidationUtil.isNotOnlyWhitespace(capacityStr)) {
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			return;
 		}
 
@@ -309,7 +310,7 @@ public class AdminController extends HttpServlet {
 			grades = Integer.parseInt(gradesStr);
 			capacity = Integer.parseInt(capacityStr);
 		} catch (NumberFormatException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			return;
 		}
 
@@ -317,12 +318,11 @@ public class AdminController extends HttpServlet {
 				.subYear(subYear).semester(semester).subDay(subDay).startTime(startTime).endTime(endTime).grades(grades)
 				.capacity(capacity).build();
 
-		// Subject 추가
 		int result = subjectRepository.addSubject(subject);
 		if (result > 0) {
 			response.sendRedirect(request.getContextPath() + "/admin/subject");
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 	}
 
@@ -368,22 +368,27 @@ public class AdminController extends HttpServlet {
 	 */
 	private void handleUpdateCollegeTuition(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		// 파라미터 값 가져오기
 		String idParam = request.getParameter("id");
 		String amountParam = request.getParameter("amount");
 
-		// 파라미터 유효성 검사
-		if (idParam == null || idParam.trim().isEmpty() || amountParam == null || amountParam.trim().isEmpty()) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+//		if (idParam == null || idParam.trim().isEmpty() || amountParam == null || amountParam.trim().isEmpty()) {
+//			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+//			return;
+//		}
+		
+		if(!ValidationUtil.isNotOnlyWhitespace(idParam) || !ValidationUtil.isNotOnlyWhitespace(amountParam) || !ValidationUtil.isOnlyNumber(amountParam)
+				) {
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			return;
 		}
+		
 		int id;
 		int amount;
 		try {
 			id = Integer.parseInt(idParam);
 			amount = Integer.parseInt(amountParam);
 		} catch (NumberFormatException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameter format");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 		CollegeTuition collegeTuition = CollegeTuition.builder().college_id(id).amount(amount).build();
@@ -393,7 +398,7 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("collegeTuitions", collegeTuitions);
 			request.getRequestDispatcher("/WEB-INF/views/admin/collegeTuition.jsp").forward(request, response);
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to update college tuition");
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
 
 	}
@@ -441,10 +446,11 @@ public class AdminController extends HttpServlet {
 	private void handleUpdateDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String idParam = request.getParameter("id");
 		String name = request.getParameter("name");
-		if (idParam == null || idParam.trim().isEmpty() || name == null || name.trim().isEmpty()) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+		
+		if (!ValidationUtil.isNotOnlyWhitespace(idParam) || !ValidationUtil.isNotOnlyWhitespace(name)) {
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
+		
 		int id;
 		try {
 			id = Integer.parseInt(idParam);
@@ -460,10 +466,10 @@ public class AdminController extends HttpServlet {
 				request.getRequestDispatcher("/WEB-INF/views/admin/department.jsp").forward(request, response);
 			} catch (ServletException e) {
 				e.printStackTrace();
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			}
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
 
@@ -481,6 +487,8 @@ public class AdminController extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
+		
+		
 		int departmentId;
 		try {
 			departmentId = Integer.parseInt(idParam);
@@ -534,15 +542,21 @@ public class AdminController extends HttpServlet {
 		String roomId = request.getParameter("roomId");
 		String collegeIdParam = request.getParameter("collegeId");
 
-		if (roomId == null || roomId.trim().isEmpty() || collegeIdParam == null || collegeIdParam.trim().isEmpty()) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+//		if (roomId == null || roomId.trim().isEmpty() || collegeIdParam == null || collegeIdParam.trim().isEmpty()) {
+//			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+//			return;
+//		}
+		
+		if (!ValidationUtil.isNotOnlyWhitespace(roomId) || !ValidationUtil.isNotOnlyWhitespace(collegeIdParam)
+				|| !ValidationUtil.isOnlyNumber(collegeIdParam)) {
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 		}
+		
 		int collegeId;
 		try {
 			collegeId = Integer.parseInt(collegeIdParam);
 		} catch (NumberFormatException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			AlertUtil.backAlert(response, "잘못된 요청입니다.");
 			return;
 		}
 		Room room = new Room(roomId, collegeId);
@@ -558,43 +572,35 @@ public class AdminController extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void handleAddDepartment(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		String departmentName = request.getParameter("departmentName");
-		String collegeIdStr = request.getParameter("collegeId");
+	private void handleAddDepartment(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	    String departmentName = request.getParameter("departmentName");
+	    String collegeIdStr = request.getParameter("collegeId");
 
-		if (departmentName == null || departmentName.trim().isEmpty() || collegeIdStr == null
-				|| collegeIdStr.trim().isEmpty()) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		}
-
-		int collegeId;
-		try {
-			collegeId = Integer.parseInt(collegeIdStr);
-		} catch (NumberFormatException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		}
-
-		Department department = new Department();
-		department.setName(departmentName);
-		department.setCollegeId(collegeId);
-
-		// 학과 추가
-		departmentRepository.addDepartment(department);
-
-		// 모든 학부를 가져옴
-		List<College> colleges = departmentRepository.getAllColleges();
-
-		// request에 데이터 설정
-		request.setAttribute("colleges", colleges);
-
-		// JSP 페이지로 포워딩
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/admin/department.jsp");
-		dispatcher.forward(request, response);
+	    if( !ValidationUtil.isNotOnlyWhitespace(departmentName) || !ValidationUtil.isNotOnlyWhitespace(collegeIdStr)) {
+	    	AlertUtil.backAlert(response, "잘못된 요청입니다.");
+	    	return;
+	    }
+	    
+	    int collegeId;
+	    try {
+	        collegeId = Integer.parseInt(collegeIdStr);
+	    } catch (NumberFormatException e) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
+	    }
+	    
+	    Department department = new Department();
+	    department.setName(departmentName);
+	    department.setCollegeId(collegeId);
+	    
+	    departmentRepository.addDepartment(department);
+	    
+	    List<College> colleges = departmentRepository.getAllColleges();
+	    
+	    request.setAttribute("colleges", colleges);
+	    response.sendRedirect(request.getContextPath() + "/admin/department");
+	    
 	}
-
 	/**
 	 * 단과대학 삭제
 	 * 

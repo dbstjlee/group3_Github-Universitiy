@@ -43,23 +43,24 @@
             <br>
             <!-- 학과 등록 -->
             <c:if test="${param.showForm == 'true'}">
-    <form action="${pageContext.request.contextPath}/admin/addDepartment" method="post" class="department-form">
-        <div class="insert-form">
-            <div class="form-header">
-                <span class="form-title">학과 등록하기</span>
-            </div>
-            <div class="form-body">
-                <input type="text" id="departmentName" class="input-box" name="departmentName" placeholder="학과이름을 입력하세요" required>
-                <select name="collegeId" class="input-box">
-                    <c:forEach var="college" items="${colleges}">
-                        <option value="${college.id}">${college.name}</option>
-                    </c:forEach>
-                </select>
-                <input type="submit" value="입력" class="button">
-            </div>
-        </div>
-    </form>
-</c:if>
+                <form action="${pageContext.request.contextPath}/admin/addDepartment" method="post" class="department-form">
+                    <div class="insert-form">
+                        <div class="form-header">
+                            <span class="form-title">학과 등록하기</span>
+                        </div>
+                        <div class="form-body">
+                            <input type="text" id="departmentName" class="input-box" name="departmentName" placeholder="학과이름을 입력하세요">
+                            <select name="collegeId" class="input-box">
+                                <option value="1">공과대학</option>
+                                <option value="2">인문대학</option>
+                                <option value="3">사회과학대학</option>
+                                <option value="4">상경대학</option>
+                            </select>
+                            <input type="submit" value="입력" class="button-add">
+                        </div>
+                    </div>
+                </form>
+            </c:if>
 
 
             <!-- 학과 수정 -->
