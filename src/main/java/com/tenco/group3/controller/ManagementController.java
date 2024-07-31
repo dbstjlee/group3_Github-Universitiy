@@ -316,7 +316,9 @@ public class ManagementController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void checkNewSemester(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		AlertUtil.hrefConfirm(response, "새학기를 적용 하시겠습니까 결정은 돌이킬 수 없습니다.", "/management/new-semester-confirm");
+		String msg = "새학기를 적용 하시겠습니까 결정은 돌이킬 수 없습니다. \\n"
+				+ "(현재 " + SemesterUtil.getCurrentYear() + "학년도 " + SemesterUtil.getCurrentSemester() + "학기)";
+		AlertUtil.hrefConfirm(response, msg, "/management/new-semester-confirm");
 	}
 
 	/**
