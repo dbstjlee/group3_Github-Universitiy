@@ -349,10 +349,6 @@ public class ManagementController extends HttpServlet {
 			SemesterUtil.setAfterYear(0);
 			SemesterUtil.setAfterSemester(0);
 
-			// 휴학이 끝난 사람을 복학 상태로 변경
-			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
-			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
-			stuStatRepository.updateStatusById(studentIdList, "복학");
 
 			// 학년 업데이트
 			List<Student> studentList = stuStatRepository.getCurrentGrade();
@@ -368,6 +364,11 @@ public class ManagementController extends HttpServlet {
 			}
 			managementRepository.updateGradeAndSemester(updatedList);
 			stuStatRepository.updateStatusById(graduatedList, "졸업");
+			
+			// 휴학이 끝난 사람을 복학 상태로 변경
+			List<BreakApp> breakAppList = breakAppRepository.getBreakAppByApproval();
+			List<Integer> studentIdList = SemesterUtil.breakDone(breakAppList);
+			stuStatRepository.updateStatusById(studentIdList, "복학");
 			String msg = "새학기 적용이 완료 되었습니다. " + SemesterUtil.getCurrentYear() + "년도 " + SemesterUtil.getCurrentSemester() + "학기가 되었습니다.";
 			AlertUtil.hrefAlert(response, msg, "/management/studentList");
 		} else {
