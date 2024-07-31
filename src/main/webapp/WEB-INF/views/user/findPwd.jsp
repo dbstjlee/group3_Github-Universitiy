@@ -14,7 +14,7 @@
 .header--top {
 	width: 100%;
 	height: 40px;
-	background-color: rgb(3, 17, 95);
+	background-color: #d0d7de;
 }
 
 .section--header {
@@ -34,19 +34,16 @@
 .col2 {
 	width: 80%;
 }
-.button--container{
-	display: flex;
-	justify-content: center;
-}
+
 
 .submit--button {
 	margin-top: 20px;
-	margin-left: 150px;
+	margin-left: 200px;
 	padding: 10px 15px;
 	border: none;
 	border-radius: 10px;
 	color: white;
-	background-color: rgb(3, 17, 95);
+	background-color: #00b918;
 	cursor: pointer;
 }
 </style>
@@ -93,7 +90,6 @@
 			</table>
 			<div class="button--container">
 				<button type="submit" class="submit--button">임시 비밀번호 발급받기</button>
-			</div>
+				</div>
 		</form>
 	</section>
-<%@ include file="/WEB-INF/views/layout/footer.jsp"%>

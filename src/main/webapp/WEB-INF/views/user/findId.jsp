@@ -15,7 +15,7 @@
 .header--top {
 	width: 100%;
 	height: 40px;
-	background-color: rgb(3, 17, 95);
+	background-color: #d0d7de;
 }
 
 .section--header {
@@ -26,7 +26,7 @@
 .search--table td {
 	padding: 4px;
 	text-align: left;
-	margin-right: 100px;
+	
 }
 
 .col1 {
@@ -44,7 +44,7 @@
 	border: none;
 	border-radius: 10px;
 	color: white;
-	background-color: rgb(3, 17, 95);
+	background-color: #00b918;
 	cursor: pointer; 
 }
 </style>
@@ -101,4 +101,3 @@
 		
 		</form>
 	</section>
-<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
