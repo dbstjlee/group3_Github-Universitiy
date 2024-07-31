@@ -25,8 +25,7 @@ public class EvaluationContorller extends HttpServlet {
 		evaluationRepository = new EvaluationRepositoryImpl();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
 		HttpSession session = request.getSession();
 		switch (action) {
@@ -47,15 +46,13 @@ public class EvaluationContorller extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws ServletException, IOException {
+	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		request.setAttribute("subjectId", subjectId);
 		request.getRequestDispatcher("/WEB-INF/views/grade/evaluation.jsp").forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
 		HttpSession session = request.getSession();
 
@@ -76,26 +73,35 @@ public class EvaluationContorller extends HttpServlet {
 	 * @param session
 	 * @throws IOException
 	 */
-	private void handlerEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	private void handlerEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		User user = (User) session.getAttribute("principal");
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 
-		int[] answers = new int[7];;
+		int[] answers = new int[7];
+		;
 		for (int i = 1; i <= 7; i++) {
 			// 방어적 코드 - answer 값이 null 값이면 창 닫기
 			if (request.getParameter("answer" + i) == null) {
 				AlertUtil.closeAlert(response, "올바른 값을 제출하세요.");
 				return;
 			}
-			answers[i] = Integer.parseInt(request.getParameter("answer" + i));
+			answers[i - 1] = Integer.parseInt(request.getParameter("answer" + i));
 		}
-		
+
 		String improvements = request.getParameter("improvements");
 
-		Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])
-				.answer4(answers[3]).answer5(answers[4]).answer6(answers[5]).answer7(answers[6])
-				.improvments(improvements).studentId(user.getId()).subjectId(subjectId).build();
+		Evaluation evaluation = Evaluation.builder()
+			.answer1(answers[0])
+			.answer2(answers[1])
+			.answer3(answers[2])
+			.answer4(answers[3])
+			.answer5(answers[4])
+			.answer6(answers[5])
+			.answer7(answers[6])
+			.improvments(improvements)
+			.studentId(user.getId())
+			.subjectId(subjectId)
+			.build();
 
 		// 이미 평가를 작성한 경우 처리 - 필터링 하는게 더 좋음(오류가 많이 발생해 일단 보류)
 		if (evaluationRepository.isEvaluation(user.getId(), subjectId)) {

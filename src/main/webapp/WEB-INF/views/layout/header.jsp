@@ -2,10 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 <meta charset="UTF-8">
-<title>그린대학교 학사관리시스템</title>
+<title>GITHUB UNIVERSITY</title>
+<link rel="icon" href="${pageContext.request.contextPath}/resources/images/footer.png" type="image/png">
 <style type="text/css">
  #divClock{
-        font-size: 15px;
+        font-size: 20px;
         color: gray;
       }
       
@@ -42,7 +43,7 @@
         setTimeout(showClock,1000);  
       }
     </script>
-<body >	
+<body onload="showClock()">	
 	<header>
 			<div class="header--top">
 			<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">
@@ -62,7 +63,7 @@
 			<nav class="main--menu">
 
 				<c:choose>
-					<c:when test="${principal.userRole == 'student'}">
+					<c:when test="${principal.userRole == 'student'}" >
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/">홈</a></li>
 							<li><a href="${pageContext.request.contextPath}/info/student">MY</a></li>
@@ -70,6 +71,8 @@
 							<li><a href="${pageContext.request.contextPath}/sugang/subjectList">수강신청</a></li>
 							<li><a href="${pageContext.request.contextPath}/grade/thisSemester">성적</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice/list">학사정보</a></li>
+						   	<div id="divClock" class="clock" >
+    						</div>
 						</ul>
 					</c:when>
 					<c:when test="${principal.userRole == 'professor'}">

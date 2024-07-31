@@ -22,16 +22,22 @@
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
 				<tr>
-					<td><a href="/subject/list/1">전체 강의 조회</a></td>
+					<td>
+						<a href="/subject/allSubject">전체 강의 조회</a>
+					</td>
 				</tr>
 				<c:if test="${principal.userRole.equals(\"professor\") }">
 					<tr>
-						<td><a href="/professor/subject">내 강의 조회</a></td>
+						<td>
+							<a href="/professor/mySubject">내 강의 조회</a>
+						</td>
 					</tr>
 				</c:if>
 				<c:if test="${principal.userRole.equals(\"professor\") }">
 					<tr>
-						<td><a href="/professor/evaluation" class="selected--menu">내 강의 평가</a></td>
+						<td>
+							<a href="/professor/evaluation" class="selected--menu">내 강의 평가</a>
+						</td>
 					</tr>
 				</c:if>
 			</table>
@@ -74,9 +80,9 @@
 					</thead>
 					<c:forEach var="eval" items="${evaluationList}">
 						<tr>
-							<td>${eval.name}</td>
+							<td>${eval.subjectName}</td>
 							<td>${eval.avg}</td>
-							<td>${eval.improvements}</td>
+							<td>${eval.improvments}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -90,7 +96,6 @@
 </div>
 
 
-</div>
 
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>
 

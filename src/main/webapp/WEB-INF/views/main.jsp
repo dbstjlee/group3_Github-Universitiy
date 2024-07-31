@@ -137,7 +137,9 @@
 	</div>
 </div>
 <div class="center--imgBox">
+<img class="side--img" src="${pageContext.request.contextPath}/resources/images/버튼왼쪽.png">
 <img class="center--img" src="${pageContext.request.contextPath}/resources/images/back1.png">
+<img class="side--img" src="${pageContext.request.contextPath}/resources/images/버튼오른쪽.png">
 </div>
 
     
