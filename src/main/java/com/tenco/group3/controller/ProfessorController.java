@@ -82,7 +82,7 @@ public class ProfessorController extends HttpServlet {
 	private void showEvaluation(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		// 강의 평가가 존재하는 과목의 과목명 리스트 받기
-		User user = (User) session.getAttribute("pincipal");
+		User user = (User) session.getAttribute("principal");
 		List<Subject> subjectName = evaluationRepository.getAllSubjectEvaluation(user.getId());
 		List<Evaluation> evaluationList = evaluationRepository.getAllEvaluation(user.getId());
 		request.setAttribute("subjectName", subjectName);
