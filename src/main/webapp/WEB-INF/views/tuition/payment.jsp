@@ -48,7 +48,7 @@
 			<div class="d-flex flex-column align-items-center" style="min-width: 100%">
 				<div class="document--layout">
 					<h3>등록금 고지서</h3>
-					<p>2023년도 1학기</p>
+					<p>${paymentTuition.year}년도 ${paymentTuition.semester}학기</p>
 					<table border="1">
 						<thead class="tuition--payment--table">
 							<tr>

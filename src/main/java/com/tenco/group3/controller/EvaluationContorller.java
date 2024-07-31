@@ -91,20 +91,6 @@ public class EvaluationContorller extends HttpServlet {
 			answers[i] = Integer.parseInt(request.getParameter("answer" + i));
 		}
 		
-		// TODO 민혁님 확인 하고나면 아래 지우기
-//		for (int i = 0; i < 7; i++) {
-//			if (request.getParameter("answer" + (i + 1)) != null) {
-//				answers = new int[7];
-//				for (int i1 = 0; i1 < 7; i1++) { // 각 문항 답을 배열로 저장
-//					answers[i1] = Integer.parseInt(request.getParameter("answer" + (i1 + 1)));
-//				}
-//			} else {
-//				response.setContentType("text/html;charset=UTF-8");
-//				PrintWriter out = response.getWriter();
-//				out.println("<script> alert('올바른 값을 제출하세요.'); window.close(); </script>");
-//				return;
-//			}
-//		}
 		String improvements = request.getParameter("improvements");
 
 		Evaluation evaluation = Evaluation.builder().answer1(answers[0]).answer2(answers[1]).answer3(answers[2])

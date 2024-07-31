@@ -16,18 +16,18 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 	private static final String GET_TUITION_BY_STUDENTID = " SELECT " + "	st.id AS studentId, "
 			+ "    st.name AS studentName, " + " de.name AS deptName, " + " co.name AS collgeName, "
 			+ "    ct.amount AS collTution, " + "    tu.sch_type AS scholarType, " + "	tu.sch_amount AS scholar, "
-			+ "    (ct.amount - tu.sch_amount) AS totaltution, tu.status as status " + " FROM "
-			+ "    student_tb AS st " + " JOIN " + " department_tb AS de ON st.dept_id = de.id " + " JOIN "
+			+ "    (ct.amount - tu.sch_amount) AS totaltution, tu.status as status, tu.tui_year, tu.semester "
+			+ " FROM " + "    student_tb AS st " + " JOIN " + " department_tb AS de ON st.dept_id = de.id " + " JOIN "
 			+ "    college_tb AS co ON de.college_id = co.id " + " JOIN "
 			+ "    coll_tuit_tb AS ct ON co.id = ct.college_id " + " JOIN "
-			+ "	 tuition_tb as tu ON tu.student_id = st.id " + " WHERE " + " st.id = ? ";
+			+ "	 tuition_tb as tu ON tu.student_id = st.id " + " WHERE " + " st.id = ? "
+			+ " AND tu.tui_year = ? AND tu.semester = ? ";
 
 	private static final String GET_SUMMARY_TUTION_BY_STUDNETID = " SELECT *, (tui_amount - sch_amount) AS total_amount FROM tuition_tb WHERE student_id = ? ";
+
 	private static final String SELECT_TUITIONS = " SELECT s.id AS student_id, ct.amount AS tui_amount, IFNULL(sch.type,0) AS sch_type, IFNULL((ct.amount * sch.max_amount / 100),0) AS sch_amount "
-			+ " FROM stu_sch_tb ssc "
-			+ " JOIN scholarship_tb sch ON ssc.sch_type = sch.type "
-			+ " RIGHT JOIN student_tb s ON s.id = ssc.student_id "
-			+ " JOIN department_tb d ON s.dept_id = d.id "
+			+ " FROM stu_sch_tb ssc " + " JOIN scholarship_tb sch ON ssc.sch_type = sch.type "
+			+ " RIGHT JOIN student_tb s ON s.id = ssc.student_id " + " JOIN department_tb d ON s.dept_id = d.id "
 			+ " JOIN coll_tuit_tb ct ON d.college_id = ct.college_id "
 			+ " JOIN stu_stat_tb ss ON s.id = ss.student_id AND ss.to_date = '9999-01-01' "
 			+ " WHERE ss.status IN ('입학','복학') ";
@@ -35,19 +35,23 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 	private static final String SELECT_ALL_STUDENTS_NON = " SELECT student_id FROM tuition_tb WHERE status = 0 AND tui_year = ? AND semester = ? ";
 
 	private static final String UPDATE_TUITION_STATE = " UPDATE tuition_tb SET status = 1 where student_id = ? ";
+
 	@Override
-	public Tuition getTuitionByStudentId(int studentId) {
+	public Tuition getTuitionByStudentId(int studentId, int year, int semester) {
 		Tuition tuition = null;
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_TUITION_BY_STUDENTID)) {
 			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					tuition = Tuition.builder().studentId(rs.getInt("studentId"))
 							.studentName(rs.getString("studentName")).deptName(rs.getString("deptName"))
 							.collgeName(rs.getString("collgeName")).collAmount(rs.getInt("collTution"))
 							.scholarType(rs.getInt("scholarType")).scholarAmount(rs.getInt("scholar"))
-							.totalAmount(rs.getInt("totaltution")).status(rs.getInt("status")).build();
+							.totalAmount(rs.getInt("totaltution")).status(rs.getInt("status"))
+							.year(rs.getInt("tui_year")).semester(rs.getInt("semester")).build();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -59,17 +63,20 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 	}
 
 	@Override
-	public Tuition getSummaryTuitionByStudentId(int studentId) {
-		Tuition tuition = null;
+	public List<Tuition> getSummaryTuitionByStudentId(int studentId, int year, int semester) {
+		List<Tuition> tuitionList = new ArrayList<Tuition>();
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_SUMMARY_TUTION_BY_STUDNETID)) {
 			pstmt.setInt(1, studentId);
 			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					tuition = Tuition.builder().year(rs.getInt("tui_year")).semester(rs.getInt("semester"))
+				while (rs.next()) {
+					Tuition tuition = Tuition.builder().year(rs.getInt("tui_year")).semester(rs.getInt("semester"))
 							.scholarType(rs.getInt("sch_type")).collAmount(rs.getInt("tui_amount"))
 							.scholarAmount(rs.getInt("sch_amount")).status(rs.getInt("status"))
-							.totalAmount(rs.getInt("total_amount")).build();
+							.totalAmount(rs.getInt("total_amount")).year(rs.getInt("tui_year"))
+							.semester(rs.getInt("semester")).build();
+					
+					tuitionList.add(tuition);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -77,7 +84,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return tuition;
+		return tuitionList;
 	}
 
 	@Override
@@ -87,8 +94,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_TUITIONS)) {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					Tuition tuition = Tuition.builder()
-							.studentId(rs.getInt("student_id"))							
+					Tuition tuition = Tuition.builder().studentId(rs.getInt("student_id"))
 							.year(SemesterUtil.getCurrentYear()).semester(SemesterUtil.getCurrentSemester())
 							.scholarType(rs.getInt("sch_type")).tuiAmount(rs.getInt("tui_amount"))
 							.scholarAmount(rs.getInt("sch_amount")).build();
@@ -137,7 +143,7 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 		}
 		return rowCount;
 	}
-	
+
 	@Override
 	public List<Integer> getAllStudentsNon() {
 		List<Integer> studentList = new ArrayList<>();
@@ -161,12 +167,12 @@ public class TuitionRepositoryImpl implements TuitionRepository {
 	@Override
 	public int submitTuition(int studnetId) {
 		int rowCount = 0;
-		try (Connection conn = DBUtil.getConnection()){
+		try (Connection conn = DBUtil.getConnection()) {
 			conn.setAutoCommit(false);
-			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TUITION_STATE)){
+			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TUITION_STATE)) {
 				pstmt.setInt(1, studnetId);
 				rowCount = pstmt.executeUpdate();
-				
+
 				conn.commit();
 			} catch (Exception e) {
 				conn.rollback();

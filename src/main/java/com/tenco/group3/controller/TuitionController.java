@@ -1,6 +1,7 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.tenco.group3.model.ScheduleState;
 import com.tenco.group3.model.Tuition;
@@ -8,6 +9,7 @@ import com.tenco.group3.model.User;
 import com.tenco.group3.repository.TuitionRepositoryImpl;
 import com.tenco.group3.repository.interfaces.TuitionRepository;
 import com.tenco.group3.util.AlertUtil;
+import com.tenco.group3.util.SemesterUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/tuition/*")
 public class TuitionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	private TuitionRepository tuitionRepository;
 
 	@Override
@@ -55,9 +57,10 @@ public class TuitionController extends HttpServlet {
 	private void showListTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
-		Tuition checkTuition = tuitionRepository.getSummaryTuitionByStudentId(user.getId());
+		List<Tuition> checkTuitionList = tuitionRepository.getSummaryTuitionByStudentId(user.getId(),
+				SemesterUtil.getCurrentYear(), SemesterUtil.getCurrentSemester());
 
-		request.setAttribute("checkTuition", checkTuition);
+		request.setAttribute("checkTuitionList", checkTuitionList);
 		request.getRequestDispatcher("/WEB-INF/views/tuition/check.jsp").forward(request, response);
 	}
 
@@ -73,10 +76,11 @@ public class TuitionController extends HttpServlet {
 	private void showPaymentTuition(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User user = (User) session.getAttribute("principal");
-		Tuition paymentTuition = tuitionRepository.getTuitionByStudentId(user.getId());
+		Tuition paymentTuition = tuitionRepository.getTuitionByStudentId(user.getId(), SemesterUtil.getCurrentYear(),
+				SemesterUtil.getCurrentSemester());
 		int isTuition = (int) getServletContext().getAttribute("tuition");
-		
-		if(isTuition == ScheduleState.TRUE) {
+
+		if (isTuition == ScheduleState.TRUE) {
 			request.setAttribute("paymentTuition", paymentTuition);
 			request.getRequestDispatcher("/WEB-INF/views/tuition/payment.jsp").forward(request, response);
 		} else {

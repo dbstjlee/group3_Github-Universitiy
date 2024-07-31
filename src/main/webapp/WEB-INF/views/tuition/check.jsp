@@ -40,38 +40,42 @@
 			<h1>등록금 내역 조회</h1>
 			<div class="split--div"></div>
 			<c:choose>
-				<c:when test="${checkTuition != null}">
+				<c:when test="${not empty checkTuitionList}">
 					<table border="1" class="list--table">
-						<tr>
-							<th>등록연도</th>
-							<th>등록학기</th>
-							<th>장학금 유형</th>
-							<th>등록금</th>
-							<th>장학금</th>
-							<th>납입금</th>
-							<th>상태</th>
-						</tr>
-						<tr>
-							<td>${checkTuition.year}년</td>
-							<td>${checkTuition.semester}학기</td>
-							<c:choose>
-								<c:when test="${checkTuition.scholarType eq 0}">
-									<td>해당 없음</td>
-								</c:when>
-								<c:otherwise>
-									<td>${checkTuition.scholarType}유형</td>
-								</c:otherwise>
-							</c:choose>
-							<td><fmt:formatNumber value="${checkTuition.collAmount}" pattern="#,###" /></td>
-							<td><fmt:formatNumber value="${checkTuition.scholarAmount}" pattern="#,###" /></td>
-							<td><fmt:formatNumber value="${checkTuition.totalAmount}" pattern="#,###" /></td>
-							<td>
-							<c:choose>
-							<c:when test="${checkTuition.status == 1}">납부</c:when>
-							<c:otherwise>미납</c:otherwise>
-							</c:choose>
-							</td>
-						</tr>
+						<thead>
+							<tr>
+								<th>등록연도</th>
+								<th>등록학기</th>
+								<th>장학금 유형</th>
+								<th>등록금</th>
+								<th>장학금</th>
+								<th>납입금</th>
+								<th>상태</th>
+							</tr>
+						</thead>
+						<c:forEach var="checkTuitionList" items="${checkTuitionList}">
+							<tbody>
+								<tr>
+									<td>${checkTuitionList.year}년</td>
+									<td>${checkTuitionList.semester}학기</td>
+									<c:choose>
+										<c:when test="${checkTuitionList.scholarType eq 0}">
+											<td>해당 없음</td>
+										</c:when>
+										<c:otherwise>
+											<td>${checkTuitionList.scholarType}유형</td>
+										</c:otherwise>
+									</c:choose>
+									<td><fmt:formatNumber value="${checkTuitionList.collAmount}" pattern="#,###" /></td>
+									<td><fmt:formatNumber value="${checkTuitionList.scholarAmount}" pattern="#,###" /></td>
+									<td><fmt:formatNumber value="${checkTuitionList.totalAmount}" pattern="#,###" /></td>
+									<td><c:choose>
+											<c:when test="${checkTuitionList.status == 1}">납부</c:when>
+											<c:otherwise>미납</c:otherwise>
+										</c:choose></td>
+								</tr>
+							</tbody>
+						</c:forEach>
 					</table>
 				</c:when>
 				<c:otherwise>
@@ -80,4 +84,4 @@
 			</c:choose>
 		</main>
 	</div>
-<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
