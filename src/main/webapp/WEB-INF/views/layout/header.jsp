@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 <meta charset="UTF-8">
-<title>그린대학교 학사관리시스템</title>
+<title>GITHUB UNIVERSITY</title>
+<link rel="icon" href="${pageContext.request.contextPath}/resources/images/footer.png" type="image/png">
 <style type="text/css">
  #divClock{
         font-size: 15px;
