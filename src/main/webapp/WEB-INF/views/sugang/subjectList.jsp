@@ -4,8 +4,14 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
+
 <body>
 	<div class="d-flex justify-content-center align-items-start" style="min-width: 100em;">
+	<div class="sub--menu">
+		<div class="sub--menu--top">
+				<h2>강의 시간표 조회</h2>
+		</div>
+	
 		<!-- 좌측 메뉴 -->
 		<div class="sub--menu--mid">
 			<table class="sub--menu--table" border="1">
@@ -237,6 +243,7 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
+			</div>
 		</main>
 	</div>
 	
