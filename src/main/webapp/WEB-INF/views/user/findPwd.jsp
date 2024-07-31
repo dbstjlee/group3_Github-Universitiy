@@ -34,6 +34,10 @@
 .col2 {
 	width: 80%;
 }
+.button--container{
+	display: flex;
+	justify-content: center;
+}
 
 .submit--button {
 	margin-top: 20px;

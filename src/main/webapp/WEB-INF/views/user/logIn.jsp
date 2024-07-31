@@ -8,11 +8,14 @@
 <title>로그인</title>
 <link rel="stylesheet" type="text/css" href="/resources/css/logIn.css">
 </head>
-<body>
+<body onload="showClock()">
 	<div class="login--div">
 			<div class="logo--section">
 				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.gif" ></a>
 				</div>
+				<div id="divClock" class="clock">
+ 				</div>
+		
 		<div class="logo">
 			<a></a>
 		</div>

@@ -16,7 +16,7 @@
 			<div class="sub--menu--mid">
 				<table class="sub--menu--table" border="1">
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/info/student" class="selected--menu">내 정보 조회</a></td>
+						<td><a href="${pageContext.request.contextPath}/info/student">내 정보 조회</a></td>
 
 					</tr>
 					<tr>
@@ -36,7 +36,7 @@
 
 					</tr>
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/tuition/payment">등록금 납부 고지서</a></td>
+						<td><a href="${pageContext.request.contextPath}/tuition/payment"  class="selected--menu">등록금 납부 고지서</a></td>
 
 					</tr>
 				</table>

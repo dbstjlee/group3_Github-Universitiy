@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>그린대학교 학사관리시스템</title>
+<style type="text/css">
+ #divClock{
+        font-size: 15px;
+        color: gray;
+      }
+      
+</style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css?v=1.0">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -10,22 +17,48 @@
 				<div class="logo--section">
 				<a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/resources/images/logo.gif"></a>
 				</div>
-<body>	
+			
+				 <script type="text/javascript">
+      function showClock(){
+        var currentDate = new Date();
+        var divClock = document.getElementById('divClock');
+        var msg ="";
+        if(currentDate.getHours()>12){      
+          msg += "오후 ";
+          msg += currentDate.getHours()-12+"시 ";
+       }
+       else {
+         msg += "오전 ";
+         msg += currentDate.getHours()+"시 ";
+       }
+ 
+        msg += currentDate.getMinutes()+"분 ";
+        msg += currentDate.getSeconds()+"초";
+ 
+        divClock.innerText = msg;
+ 
+        if (currentDate.getMinutes()>58) {   
+        }
+        setTimeout(showClock,1000);  
+      }
+    </script>
+<body >	
 	<header>
-		<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">
 			<div class="header--top">
+			<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">
 			<div class="hamburger-menu">
   					<span></span>
   					<span></span>
   					<span></span>
 			</div>
+			
+    
 				<ul>
-					<li>${principal.username}님(${principal.id})</li>
-					<li style="margin: 0 15px;">|</li>
 					<li><a href="${pageContext.request.contextPath}/user/logOut">로그아웃</a></li>
 				</ul>
 			</div>
 	<div class="sidebar">
+	
 			<nav class="main--menu">
 
 				<c:choose>
@@ -57,6 +90,7 @@
 						</ul>
 					</c:when>
 				</c:choose>
+				
 			</nav>
 	</div>
 		</form>

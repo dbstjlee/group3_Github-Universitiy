@@ -2,6 +2,7 @@
 <div class="content">
 </div>
 </body>
+
 </html>
 <footer>
 <div class="footer">

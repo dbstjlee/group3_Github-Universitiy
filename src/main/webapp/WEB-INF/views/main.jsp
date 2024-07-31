@@ -139,4 +139,7 @@
 <div class="center--imgBox">
 <img class="center--img" src="${pageContext.request.contextPath}/resources/images/back1.png">
 </div>
+
+    
+    
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>
