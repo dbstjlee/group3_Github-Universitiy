@@ -532,8 +532,10 @@ public class SugangRepositoryImpl implements SugangRepository {
 		try (Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(GET_APPLICATION_SUBJECT)) {
 			pstmt.setInt(1, studentId);
-			pstmt.setInt(2, limit);
-			pstmt.setInt(3, offset);
+			pstmt.setInt(2, year);
+			pstmt.setInt(3, semester);
+			pstmt.setInt(4, limit);
+			pstmt.setInt(5, offset);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					Sugang sugang = Sugang.builder().collegeName(rs.getString("단과대학")).departName(rs.getString("개설학과"))
