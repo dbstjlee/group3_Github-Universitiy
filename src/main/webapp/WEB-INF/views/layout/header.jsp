@@ -43,7 +43,7 @@
         setTimeout(showClock,1000);  
       }
     </script>
-<body onload="showClock()">	
+<body onload="showClock(); openPopup();">	
 	<header>
 			<div class="header--top">
 			<form action="${pageContext.request.contextPath}/" method="get" style="margin-left: 0">

@@ -1,6 +1,7 @@
 package com.tenco.group3.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import com.tenco.group3.model.User;
 import com.tenco.group3.repository.UserRepositoryImpl;
@@ -330,7 +331,9 @@ public class UserController extends HttpServlet {
 				}
 			}
 		}
+		
 		session.setAttribute("principal", principal);
 		response.sendRedirect(request.getContextPath() + "/"); // 로그인 성공 - 메인 홈으로 이동
+	
 	}
 }

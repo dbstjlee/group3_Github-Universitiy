@@ -3,11 +3,20 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/main.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/mainpage.css">
 
+    <script type="text/javascript">
+        function openPopup() {
+            
+            window.open('popup.jsp', 'popup', 'width=400,height=600','scrollbars=no','resizable=yes');
+        }
+    </script>
+    <body2 onload="openPopup()">
+    </body2>
 <div class="d-flex justify-content-center align-items-start"
 	style="min-width: 100em;">
 
@@ -141,7 +150,6 @@
 <img class="center--img" src="${pageContext.request.contextPath}/resources/images/back1.png">
 <img class="side--img" src="${pageContext.request.contextPath}/resources/images/버튼오른쪽.png">
 </div>
-
-    
+ 
     
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>

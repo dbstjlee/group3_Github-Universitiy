@@ -46,7 +46,8 @@
 			</div>
 		</div>
 		<div>
-			<input type="submit" value="로그인" id="input--submit">
+			<input type="submit" value="로그인" id="input--submit" >
+
 		</div>
 		<ul class="login--info">
 			<li><a href="${pageContext.request.contextPath}/user/findId" onclick="window.open(this.href,'_blank', 'width=500, height=300'); return false;">ID 찾기</a></li>
@@ -57,4 +58,6 @@
 	<div>
 		<pre class="exam"></pre>
 	</div>
+	
+
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>
