@@ -14,7 +14,7 @@ public class DBUtil {
 	static {
 		try {
 			InitialContext ctx = new InitialContext();
-			datesource = (DataSource) ctx.lookup("java:comp/env/jdbc/greenboard");
+			datesource = (DataSource) ctx.lookup("java:comp/env/jdbc/githubUniversity");
 		} catch (NamingException e) {
 			System.out.println("DBUtil 초기화 실패");
 			e.printStackTrace();	

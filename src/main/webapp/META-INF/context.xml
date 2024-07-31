@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	<Resource 
-		name="jdbc/greenboard"
+		name="jdbc/githubUniversity"
 		auth="Container"
 		type="javax.sql.DataSource"
 		factory="com.zaxxer.hikari.HikariJNDIFactory"
@@ -11,7 +11,7 @@
 		connectionTimeout="30000"
 		idleTimeout="60000"
 		maxLifetime="1800000"
-		jdbcUrl="jdbc:mysql://localhost:3306/db_greenboard?serverTimezone=Asia/Seoul"
+		jdbcUrl="jdbc:mysql://localhost:3306/github_university_db?serverTimezone=Asia/Seoul"
 		driverClassName="com.mysql.cj.jdbc.Driver"
 		username="root"
 		password="asd123"/>

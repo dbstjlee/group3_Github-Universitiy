@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS db_greenboard;
-CREATE DATABASE db_greenboard;
-USE db_greenboard;
+DROP DATABASE IF EXISTS github_university_db;
+CREATE DATABASE github_university_db;
+USE github_university_db;
 
 -- 단과대
 CREATE TABLE college_tb
