@@ -74,9 +74,29 @@
 
 ![image](https://github.com/user-attachments/assets/9438c973-320a-4edf-9a23-098df53095c1)
 
+---
+### 화면
+로그인
+![image](https://github.com/user-attachments/assets/14151615-237b-4b77-a3b2-3d9c8849042e)
+
+
+학생 - 전체 강의 조회
+![image](https://github.com/user-attachments/assets/aa385969-4297-4e22-b14a-b196326e95b3)
+
+학생 - 전체 강의 시간표 조회
+![image](https://github.com/user-attachments/assets/942fb491-b138-44cd-992a-8a4e68e11d30)
+
+교수 - 내 강의 조회
+![image](https://github.com/user-attachments/assets/ea7dd41d-a975-4ae3-ac90-4f44be3144f0)
+
+직원 - 학사관리
+![image](https://github.com/user-attachments/assets/7a9222ce-2112-4146-b264-72b54c8d7c81)
+
+직원 - 등록 관리
+![image](https://github.com/user-attachments/assets/27b30396-76b1-425b-9012-fd716f8458ad)
 
 ---
 
-## 📊 프로젝트 PPT
+## 📊 프로젝트 PPT 자료
 [Github-University.pptx](https://github.com/user-attachments/files/17643896/Github-University.pptx?raw=true)
 
