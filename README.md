@@ -1,5 +1,5 @@
 # Github-University
-교직원, 강사, 학생 등 각기 다른 사용자들이 각각의 기능을 가진 **대학교 학사관리 사이트**입니다.
+교직원, 교수, 학생이 각각의 기능을 가진 **대학교 학사관리 사이트**입니다.
 ![image](https://github.com/user-attachments/assets/1b458306-1272-4f6f-8468-6f51c078bad7)
 
 ## 프로젝트 기간
