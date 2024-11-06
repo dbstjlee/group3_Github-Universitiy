@@ -1,6 +1,6 @@
 # Github-University
 교직원, 강사, 학생 등 각기 다른 사용자들이 각각의 기능을 가진 **대학교 학사관리 사이트**입니다.
-![대표 이미지] (https://github.com/user-attachments/assets/8b0252c0-fd5b-454b-a249-4d50b3802afb)
+![image](https://github.com/user-attachments/assets/1b458306-1272-4f6f-8468-6f51c078bad7)
 
 ## 프로젝트 기간
 2024.07.18. - 2024.07.30.
