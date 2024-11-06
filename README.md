@@ -37,7 +37,7 @@
 - 등록관리(단과대학, 학과, 강의실, 강의, 단대별 등록금)
 
 4. **공통**
-- 로그인, 아이디/비밀번호 찾기, 학사정보(공지사항, 학사일정, 학사일정 등록(직원만)
+- 로그인, 아이디/비밀번호 찾기, 학사정보(공지사항, 학사일정, 학사일정 등록(직원만))
 ---
 
 ## 🗂 데이터베이스 설계
@@ -55,7 +55,7 @@
 ### 사용 기술 스택
 
 - **백엔드 프레임워크**: Spring Boot
-- **개발 툴**: Eclipse, VS Code, IntelliJ
+- **개발 툴**: Eclipse, VS Code
 - **데이터베이스**: MySQL
 - **템플릿 엔진**: JSP
 - **협업 툴**: Github, Discord
@@ -73,7 +73,7 @@
 ![image](https://github.com/user-attachments/assets/3fbaab72-7ca8-46c6-b306-ca812832ed40)
 
 ![image](https://github.com/user-attachments/assets/9438c973-320a-4edf-9a23-098df53095c1)
----
+
 
 ---
 
