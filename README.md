@@ -77,6 +77,6 @@
 
 ---
 
-## 📊 프로젝트 주요 링크
+## 📊 프로젝트 PPT
 [Github-University.pptx](https://github.com/user-attachments/files/17643896/Github-University.pptx?raw=true)
 
