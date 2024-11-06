@@ -44,7 +44,9 @@
 
 프로젝트의 데이터베이스는 MySQL을 기반으로 하였습니다. 전체적인 데이터 구조는 아래 ERD를 통해 확인할 수 있습니다.
 
-![ERD 이미지]()
+![image](https://github.com/user-attachments/assets/58336a60-d95f-4f3e-b9eb-bfceea6188dc)
+
+![image](https://github.com/user-attachments/assets/45cc2dec-f30e-4b1c-a4a4-dab3e29362f4)
 
 ---
 
@@ -62,10 +64,15 @@
 ---
 
 ### 사이트맵
-![사이트맵1]()
+![image](https://github.com/user-attachments/assets/10db0d70-58a6-4a2e-bbcf-3a47ba6ffa04)
 
-![사이트맵2]()
+![image](https://github.com/user-attachments/assets/46fd0d10-ec17-4db9-afe1-fc7e2d0e3749)
 
+![image](https://github.com/user-attachments/assets/28b60fd5-4eec-408e-b2c1-55feb65caeee)
+
+![image](https://github.com/user-attachments/assets/3fbaab72-7ca8-46c6-b306-ca812832ed40)
+
+![image](https://github.com/user-attachments/assets/9438c973-320a-4edf-9a23-098df53095c1)
 ---
 
 ---
