@@ -78,5 +78,5 @@
 ---
 
 ## 📊 프로젝트 주요 링크
-[Github-University 프로젝트.pptx]()
+[3조 프로젝트.pptx](https://github.com/user-attachments/files/17643797/3.pptx?raw=true)
 
