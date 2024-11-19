@@ -85,11 +85,8 @@
 학생 - 전체 강의 조회
 ![image](https://github.com/user-attachments/assets/aa385969-4297-4e22-b14a-b196326e95b3)
 
-학생 - 전체 강의 시간표 조회
-![image](https://github.com/user-attachments/assets/942fb491-b138-44cd-992a-8a4e68e11d30)
-
 학생 - 수강 신청
-![image](https://github.com/user-attachments/assets/e4b5a5f2-2ccf-4c30-9d38-e206ed2fbd46)
+![image](https://github.com/user-attachments/assets/95a060ae-cc63-4fcf-8808-4236c0068a9a)
 
 교수 - 내 강의 조회
 ![image](https://github.com/user-attachments/assets/ea7dd41d-a975-4ae3-ac90-4f44be3144f0)
