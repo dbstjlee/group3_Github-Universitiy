@@ -75,12 +75,10 @@
 ![image](https://github.com/user-attachments/assets/9438c973-320a-4edf-9a23-098df53095c1)
 
 ---
-### 화면
+### 주요 기능 및 화면
+
 로그인
-
-
-![image](https://github.com/user-attachments/assets/14151615-237b-4b77-a3b2-3d9c8849042e)
-
+![image](https://github.com/user-attachments/assets/b46b699e-dd77-4ec5-9709-45c9a4cf8af5)
 
 학생 - 전체 강의 조회
 ![image](https://github.com/user-attachments/assets/aa385969-4297-4e22-b14a-b196326e95b3)
