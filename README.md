@@ -59,7 +59,7 @@
 - **데이터베이스**: MySQL
 - **템플릿 엔진**: JSP
 - **협업 툴**: Github, Discord
-- **라이브러리**: HiKariCP, Lombok, SLF4J, jakarta
+- **라이브러리**: HiKariCP, Lombok, SLF4J
 
 ---
 
