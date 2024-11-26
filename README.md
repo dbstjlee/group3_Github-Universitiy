@@ -58,7 +58,12 @@
 - **데이터베이스**: MySQL
 - **템플릿 엔진**: JSP
 - **협업 툴**: Github, Discord
-- **라이브러리**: HiKariCP, Lombok, SLF4J
+- **라이브러리**: HikariCP 5.1.0, Lombok 1.18.34, 
+jakarta servlet jsp jstl 3.0.0, 
+jakarta servlet jsp jstl api 3.0.0, <br>
+slf4j api 2.0.0 alpha5, 
+slf4j simple 2.0.0, 
+mysql connector java 8.0.21
 
 ---
 
