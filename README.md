@@ -54,8 +54,7 @@
 
 ### 사용 기술 스택
 
-- **백엔드 프레임워크**: Spring Boot
-- **개발 툴**: Spring tool Suite 4.21.1, VS Code
+- **개발 툴**: Spring tool Suite 4.21.1, VS Code 1.94.0
 - **데이터베이스**: MySQL
 - **템플릿 엔진**: JSP
 - **협업 툴**: Github, Discord
